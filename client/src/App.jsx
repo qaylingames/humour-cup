@@ -1,0 +1,429 @@
+import { useEffect, useState, useRef } from 'react';
+import { io } from 'socket.io-client';
+
+const socket = io('http://localhost:3001');
+
+const SFX = {
+  click: 'https://actions.google.com/sounds/v1/ui/button_click.ogg',
+  create: 'https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg',
+  join: 'https://actions.google.com/sounds/v1/cartoon/pop.ogg', 
+  vote: 'https://actions.google.com/sounds/v1/magic/magic_chime.ogg', 
+  win: 'https://actions.google.com/sounds/v1/crowds/crowd_cheer.ogg'
+};
+
+// The Dynamic Background Music Pool!
+const BGM_TRACKS = [
+  'https://ia903204.us.archive.org/16/items/MonkeysSpinningMonkeys/Monkeys%20Spinning%20Monkeys.mp3',
+  'https://ia800305.us.archive.org/30/items/SneakySnitch/Sneaky%20Snitch.mp3',
+  'https://ia903107.us.archive.org/15/items/FluffingADuck/Fluffing%20a%20Duck.mp3',
+  'https://ia801402.us.archive.org/27/items/TheBuilder_201511/The%20Builder.mp3',
+  'https://ia800201.us.archive.org/5/items/MerryGo/Merry%20Go.mp3',
+  'https://ia801407.us.archive.org/29/items/QuirkyDog/Quirky%20Dog.mp3',
+  'https://ia801509.us.archive.org/22/items/SchemingWeaselFaster/Scheming%20Weasel%20%28faster%20version%29.mp3'
+];
+
+function App() {
+  const [playerName, setPlayerName] = useState('');
+  const [joinCode, setJoinCode] = useState('');
+  const [room, setRoom] = useState(null);
+  
+  const [myAnswer, setMyAnswer] = useState('');
+  const [replyText, setReplyText] = useState('');
+  const [replyingToAnsId, setReplyingToAnsId] = useState(null);
+  const [seenReplies, setSeenReplies] = useState(new Set());
+  const [timeLeft, setTimeLeft] = useState(0);
+
+  const [bgmIndex, setBgmIndex] = useState(() => Math.floor(Math.random() * BGM_TRACKS.length));
+  const audioRef = useRef(null);
+  const prevPlayersCount = useRef(0);
+  const prevGameState = useRef('');
+  const prevRoundNumber = useRef(1);
+
+  // Hard SFX Player
+  const playSound = (url, vol = 1.0) => {
+    try {
+      const audio = new Audio(url);
+      audio.volume = vol;
+      audio.play().catch(() => {});
+    } catch(e) {}
+  };
+
+  // The Un-Blocker: Fires the second the screen is clicked
+  const unlockAudio = () => {
+    if (audioRef.current && audioRef.current.paused) {
+      audioRef.current.volume = 0.05; 
+      audioRef.current.play().catch(() => {});
+    }
+  };
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = 0.05;
+      audioRef.current.play().catch(() => {});
+    }
+  }, [bgmIndex]);
+
+  useEffect(() => {
+    socket.on('roomData', (updatedRoom) => {
+      // Lobby Join SFX
+      if (updatedRoom.state === 'LOBBY' && updatedRoom.players.length > prevPlayersCount.current) {
+        if (prevPlayersCount.current > 0) playSound(SFX.join, 1.0); 
+      }
+      prevPlayersCount.current = updatedRoom.players.length;
+
+      // Swap Music every single round
+      if (updatedRoom.state === 'ANSWER_PHASE' && updatedRoom.roundData?.roundNumber !== prevRoundNumber.current) {
+        setBgmIndex(Math.floor(Math.random() * BGM_TRACKS.length));
+        prevRoundNumber.current = updatedRoom.roundData.roundNumber;
+      }
+
+      // Winner Celebration
+      if (updatedRoom.state === 'RESULTS' && prevGameState.current !== 'RESULTS') {
+        playSound(SFX.win, 1.0);
+      }
+
+      prevGameState.current = updatedRoom.state;
+      setRoom(updatedRoom);
+    });
+
+    socket.on('newReplyAlert', () => playSound('https://actions.google.com/sounds/v1/alarms/beep_short.ogg', 0.5));
+    return () => { socket.off('roomData'); socket.off('newReplyAlert'); };
+  }, []);
+
+  useEffect(() => {
+    if (room?.state === 'CHAT_PHASE') {
+      const interval = setInterval(() => {
+        const end = room.roundData?.endTime || Date.now();
+        setTimeLeft(Math.max(0, Math.ceil((end - Date.now()) / 1000)));
+      }, 200);
+      return () => clearInterval(interval);
+    } else if (room?.state === 'INTERMISSION') {
+      const interval = setInterval(() => {
+        const end = room.roundData?.intermissionEndTime || Date.now();
+        setTimeLeft(Math.max(0, Math.ceil((end - Date.now()) / 1000)));
+      }, 200);
+      return () => clearInterval(interval);
+    }
+  }, [room]);
+
+  // Major Button Clicks
+  const handleCreateRoom = () => { 
+    playSound(SFX.create);
+    if (!playerName) alert("Enter a name!"); else socket.emit('createRoom', playerName, () => {}); 
+  };
+  
+  const handleJoinRoom = () => { 
+    playSound(SFX.click);
+    if (!playerName || !joinCode) alert("Fill all fields!"); else socket.emit('joinRoom', { roomId: joinCode, playerName }, (res) => !res.success && alert(res.message)); 
+  };
+  
+  const handleStartGame = () => { playSound(SFX.click); socket.emit('startGame', room.id); };
+  
+  const handleSubmitAnswer = (e) => {
+    e.preventDefault();
+    playSound(SFX.click);
+    if (myAnswer) socket.emit('submitAnswer', { roomId: room.id, answerText: myAnswer });
+    setMyAnswer('');
+  };
+
+  const handleSendReply = (answerId) => {
+    playSound(SFX.click);
+    if (replyText) socket.emit('submitChatReply', { roomId: room.id, answerId: answerId, text: replyText });
+    setReplyText('');
+    setReplyingToAnsId(null);
+  };
+
+  const handleVote = (itemId) => { 
+    playSound(SFX.vote, 1.0); 
+    socket.emit('submitChatVote', { roomId: room.id, itemId: itemId }); 
+  };
+  
+  const handleDone = () => { playSound(SFX.click); socket.emit('toggleDone', { roomId: room.id }); };
+  const handleInitReply = (ansId, prefix = "") => { playSound(SFX.click); setReplyingToAnsId(ansId); setReplyText(prefix); };
+  const handlePlayAgain = () => { playSound(SFX.click); socket.emit('playAgain', { roomId: room.id }); };
+
+  const isHost = room?.players[0]?.id === socket.id;
+
+  return (
+    <div onClick={unlockAudio} style={styles.appWrapper}>
+      
+      <style>{`
+        .btn-3d { transition: transform 0.1s ease, box-shadow 0.1s ease; }
+        .btn-3d:active:not(:disabled) { transform: translateY(6px); box-shadow: 0px 0px 0px #1a1a1a !important; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        .animate-bounce { animation: bounce 1.5s infinite ease-in-out; }
+        
+        /* The Smooth Loading Bar CSS */
+        .loading-container { width: 100%; height: 30px; background: #fff; border: 4px solid #1a1a1a; border-radius: 15px; overflow: hidden; position: relative; box-shadow: 4px 4px 0px #1a1a1a; margin-top: 20px;}
+        .loading-fill { height: 100%; background: #10b981; width: 0%; animation: loadBar 1.5s ease-in-out forwards; }
+        @keyframes loadBar { 0% { width: 0%; } 100% { width: 100%; } }
+      `}</style>
+
+      <audio ref={audioRef} src={BGM_TRACKS[bgmIndex]} loop />
+
+      {/* --- VIEW: HOME --- */}
+      {!room && (
+        <div style={styles.container}>
+          <h1 style={styles.logo}>🏆 Humour Cup</h1>
+          <div style={styles.mainCard}>
+            <input placeholder="Your Funny Name" value={playerName} onChange={(e) => setPlayerName(e.target.value)} style={styles.input} />
+            <button onClick={handleCreateRoom} className="btn-3d" style={styles.primaryBtn}>Create Game</button>
+            <div style={styles.divider}>OR JOIN A FRIEND</div>
+            <div style={{display:'flex', gap:'10px', width: '100%'}}>
+              <input placeholder="CODE" value={joinCode} onChange={(e) => setJoinCode(e.target.value)} style={styles.smallInput} maxLength={4} />
+              <button onClick={handleJoinRoom} className="btn-3d" style={styles.secondaryBtn}>Join</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* --- VIEW: LOBBY --- */}
+      {room?.state === 'LOBBY' && (
+        <div style={styles.container}>
+          <div style={styles.roomBadge}>ROOM CODE: {room.id}</div>
+          <h2 style={styles.phaseTitle}>Waiting for the squad...</h2>
+          <div style={styles.playerGrid}>
+            {room.players.map((p, i) => (
+              <div key={i} className="animate-bounce" style={{...styles.playerTag, animationDelay: `${i * 0.2}s`}}>
+                🎭 {p.name} {i === 0 && <span style={{opacity: 0.5, fontSize: '14px'}}> (Host)</span>}
+              </div>
+            ))}
+          </div>
+          
+          {isHost ? (
+            room.players.length >= 2 ? (
+              <button onClick={handleStartGame} className="btn-3d" style={styles.startBtn}>Launch Game 🚀</button>
+            ) : (
+              <h3 className="animate-bounce" style={{color: '#ef4444', marginTop: '30px', fontWeight: '900', fontSize: '20px'}}>Waiting for at least 1 more player...</h3>
+            )
+          ) : (
+            <h3 className="animate-bounce" style={styles.loadingText}>Waiting for the host to start...</h3>
+          )}
+
+          {room.players.length < 3 && (
+            <h4 style={{color: '#1a1a1a', fontWeight: '900', marginTop: '15px', fontSize: '16px', opacity: 0.7}}>💡 The game is fun when you have at least 3 players!</h4>
+          )}
+        </div>
+      )}
+
+      {/* --- VIEW: LAUNCHING (The Guaranteed Loading Screen) --- */}
+      {room?.state === 'LAUNCHING' && (
+        <div style={styles.container}>
+          <h1 className="animate-bounce" style={{fontSize:'80px', margin:'0 0 20px 0'}}>🚀</h1>
+          <h2 style={styles.phaseTitle}>Launching Humour Cup...</h2>
+          <div className="loading-container">
+            <div className="loading-fill"></div>
+          </div>
+        </div>
+      )}
+
+      {/* --- VIEW: ANSWER --- */}
+      {room?.state === 'ANSWER_PHASE' && (() => {
+        const safeAnswers = room.roundData.answers || [];
+        const hasSubmitted = safeAnswers.some(a => a.playerId === socket.id);
+        const currentRound = room.roundData.roundNumber || 1; 
+        return (
+          <div style={styles.container}>
+            <h2 style={styles.phaseTitle}>Scenario {currentRound}</h2>
+            <div style={styles.scenarioCard}>"{room.roundData.scenario}"</div>
+            {!hasSubmitted ? (
+              <form onSubmit={handleSubmitAnswer} style={styles.form}>
+                <textarea value={myAnswer} onChange={(e) => setMyAnswer(e.target.value)} placeholder="Type your humour..." style={styles.textarea} />
+                <button type="submit" className="btn-3d" style={styles.primaryBtn}>Submit Humour</button>
+              </form>
+            ) : <h2 className="animate-bounce" style={styles.loadingText}>Waiting for slower humans... ({safeAnswers.length}/{room.players.length})</h2>}
+          </div>
+        );
+      })()}
+
+      {/* --- VIEW: REAL-TIME CHAT & VOTE PHASE --- */}
+      {room?.state === 'CHAT_PHASE' && (() => {
+        const donePlayers = room.roundData.donePlayers || [];
+        const safeAnswers = room.roundData.answers || [];
+        const isDone = donePlayers.includes(socket.id);
+
+        return (
+          <div style={styles.container}>
+            <div style={styles.timerBadge}>⏳ {timeLeft} Seconds Left</div>
+            <div style={{...styles.scenarioCard, padding: '20px', fontSize: '22px', marginBottom: '20px'}}>
+              "{room.roundData.scenario}"
+            </div>
+
+            <div style={styles.ansList}>
+              {safeAnswers.map((ans) => {
+                const ansAuthor = room.players.find(p => p.id === ans.playerId)?.name || "Unknown";
+                const ansVotes = ans.votes || [];
+                const ansReplies = ans.replies || [];
+                
+                return (
+                  <div key={ans.id || Math.random()} style={styles.ansCard}>
+                    <p style={{fontSize: '14px', color: '#666', margin: '0 0 5px 0', fontWeight: 'bold'}}>{ansAuthor}:</p>
+                    <p style={styles.jokeText}>"{ans.text}"</p>
+                    
+                    <div style={{display: 'flex', gap: '10px', marginTop: '10px', flexWrap: 'wrap'}}>
+                      <div style={styles.voteCountBadge}>⭐ {ansVotes.length}</div>
+                      {ans.playerId !== socket.id && !ansVotes.includes(socket.id) && (
+                        <button onClick={() => handleVote(ans.id)} className="btn-3d" style={styles.voteBtn}>Humorous!</button>
+                      )}
+                      <button onClick={() => handleInitReply(ans.id)} className="btn-3d" style={styles.replyBtn}>Reply</button>
+                    </div>
+
+                    {ansReplies.map((rep) => {
+                      const repAuthor = room.players.find(p => p.id === rep.playerId)?.name || "Unknown";
+                      const repVotes = rep.votes || [];
+                      const isUnseen = !seenReplies.has(rep.id) && rep.playerId !== socket.id;
+
+                      return (
+                        <div key={rep.id || Math.random()} style={styles.replyBubble} onMouseEnter={() => { if (isUnseen) setSeenReplies(prev => new Set(prev).add(rep.id)); }}>
+                          {isUnseen && <span style={styles.yellowDot}></span>}
+                          <p style={{margin: 0, fontWeight: '800'}}>{repAuthor}:</p>
+                          <p style={{margin: '5px 0'}}>{rep.text}</p>
+                          <div style={{display: 'flex', gap: '10px', marginTop: '10px', flexWrap: 'wrap'}}>
+                            <div style={styles.voteCountBadge}>⭐ {repVotes.length}</div>
+                            {rep.playerId !== socket.id && !repVotes.includes(socket.id) && (
+                              <button onClick={() => handleVote(rep.id)} className="btn-3d" style={styles.voteBtn}>Humorous!</button>
+                            )}
+                            <button onClick={() => handleInitReply(ans.id, `@${repAuthor} `)} className="btn-3d" style={styles.replyBtn}>Reply</button>
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                    {replyingToAnsId === ans.id && (
+                      <div style={{marginTop:'15px', display:'flex', flexDirection:'column', gap:'10px'}}>
+                        <input value={replyText} onChange={(e) => setReplyText(e.target.value)} placeholder="Reply with a humorous punch..." style={styles.input} autoFocus />
+                        <div style={{display:'flex', gap:'10px'}}>
+                           <button onClick={() => handleSendReply(ans.id)} className="btn-3d" style={styles.actionBtn}>Send</button>
+                           <button onClick={() => { playSound(SFX.click); setReplyingToAnsId(null); }} className="btn-3d" style={styles.cancelBtn}>Cancel</button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            <div style={{ marginTop: '30px', paddingBottom: '50px', width: '100%' }}>
+              <button onClick={handleDone} disabled={isDone} className="btn-3d" style={isDone ? styles.doneBtnActive : styles.primaryBtn}>
+                {isDone ? `Waiting for others... (${donePlayers.length}/${room.players.length})` : "I'm Done Reading!"}
+              </button>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* --- VIEW: INTERMISSION & THE SMART LOADING BAR --- */}
+      {room?.state === 'INTERMISSION' && (() => {
+        const sortedPlayers = [...room.players].sort((a,b) => b.score - a.score);
+        const nextRound = (room.roundData?.roundNumber || 1) + 1;
+
+        return (
+          <div style={styles.container}>
+            <h2 style={styles.phaseTitle}>Scoreboard</h2>
+            <div style={{width: '100%', marginBottom: '40px'}}>
+              {sortedPlayers.map((p, i) => (
+                <div key={p.id} style={{display: 'flex', justifyContent: 'space-between', padding: '15px', background: '#fff', border: '3px solid #1a1a1a', borderRadius: '12px', marginBottom: '10px', fontWeight: 'bold', boxShadow: '4px 4px 0px #1a1a1a'}}>
+                  <span style={{fontSize: '18px'}}>#{i + 1} {p.name}</span>
+                  <span style={{fontSize: '18px', color: '#10b981'}}>{p.score} pts</span>
+                </div>
+              ))}
+            </div>
+            
+            {timeLeft > 0 ? (
+               <h3 style={{color: '#1a1a1a', fontWeight: '900', fontSize: '24px', textTransform: 'uppercase'}}>
+                 Entering Round {nextRound} in {timeLeft}...
+               </h3>
+            ) : (
+               <div style={{width: '100%', marginTop: '20px'}}>
+                 <h3 className="animate-bounce" style={{color: '#1a1a1a', fontWeight: '900', fontSize: '20px', textTransform: 'uppercase'}}>Generating AI Scenario...</h3>
+                 <div className="loading-container">
+                    <div className="loading-fill"></div>
+                 </div>
+               </div>
+            )}
+          </div>
+        );
+      })()}
+
+      {/* --- VIEW: RESULTS (End of Game) --- */}
+      {room?.state === 'RESULTS' && (() => {
+        const sortedPlayers = [...room.players].sort((a,b) => b.score - a.score);
+        const highestScore = sortedPlayers[0].score;
+        const winners = sortedPlayers.filter(p => p.score === highestScore);
+        const isTie = winners.length > 1;
+
+        return (
+          <div style={styles.container}>
+            <h1 className="animate-bounce" style={{fontSize:'100px', margin:'0 0 20px 0'}}>🏆</h1>
+            <h2 style={styles.phaseTitle}>Humour Cup</h2>
+            <h3 style={{color: '#1a1a1a', textTransform: 'uppercase', fontWeight: '900', marginTop: '10px', marginBottom: '10px', fontSize: '24px'}}>
+              {isTie ? 'Winners' : 'Winner'}
+            </h3>
+            
+            <div style={styles.winnerCard}>
+              {winners.map(w => (
+                <h1 key={w.id} style={{margin:'0 0 5px 0', color: '#1a1a1a', fontSize: '42px'}}>{w.name}</h1>
+              ))}
+              <h3 style={{margin:'15px 0 0 0', color: '#1a1a1a', opacity: 0.8}}>{highestScore} Points</h3>
+            </div>
+
+            <h3 style={{color: '#1a1a1a', textTransform: 'uppercase', fontWeight: '900', marginTop: '20px'}}>Final Scoreboard</h3>
+            <div style={{width: '100%', marginBottom: '40px'}}>
+              {sortedPlayers.map((p, i) => (
+                <div key={p.id} style={{display: 'flex', justifyContent: 'space-between', padding: '15px', background: '#fff', border: '3px solid #1a1a1a', borderRadius: '12px', marginBottom: '10px', fontWeight: 'bold', boxShadow: '4px 4px 0px #1a1a1a'}}>
+                  <span style={{fontSize: '18px'}}>#{i + 1} {p.name}</span>
+                  <span style={{fontSize: '18px', color: '#10b981'}}>{p.score} pts</span>
+                </div>
+              ))}
+            </div>
+
+            {isHost ? (
+               <button onClick={handlePlayAgain} className="btn-3d" style={styles.primaryBtn}>Play Again (Host)</button>
+            ) : (
+               <h3 className="animate-bounce" style={{color: '#1a1a1a', fontWeight: '900', fontSize: '20px'}}>Waiting for Host to Restart...</h3>
+            )}
+          </div>
+        );
+      })()}
+
+    </div>
+  );
+}
+
+// --- MASTER STYLES ---
+const styles = {
+  appWrapper: { backgroundColor: '#FFC200', color: '#1a1a1a', minHeight: '100vh', width: '100vw', display: 'flex', justifyContent: 'center', padding: '20px', boxSizing: 'border-box', position: 'absolute', top: 0, left: 0, overflowX: 'hidden' },
+  container: { width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', paddingTop: '40px' },
+  logo: { fontSize: '48px', color: '#1a1a1a', marginBottom: '30px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '-1px' },
+  mainCard: { background: '#ffffff', padding: '40px', borderRadius: '24px', width: '100%', boxSizing: 'border-box', border: '4px solid #1a1a1a', boxShadow: '8px 8px 0px #1a1a1a' },
+  input: { width: '100%', padding: '16px', borderRadius: '12px', border: '3px solid #1a1a1a', fontSize: '18px', marginBottom: '20px', boxSizing: 'border-box', fontWeight: 'bold', outline: 'none' },
+  smallInput: { flex: 1, padding: '16px', borderRadius: '12px', border: '3px solid #1a1a1a', fontSize: '18px', boxSizing: 'border-box', fontWeight: 'bold', outline: 'none', textTransform: 'uppercase' },
+  primaryBtn: { width: '100%', padding: '18px', borderRadius: '12px', border: '3px solid #1a1a1a', backgroundColor: '#ffffff', color: '#1a1a1a', fontSize: '20px', fontWeight: '900', cursor: 'pointer', boxShadow: '6px 6px 0px #1a1a1a', textTransform: 'uppercase' },
+  secondaryBtn: { padding: '15px 30px', borderRadius: '12px', border: '3px solid #1a1a1a', backgroundColor: '#ffffff', color: '#1a1a1a', fontWeight: '900', cursor: 'pointer', boxShadow: '4px 4px 0px #1a1a1a' },
+  startBtn: { padding: '20px 40px', borderRadius: '16px', border: '4px solid #1a1a1a', backgroundColor: '#10b981', color: '#ffffff', fontSize: '22px', fontWeight: '900', cursor: 'pointer', boxShadow: '8px 8px 0px #1a1a1a', marginTop: '30px' },
+  doneBtnActive: { width: '100%', padding: '18px', borderRadius: '12px', border: '3px solid #1a1a1a', backgroundColor: '#ccc', color: '#1a1a1a', fontSize: '18px', fontWeight: '900', boxShadow: 'none', cursor: 'not-allowed' },
+  divider: { margin: '25px 0', color: '#1a1a1a', fontSize: '14px', fontWeight: '900', letterSpacing: '2px' },
+  roomBadge: { backgroundColor: '#ffffff', color: '#1a1a1a', padding: '10px 24px', borderRadius: '12px', fontSize: '16px', fontWeight: '900', border: '3px solid #1a1a1a', boxShadow: '4px 4px 0px #1a1a1a', marginBottom: '30px' },
+  warmupText: { color: '#1a1a1a', fontWeight: '900', marginTop: '40px', fontSize: '20px', textTransform: 'uppercase' },
+  timerBadge: { backgroundColor: '#ef4444', color: '#fff', padding: '10px 20px', borderRadius: '50px', fontSize: '24px', fontWeight: '900', border: '4px solid #1a1a1a', boxShadow: '4px 4px 0px #1a1a1a', marginBottom: '20px' },
+  playerGrid: { display: 'flex', gap: '15px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '20px', width: '100%' },
+  playerTag: { padding: '12px 24px', background: '#ffffff', color: '#1a1a1a', borderRadius: '12px', fontWeight: '800', fontSize: '18px', border: '3px solid #1a1a1a', boxShadow: '4px 4px 0px #1a1a1a' },
+  scenarioCard: { fontSize: '26px', fontWeight: '900', background: '#ffffff', color: '#1a1a1a', padding: '35px', borderRadius: '24px', marginBottom: '30px', width: '100%', boxSizing: 'border-box', border: '4px solid #1a1a1a', boxShadow: '8px 8px 0px #1a1a1a' },
+  form: { width: '100%' },
+  textarea: { width: '100%', height: '140px', padding: '20px', borderRadius: '16px', border: '3px solid #1a1a1a', fontSize: '20px', marginBottom: '20px', boxSizing: 'border-box', fontWeight: 'bold', outline: 'none', resize: 'none' },
+  ansList: { width: '100%', display: 'flex', flexDirection: 'column', gap: '25px' },
+  ansCard: { background: '#ffffff', padding: '25px', borderRadius: '20px', textAlign: 'left', width: '100%', boxSizing: 'border-box', border: '4px solid #1a1a1a', boxShadow: '6px 6px 0px #1a1a1a' },
+  jokeText: { fontSize: '24px', fontWeight: '900', color: '#1a1a1a', margin: '0 0 15px 0' },
+  replyBubble: { background: '#fef3c7', padding: '15px', borderRadius: '12px', marginTop: '15px', fontSize: '18px', color: '#1a1a1a', border: '3px solid #1a1a1a', marginLeft: '20px' },
+  yellowDot: { display: 'inline-block', width: '12px', height: '12px', backgroundColor: '#ef4444', borderRadius: '50%', border: '2px solid #1a1a1a', marginRight: '8px', verticalAlign: 'middle' },
+  voteCountBadge: { background: '#1a1a1a', color: '#fbbf24', padding: '8px 12px', borderRadius: '8px', fontWeight: '900', fontSize: '14px' },
+  replyBtn: { background: '#ffffff', border: '3px solid #1a1a1a', padding: '8px 15px', borderRadius: '8px', cursor: 'pointer', fontWeight: '900', color: '#1a1a1a', boxShadow: '4px 4px 0px #1a1a1a', fontSize: '14px' },
+  voteBtn: { background: '#10b981', color: '#ffffff', border: '3px solid #1a1a1a', padding: '8px 15px', borderRadius: '8px', cursor: 'pointer', fontWeight: '900', fontSize: '14px', boxShadow: '4px 4px 0px #1a1a1a' },
+  winnerCard: { background: '#ffffff', padding: '40px', borderRadius: '24px', width: '100%', margin: '0 0 30px 0', boxSizing: 'border-box', border: '4px solid #1a1a1a', boxShadow: '12px 12px 0px #1a1a1a' },
+  phaseTitle: { fontSize: '32px', color: '#1a1a1a', marginBottom: '30px', fontWeight: '900', textTransform: 'uppercase' },
+  loadingText: { color: '#1a1a1a', marginTop: '30px', fontWeight: '800', fontSize: '20px' },
+  actionBtn: { flex: 2, background: '#3b82f6', color: '#fff', border: '3px solid #1a1a1a', padding: '12px', borderRadius: '12px', fontWeight: '900', cursor: 'pointer', boxShadow: '4px 4px 0px #1a1a1a', fontSize: '16px' },
+  cancelBtn: { flex: 1, background: '#ffffff', color: '#1a1a1a', border: '3px solid #1a1a1a', padding: '12px', borderRadius: '12px', fontWeight: '900', cursor: 'pointer', boxShadow: '4px 4px 0px #1a1a1a', fontSize: '16px' }
+};
+
+export default App;
