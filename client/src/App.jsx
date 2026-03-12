@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { io } from 'socket.io-client';
 
-const socket = io('http://localhost:3001');
+const socket = io('https://humour-cup-server.onrender.com');
 
 const SFX = {
   click: 'https://actions.google.com/sounds/v1/ui/button_click.ogg',
