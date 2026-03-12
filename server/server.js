@@ -10,49 +10,57 @@ app.use(cors());
 const server = http.createServer(app);
 
 const io = new Server(server, {
-  cors: { origin: "*", methods: ["GET", "POST"] } // Changed from localhost!
+  cors: { origin: "*", methods: ["GET", "POST"] }
 });
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-// THE FIX: We now pass the 'usedScenarios' array into the AI's brain!
-async function fetchNewScenario(usedScenarios = []) {
+const FALLBACK_VAULT = [
+  "My browser history was leaked, and the hardest thing to explain is...",
+  "I was fired from the morgue today because I accidentally...",
+  "The worst possible thing to say right after a kiss is...",
+  "My dog finally learned to talk, and his first words to me were...",
+  "I got kicked out of the family group chat because I...",
+  "The real reason aliens lock their doors when flying past Earth is...",
+  "The doctor looked at my X-ray, sighed, and said...",
+  "I knew the blind date was over when they pulled out a...",
+  "The secret ingredient in my grandma's famous stew is...",
+  "The worst thing to accidentally text your boss is...",
+  "I won the lottery, but I spent it all in one day on...",
+  "My superpower is useless. Every time I sneeze, I..."
+];
+
+function getFallbackBatch() {
+  const shuffled = [...FALLBACK_VAULT].sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, 5); 
+}
+
+async function fetchScenarioBatch() {
   try {
     const model = genAI.getGenerativeModel({ 
       model: "gemini-2.5-flash",
       generationConfig: { temperature: 1.4 } 
     });
 
-    const themes = [
-      'awkward dates', 'terrible superpowers', 'bad job interviews', 
-      'weird family secrets', 'bizarre crimes', 'time travel mistakes', 
-      'alien abductions', 'roommate horror stories', 'getting caught', 
-      'medical anomalies', 'wild conspiracy theories', 'ruined weddings',
-      'pet confessions', 'embarrassing internet searches', 'worst advice'
-    ];
-    const randomTheme = themes[Math.floor(Math.random() * themes.length)];
-
-    // If we have played rounds already, strictly forbid those past topics!
-    let exclusionRule = "";
-    if (usedScenarios.length > 0) {
-      exclusionRule = `\nCRITICAL RULE: You MUST NOT generate anything similar to these past scenarios:\n"${usedScenarios.join('"\n"')}"\n`;
-    }
-
-    const prompt = `Generate a single, short, funny, slightly edgy, open-ended fill-in-the-blank scenario for a party game. 
-    The theme MUST involve: ${randomTheme}.${exclusionRule}
+    const prompt = `Generate exactly 5 completely different, highly creative, short, funny, slightly edgy, open-ended fill-in-the-blank scenarios for an adult party game. 
     (Anti-Cache Seed: ${Date.now()})
-    Return ONLY the text of the scenario, no quotes or extra words. 
-    Example: I woke up as a different gender and the first thing I did was...`;
+    Return ONLY a valid JSON array of strings. Do not include markdown formatting or the word "json".
+    Example: ["scenario 1...", "scenario 2...", "scenario 3...", "scenario 4...", "scenario 5..."]`;
 
     const result = await model.generateContent(prompt);
-    const finalScenario = result.response.text().trim().replace(/^"|"$/g, '');
+    let text = result.response.text().trim();
+    text = text.replace(/```json/gi, '').replace(/```/g, '').trim();
     
-    console.log(`🤖 AI Generated Scenario: "${finalScenario}"`);
-    return finalScenario;
+    const scenarios = JSON.parse(text);
+    
+    if (Array.isArray(scenarios) && scenarios.length >= 3) {
+      return scenarios;
+    } else {
+      throw new Error("Invalid array format from AI");
+    }
   } catch (e) {
-    console.error("🚨 AI ERROR DETECTED:", e.message);
-    // Added a random number so even the fallback error doesn't look identical twice!
-    return `My browser history was just leaked, and the hardest thing to explain is... (Fallback ${Math.floor(Math.random() * 100)})`;
+    console.log("🚨 AI LIMIT HIT OR ERROR! Silently pulling from The Vault...", e.message);
+    return getFallbackBatch();
   }
 }
 
@@ -69,19 +77,23 @@ io.on('connection', (socket) => {
       state: 'LOBBY',
       players: [{ id: socket.id, name: playerName, score: 0 }],
       roundData: null,
-      prefetchedScenario: null, 
-      isFetching: true,
-      usedScenarios: [] // THE MEMORY BANK!
+      scenarioBatch: [], 
+      isFetching: true
     };
     socket.join(roomId);
     callback({ success: true, roomId: roomId });
     io.to(roomId).emit('roomData', rooms[roomId]);
 
-    fetchNewScenario().then(scenario => {
+    fetchScenarioBatch().then(batch => {
       if (rooms[roomId]) {
-        rooms[roomId].prefetchedScenario = scenario;
-        rooms[roomId].usedScenarios.push(scenario); // Save it to memory!
+        rooms[roomId].scenarioBatch = batch;
         rooms[roomId].isFetching = false;
+        
+        if (rooms[roomId].state === 'LAUNCHING') {
+           rooms[roomId].state = 'ANSWER_PHASE';
+           rooms[roomId].roundData = { roundNumber: 1, scenario: rooms[roomId].scenarioBatch.shift(), answers: [] };
+           io.to(roomId).emit('roomData', rooms[roomId]);
+        }
       }
     });
   });
@@ -102,23 +114,18 @@ io.on('connection', (socket) => {
     const roomCode = roomId.toUpperCase();
     const room = rooms[roomCode];
     if (room && room.players.length >= 2) {
-      room.state = 'LAUNCHING';
-      io.to(roomCode).emit('roomData', room);
-
-      const checkReady = setInterval(() => {
-        if (!room.isFetching) {
-          clearInterval(checkReady);
-          setTimeout(() => {
-            room.state = 'ANSWER_PHASE';
-            room.roundData = {
-              roundNumber: 1,
-              scenario: room.prefetchedScenario,
-              answers: []
-            };
-            io.to(roomCode).emit('roomData', room);
-          }, 1500); 
-        }
-      }, 200);
+      if (room.isFetching) {
+        room.state = 'LAUNCHING'; 
+        io.to(roomCode).emit('roomData', room);
+      } else {
+        room.state = 'ANSWER_PHASE'; 
+        room.roundData = {
+          roundNumber: 1,
+          scenario: room.scenarioBatch.shift(), 
+          answers: []
+        };
+        io.to(roomCode).emit('roomData', room);
+      }
     }
   });
 
@@ -139,11 +146,10 @@ io.on('connection', (socket) => {
         
         const baseTime = room.players.length <= 2 ? 35000 : room.players.length * 15000;
         room.roundData.endTime = Date.now() + baseTime;
-        room.roundData.maxTime = Date.now() + 60000; 
         room.roundData.donePlayers = [];
 
         if (roomTimers[roomCode]) clearInterval(roomTimers[roomCode]);
-        roomTimers[roomCode] = setInterval(async () => {
+        roomTimers[roomCode] = setInterval(() => {
           if (Date.now() >= room.roundData.endTime || room.roundData.donePlayers.length === room.players.length) {
             clearInterval(roomTimers[roomCode]);
             
@@ -152,14 +158,11 @@ io.on('connection', (socket) => {
               room.roundData.intermissionEndTime = Date.now() + 7000; 
               io.to(roomCode).emit('roomData', room);
 
-              // Pass the memory bank to the AI for the next round!
-              const nextScenarioPromise = fetchNewScenario(room.usedScenarios);
-
-              roomTimers[roomCode] = setInterval(async () => {
+              roomTimers[roomCode] = setInterval(() => {
                 if (Date.now() >= room.roundData.intermissionEndTime) {
                   clearInterval(roomTimers[roomCode]);
-                  const nextScenario = await nextScenarioPromise;
-                  room.usedScenarios.push(nextScenario); // Add the new one to memory!
+                  
+                  const nextScenario = room.scenarioBatch.length > 0 ? room.scenarioBatch.shift() : getFallbackBatch()[0];
                   
                   room.state = 'ANSWER_PHASE';
                   room.roundData.roundNumber++;
@@ -192,7 +195,8 @@ io.on('connection', (socket) => {
           votes: []
         });
 
-        room.roundData.endTime = Math.min(room.roundData.endTime + 15000, room.roundData.maxTime);
+        // THE TIMER FIX: Always adds 15 seconds, capped at 45 seconds from RIGHT NOW!
+        room.roundData.endTime = Math.min(room.roundData.endTime + 15000, Date.now() + 45000);
         room.roundData.donePlayers = []; 
         
         io.to(roomCode).emit('newReplyAlert');
@@ -240,14 +244,12 @@ io.on('connection', (socket) => {
       room.roundData = null; 
       room.players.forEach(p => p.score = 0); 
       room.isFetching = true;
-      room.prefetchedScenario = null;
-      room.usedScenarios = []; // Wipe the memory bank clean for the new game!
+      room.scenarioBatch = []; 
       io.to(roomCode).emit('roomData', room);
 
-      fetchNewScenario().then(scenario => {
+      fetchScenarioBatch().then(batch => {
         if (rooms[roomCode]) {
-          rooms[roomCode].prefetchedScenario = scenario;
-          rooms[roomCode].usedScenarios.push(scenario);
+          rooms[roomCode].scenarioBatch = batch;
           rooms[roomCode].isFetching = false;
         }
       });
@@ -259,5 +261,5 @@ io.on('connection', (socket) => {
   });
 });
 
-const PORT = process.env.PORT || 3001; // Render will inject its own port here!
+const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => console.log(`🚀 Humour Cup Server running on port ${PORT}`));

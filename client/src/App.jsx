@@ -391,12 +391,16 @@ function App() {
 }
 
 const styles = {
-  appWrapper: { minHeight: '100vh', width: '100vw', display: 'flex', justifyContent: 'center', padding: '20px', position: 'relative' },
+  appWrapper: { minHeight: '100vh', width: '100vw', display: 'flex', justifyContent: 'center', padding: '20px', position: 'relative', backgroundColor: '#FFD700' },
   container: { width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', paddingTop: '40px', paddingBottom: '60px' },
   logo: { fontSize: '48px', color: '#1a1a1a', marginBottom: '30px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '-1px' },
   mainCard: { background: '#ffffff', padding: '30px', borderRadius: '24px', width: '100%', border: '4px solid #1a1a1a', boxShadow: '8px 8px 0px #1a1a1a' },
-  input: { width: '100%', padding: '16px', borderRadius: '12px', border: '3px solid #1a1a1a', fontSize: '18px', marginBottom: '20px', fontWeight: 'bold', outline: 'none' },
-  smallInput: { flex: 1, padding: '16px', borderRadius: '12px', border: '3px solid #1a1a1a', fontSize: '18px', fontWeight: 'bold', outline: 'none', textTransform: 'uppercase', minWidth: 0 },
+  
+  // RESTORED THE DARK GRAY BOXES!
+  input: { backgroundColor: '#333333', color: '#ffffff', width: '100%', padding: '16px', borderRadius: '12px', border: '3px solid #1a1a1a', fontSize: '18px', marginBottom: '20px', fontWeight: 'bold', outline: 'none' },
+  smallInput: { backgroundColor: '#333333', color: '#ffffff', flex: 1, padding: '16px', borderRadius: '12px', border: '3px solid #1a1a1a', fontSize: '18px', fontWeight: 'bold', outline: 'none', textTransform: 'uppercase', minWidth: 0 },
+  textarea: { backgroundColor: '#333333', color: '#ffffff', width: '100%', height: '120px', padding: '15px', borderRadius: '16px', border: '3px solid #1a1a1a', fontSize: '18px', marginBottom: '20px', fontWeight: 'bold', outline: 'none', resize: 'none' },
+  
   primaryBtn: { width: '100%', padding: '18px', borderRadius: '12px', border: '3px solid #1a1a1a', backgroundColor: '#ffffff', color: '#1a1a1a', fontSize: '20px', fontWeight: '900', cursor: 'pointer', boxShadow: '6px 6px 0px #1a1a1a', textTransform: 'uppercase' },
   secondaryBtn: { padding: '15px 20px', borderRadius: '12px', border: '3px solid #1a1a1a', backgroundColor: '#ffffff', color: '#1a1a1a', fontWeight: '900', cursor: 'pointer', boxShadow: '4px 4px 0px #1a1a1a' },
   startBtn: { width: '100%', padding: '20px', borderRadius: '16px', border: '4px solid #1a1a1a', backgroundColor: '#10b981', color: '#ffffff', fontSize: '22px', fontWeight: '900', cursor: 'pointer', boxShadow: '8px 8px 0px #1a1a1a', marginTop: '30px' },
@@ -409,7 +413,6 @@ const styles = {
   playerTag: { padding: '10px 18px', background: '#ffffff', color: '#1a1a1a', borderRadius: '12px', fontWeight: '800', fontSize: '16px', border: '3px solid #1a1a1a', boxShadow: '4px 4px 0px #1a1a1a' },
   scenarioCard: { fontSize: '22px', fontWeight: '900', background: '#ffffff', color: '#1a1a1a', padding: '25px', borderRadius: '24px', marginBottom: '30px', width: '100%', border: '4px solid #1a1a1a', boxShadow: '8px 8px 0px #1a1a1a' },
   form: { width: '100%' },
-  textarea: { width: '100%', height: '120px', padding: '15px', borderRadius: '16px', border: '3px solid #1a1a1a', fontSize: '18px', marginBottom: '20px', fontWeight: 'bold', outline: 'none', resize: 'none' },
   ansList: { width: '100%', display: 'flex', flexDirection: 'column', gap: '20px' },
   ansCard: { background: '#ffffff', padding: '20px', borderRadius: '20px', textAlign: 'left', width: '100%', border: '4px solid #1a1a1a', boxShadow: '6px 6px 0px #1a1a1a' },
   jokeText: { fontSize: '20px', fontWeight: '900', color: '#1a1a1a', margin: '0 0 15px 0', wordWrap: 'break-word' },
