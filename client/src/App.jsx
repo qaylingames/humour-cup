@@ -3,15 +3,16 @@ import { io } from 'socket.io-client';
 
 const socket = io('https://humour-cup-server.onrender.com');
 
-const SFX = {
-  click: 'https://actions.google.com/sounds/v1/ui/button_click.ogg',
-  create: 'https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg',
-  join: 'https://actions.google.com/sounds/v1/cartoon/pop.ogg', 
-  vote: 'https://actions.google.com/sounds/v1/magic/magic_chime.ogg', 
-  win: 'https://actions.google.com/sounds/v1/crowds/crowd_cheer.ogg'
+// --- THE AUDIO CACHE (Pre-loads sounds so mobile doesn't lag!) ---
+const sfxCache = {
+  click: new Audio('https://actions.google.com/sounds/v1/ui/button_click.ogg'),
+  create: new Audio('https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg'),
+  join: new Audio('https://actions.google.com/sounds/v1/cartoon/pop.ogg'), 
+  vote: new Audio('https://actions.google.com/sounds/v1/magic/magic_chime.ogg'), 
+  win: new Audio('https://actions.google.com/sounds/v1/crowds/crowd_cheer.ogg'),
+  alert: new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg')
 };
 
-// The Dynamic Background Music Pool!
 const BGM_TRACKS = [
   'https://ia903204.us.archive.org/16/items/MonkeysSpinningMonkeys/Monkeys%20Spinning%20Monkeys.mp3',
   'https://ia800305.us.archive.org/30/items/SneakySnitch/Sneaky%20Snitch.mp3',
@@ -39,16 +40,18 @@ function App() {
   const prevGameState = useRef('');
   const prevRoundNumber = useRef(1);
 
-  // Hard SFX Player
-  const playSound = (url, vol = 1.0) => {
+  // Instant SFX Player using the Cache!
+  const playSound = (soundName, vol = 1.0) => {
     try {
-      const audio = new Audio(url);
-      audio.volume = vol;
-      audio.play().catch(() => {});
+      const sound = sfxCache[soundName];
+      if (sound) {
+        sound.volume = vol;
+        sound.currentTime = 0; // Rewind to start instantly
+        sound.play().catch(() => {}); // Catch mobile blocks silently
+      }
     } catch(e) {}
   };
 
-  // The Un-Blocker: Fires the second the screen is clicked
   const unlockAudio = () => {
     if (audioRef.current && audioRef.current.paused) {
       audioRef.current.volume = 0.05; 
@@ -67,7 +70,7 @@ function App() {
     socket.on('roomData', (updatedRoom) => {
       // Lobby Join SFX
       if (updatedRoom.state === 'LOBBY' && updatedRoom.players.length > prevPlayersCount.current) {
-        if (prevPlayersCount.current > 0) playSound(SFX.join, 1.0); 
+        if (prevPlayersCount.current > 0) playSound('join', 1.0); 
       }
       prevPlayersCount.current = updatedRoom.players.length;
 
@@ -79,14 +82,14 @@ function App() {
 
       // Winner Celebration
       if (updatedRoom.state === 'RESULTS' && prevGameState.current !== 'RESULTS') {
-        playSound(SFX.win, 1.0);
+        playSound('win', 1.0);
       }
 
       prevGameState.current = updatedRoom.state;
       setRoom(updatedRoom);
     });
 
-    socket.on('newReplyAlert', () => playSound('https://actions.google.com/sounds/v1/alarms/beep_short.ogg', 0.5));
+    socket.on('newReplyAlert', () => playSound('alert', 0.5));
     return () => { socket.off('roomData'); socket.off('newReplyAlert'); };
   }, []);
 
@@ -106,41 +109,40 @@ function App() {
     }
   }, [room]);
 
-  // Major Button Clicks
   const handleCreateRoom = () => { 
-    playSound(SFX.create);
+    playSound('create');
     if (!playerName) alert("Enter a name!"); else socket.emit('createRoom', playerName, () => {}); 
   };
   
   const handleJoinRoom = () => { 
-    playSound(SFX.click);
+    playSound('click');
     if (!playerName || !joinCode) alert("Fill all fields!"); else socket.emit('joinRoom', { roomId: joinCode, playerName }, (res) => !res.success && alert(res.message)); 
   };
   
-  const handleStartGame = () => { playSound(SFX.click); socket.emit('startGame', room.id); };
+  const handleStartGame = () => { playSound('click'); socket.emit('startGame', room.id); };
   
   const handleSubmitAnswer = (e) => {
     e.preventDefault();
-    playSound(SFX.click);
+    playSound('click');
     if (myAnswer) socket.emit('submitAnswer', { roomId: room.id, answerText: myAnswer });
     setMyAnswer('');
   };
 
   const handleSendReply = (answerId) => {
-    playSound(SFX.click);
+    playSound('click');
     if (replyText) socket.emit('submitChatReply', { roomId: room.id, answerId: answerId, text: replyText });
     setReplyText('');
     setReplyingToAnsId(null);
   };
 
   const handleVote = (itemId) => { 
-    playSound(SFX.vote, 1.0); 
+    playSound('vote', 1.0); 
     socket.emit('submitChatVote', { roomId: room.id, itemId: itemId }); 
   };
   
-  const handleDone = () => { playSound(SFX.click); socket.emit('toggleDone', { roomId: room.id }); };
-  const handleInitReply = (ansId, prefix = "") => { playSound(SFX.click); setReplyingToAnsId(ansId); setReplyText(prefix); };
-  const handlePlayAgain = () => { playSound(SFX.click); socket.emit('playAgain', { roomId: room.id }); };
+  const handleDone = () => { playSound('click'); socket.emit('toggleDone', { roomId: room.id }); };
+  const handleInitReply = (ansId, prefix = "") => { playSound('click'); setReplyingToAnsId(ansId); setReplyText(prefix); };
+  const handlePlayAgain = () => { playSound('click'); socket.emit('playAgain', { roomId: room.id }); };
 
   const isHost = room?.players[0]?.id === socket.id;
 
@@ -152,8 +154,6 @@ function App() {
         .btn-3d:active:not(:disabled) { transform: translateY(6px); box-shadow: 0px 0px 0px #1a1a1a !important; }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
         .animate-bounce { animation: bounce 1.5s infinite ease-in-out; }
-        
-        /* The Smooth Loading Bar CSS */
         .loading-container { width: 100%; height: 30px; background: #fff; border: 4px solid #1a1a1a; border-radius: 15px; overflow: hidden; position: relative; box-shadow: 4px 4px 0px #1a1a1a; margin-top: 20px;}
         .loading-fill { height: 100%; background: #10b981; width: 0%; animation: loadBar 1.5s ease-in-out forwards; }
         @keyframes loadBar { 0% { width: 0%; } 100% { width: 100%; } }
@@ -206,7 +206,7 @@ function App() {
         </div>
       )}
 
-      {/* --- VIEW: LAUNCHING (The Guaranteed Loading Screen) --- */}
+      {/* --- VIEW: LAUNCHING --- */}
       {room?.state === 'LAUNCHING' && (
         <div style={styles.container}>
           <h1 className="animate-bounce" style={{fontSize:'80px', margin:'0 0 20px 0'}}>🚀</h1>
@@ -294,7 +294,7 @@ function App() {
                         <input value={replyText} onChange={(e) => setReplyText(e.target.value)} placeholder="Reply with a humorous punch..." style={styles.input} autoFocus />
                         <div style={{display:'flex', gap:'10px'}}>
                            <button onClick={() => handleSendReply(ans.id)} className="btn-3d" style={styles.actionBtn}>Send</button>
-                           <button onClick={() => { playSound(SFX.click); setReplyingToAnsId(null); }} className="btn-3d" style={styles.cancelBtn}>Cancel</button>
+                           <button onClick={() => { playSound('click'); setReplyingToAnsId(null); }} className="btn-3d" style={styles.cancelBtn}>Cancel</button>
                         </div>
                       </div>
                     )}
@@ -312,7 +312,7 @@ function App() {
         );
       })()}
 
-      {/* --- VIEW: INTERMISSION & THE SMART LOADING BAR --- */}
+      {/* --- VIEW: INTERMISSION --- */}
       {room?.state === 'INTERMISSION' && (() => {
         const sortedPlayers = [...room.players].sort((a,b) => b.score - a.score);
         const nextRound = (room.roundData?.roundNumber || 1) + 1;
@@ -345,7 +345,7 @@ function App() {
         );
       })()}
 
-      {/* --- VIEW: RESULTS (End of Game) --- */}
+      {/* --- VIEW: RESULTS --- */}
       {room?.state === 'RESULTS' && (() => {
         const sortedPlayers = [...room.players].sort((a,b) => b.score - a.score);
         const highestScore = sortedPlayers[0].score;
@@ -390,40 +390,39 @@ function App() {
   );
 }
 
-// --- MASTER STYLES ---
 const styles = {
-  appWrapper: { backgroundColor: '#FFC200', color: '#1a1a1a', minHeight: '100vh', width: '100vw', display: 'flex', justifyContent: 'center', padding: '20px', boxSizing: 'border-box', position: 'absolute', top: 0, left: 0, overflowX: 'hidden' },
-  container: { width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', paddingTop: '40px' },
+  appWrapper: { minHeight: '100vh', width: '100vw', display: 'flex', justifyContent: 'center', padding: '20px', position: 'relative' },
+  container: { width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', paddingTop: '40px', paddingBottom: '60px' },
   logo: { fontSize: '48px', color: '#1a1a1a', marginBottom: '30px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '-1px' },
-  mainCard: { background: '#ffffff', padding: '40px', borderRadius: '24px', width: '100%', boxSizing: 'border-box', border: '4px solid #1a1a1a', boxShadow: '8px 8px 0px #1a1a1a' },
-  input: { width: '100%', padding: '16px', borderRadius: '12px', border: '3px solid #1a1a1a', fontSize: '18px', marginBottom: '20px', boxSizing: 'border-box', fontWeight: 'bold', outline: 'none' },
-  smallInput: { flex: 1, padding: '16px', borderRadius: '12px', border: '3px solid #1a1a1a', fontSize: '18px', boxSizing: 'border-box', fontWeight: 'bold', outline: 'none', textTransform: 'uppercase' },
+  mainCard: { background: '#ffffff', padding: '30px', borderRadius: '24px', width: '100%', border: '4px solid #1a1a1a', boxShadow: '8px 8px 0px #1a1a1a' },
+  input: { width: '100%', padding: '16px', borderRadius: '12px', border: '3px solid #1a1a1a', fontSize: '18px', marginBottom: '20px', fontWeight: 'bold', outline: 'none' },
+  smallInput: { flex: 1, padding: '16px', borderRadius: '12px', border: '3px solid #1a1a1a', fontSize: '18px', fontWeight: 'bold', outline: 'none', textTransform: 'uppercase', minWidth: 0 },
   primaryBtn: { width: '100%', padding: '18px', borderRadius: '12px', border: '3px solid #1a1a1a', backgroundColor: '#ffffff', color: '#1a1a1a', fontSize: '20px', fontWeight: '900', cursor: 'pointer', boxShadow: '6px 6px 0px #1a1a1a', textTransform: 'uppercase' },
-  secondaryBtn: { padding: '15px 30px', borderRadius: '12px', border: '3px solid #1a1a1a', backgroundColor: '#ffffff', color: '#1a1a1a', fontWeight: '900', cursor: 'pointer', boxShadow: '4px 4px 0px #1a1a1a' },
-  startBtn: { padding: '20px 40px', borderRadius: '16px', border: '4px solid #1a1a1a', backgroundColor: '#10b981', color: '#ffffff', fontSize: '22px', fontWeight: '900', cursor: 'pointer', boxShadow: '8px 8px 0px #1a1a1a', marginTop: '30px' },
-  doneBtnActive: { width: '100%', padding: '18px', borderRadius: '12px', border: '3px solid #1a1a1a', backgroundColor: '#ccc', color: '#1a1a1a', fontSize: '18px', fontWeight: '900', boxShadow: 'none', cursor: 'not-allowed' },
+  secondaryBtn: { padding: '15px 20px', borderRadius: '12px', border: '3px solid #1a1a1a', backgroundColor: '#ffffff', color: '#1a1a1a', fontWeight: '900', cursor: 'pointer', boxShadow: '4px 4px 0px #1a1a1a' },
+  startBtn: { width: '100%', padding: '20px', borderRadius: '16px', border: '4px solid #1a1a1a', backgroundColor: '#10b981', color: '#ffffff', fontSize: '22px', fontWeight: '900', cursor: 'pointer', boxShadow: '8px 8px 0px #1a1a1a', marginTop: '30px' },
+  doneBtnActive: { width: '100%', padding: '18px', borderRadius: '12px', border: '3px solid #1a1a1a', backgroundColor: '#ccc', color: '#1a1a1a', fontSize: '18px', fontWeight: '900', cursor: 'not-allowed' },
   divider: { margin: '25px 0', color: '#1a1a1a', fontSize: '14px', fontWeight: '900', letterSpacing: '2px' },
   roomBadge: { backgroundColor: '#ffffff', color: '#1a1a1a', padding: '10px 24px', borderRadius: '12px', fontSize: '16px', fontWeight: '900', border: '3px solid #1a1a1a', boxShadow: '4px 4px 0px #1a1a1a', marginBottom: '30px' },
-  warmupText: { color: '#1a1a1a', fontWeight: '900', marginTop: '40px', fontSize: '20px', textTransform: 'uppercase' },
+  warmupText: { color: '#1a1a1a', fontWeight: '900', marginTop: '40px', fontSize: '18px', textTransform: 'uppercase' },
   timerBadge: { backgroundColor: '#ef4444', color: '#fff', padding: '10px 20px', borderRadius: '50px', fontSize: '24px', fontWeight: '900', border: '4px solid #1a1a1a', boxShadow: '4px 4px 0px #1a1a1a', marginBottom: '20px' },
-  playerGrid: { display: 'flex', gap: '15px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '20px', width: '100%' },
-  playerTag: { padding: '12px 24px', background: '#ffffff', color: '#1a1a1a', borderRadius: '12px', fontWeight: '800', fontSize: '18px', border: '3px solid #1a1a1a', boxShadow: '4px 4px 0px #1a1a1a' },
-  scenarioCard: { fontSize: '26px', fontWeight: '900', background: '#ffffff', color: '#1a1a1a', padding: '35px', borderRadius: '24px', marginBottom: '30px', width: '100%', boxSizing: 'border-box', border: '4px solid #1a1a1a', boxShadow: '8px 8px 0px #1a1a1a' },
+  playerGrid: { display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '20px', width: '100%' },
+  playerTag: { padding: '10px 18px', background: '#ffffff', color: '#1a1a1a', borderRadius: '12px', fontWeight: '800', fontSize: '16px', border: '3px solid #1a1a1a', boxShadow: '4px 4px 0px #1a1a1a' },
+  scenarioCard: { fontSize: '22px', fontWeight: '900', background: '#ffffff', color: '#1a1a1a', padding: '25px', borderRadius: '24px', marginBottom: '30px', width: '100%', border: '4px solid #1a1a1a', boxShadow: '8px 8px 0px #1a1a1a' },
   form: { width: '100%' },
-  textarea: { width: '100%', height: '140px', padding: '20px', borderRadius: '16px', border: '3px solid #1a1a1a', fontSize: '20px', marginBottom: '20px', boxSizing: 'border-box', fontWeight: 'bold', outline: 'none', resize: 'none' },
-  ansList: { width: '100%', display: 'flex', flexDirection: 'column', gap: '25px' },
-  ansCard: { background: '#ffffff', padding: '25px', borderRadius: '20px', textAlign: 'left', width: '100%', boxSizing: 'border-box', border: '4px solid #1a1a1a', boxShadow: '6px 6px 0px #1a1a1a' },
-  jokeText: { fontSize: '24px', fontWeight: '900', color: '#1a1a1a', margin: '0 0 15px 0' },
-  replyBubble: { background: '#fef3c7', padding: '15px', borderRadius: '12px', marginTop: '15px', fontSize: '18px', color: '#1a1a1a', border: '3px solid #1a1a1a', marginLeft: '20px' },
-  yellowDot: { display: 'inline-block', width: '12px', height: '12px', backgroundColor: '#ef4444', borderRadius: '50%', border: '2px solid #1a1a1a', marginRight: '8px', verticalAlign: 'middle' },
+  textarea: { width: '100%', height: '120px', padding: '15px', borderRadius: '16px', border: '3px solid #1a1a1a', fontSize: '18px', marginBottom: '20px', fontWeight: 'bold', outline: 'none', resize: 'none' },
+  ansList: { width: '100%', display: 'flex', flexDirection: 'column', gap: '20px' },
+  ansCard: { background: '#ffffff', padding: '20px', borderRadius: '20px', textAlign: 'left', width: '100%', border: '4px solid #1a1a1a', boxShadow: '6px 6px 0px #1a1a1a' },
+  jokeText: { fontSize: '20px', fontWeight: '900', color: '#1a1a1a', margin: '0 0 15px 0', wordWrap: 'break-word' },
+  replyBubble: { background: '#fef3c7', padding: '15px', borderRadius: '12px', marginTop: '15px', fontSize: '16px', color: '#1a1a1a', border: '3px solid #1a1a1a', marginLeft: '10px' },
+  yellowDot: { display: 'inline-block', width: '10px', height: '10px', backgroundColor: '#ef4444', borderRadius: '50%', border: '2px solid #1a1a1a', marginRight: '8px', verticalAlign: 'middle' },
   voteCountBadge: { background: '#1a1a1a', color: '#fbbf24', padding: '8px 12px', borderRadius: '8px', fontWeight: '900', fontSize: '14px' },
-  replyBtn: { background: '#ffffff', border: '3px solid #1a1a1a', padding: '8px 15px', borderRadius: '8px', cursor: 'pointer', fontWeight: '900', color: '#1a1a1a', boxShadow: '4px 4px 0px #1a1a1a', fontSize: '14px' },
-  voteBtn: { background: '#10b981', color: '#ffffff', border: '3px solid #1a1a1a', padding: '8px 15px', borderRadius: '8px', cursor: 'pointer', fontWeight: '900', fontSize: '14px', boxShadow: '4px 4px 0px #1a1a1a' },
-  winnerCard: { background: '#ffffff', padding: '40px', borderRadius: '24px', width: '100%', margin: '0 0 30px 0', boxSizing: 'border-box', border: '4px solid #1a1a1a', boxShadow: '12px 12px 0px #1a1a1a' },
-  phaseTitle: { fontSize: '32px', color: '#1a1a1a', marginBottom: '30px', fontWeight: '900', textTransform: 'uppercase' },
-  loadingText: { color: '#1a1a1a', marginTop: '30px', fontWeight: '800', fontSize: '20px' },
-  actionBtn: { flex: 2, background: '#3b82f6', color: '#fff', border: '3px solid #1a1a1a', padding: '12px', borderRadius: '12px', fontWeight: '900', cursor: 'pointer', boxShadow: '4px 4px 0px #1a1a1a', fontSize: '16px' },
-  cancelBtn: { flex: 1, background: '#ffffff', color: '#1a1a1a', border: '3px solid #1a1a1a', padding: '12px', borderRadius: '12px', fontWeight: '900', cursor: 'pointer', boxShadow: '4px 4px 0px #1a1a1a', fontSize: '16px' }
+  replyBtn: { background: '#ffffff', border: '3px solid #1a1a1a', padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', fontWeight: '900', color: '#1a1a1a', boxShadow: '4px 4px 0px #1a1a1a', fontSize: '14px' },
+  voteBtn: { background: '#10b981', color: '#ffffff', border: '3px solid #1a1a1a', padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', fontWeight: '900', fontSize: '14px', boxShadow: '4px 4px 0px #1a1a1a' },
+  winnerCard: { background: '#ffffff', padding: '30px', borderRadius: '24px', width: '100%', margin: '0 0 30px 0', border: '4px solid #1a1a1a', boxShadow: '12px 12px 0px #1a1a1a' },
+  phaseTitle: { fontSize: '28px', color: '#1a1a1a', marginBottom: '25px', fontWeight: '900', textTransform: 'uppercase' },
+  loadingText: { color: '#1a1a1a', marginTop: '20px', fontWeight: '800', fontSize: '18px' },
+  actionBtn: { flex: 2, background: '#3b82f6', color: '#fff', border: '3px solid #1a1a1a', padding: '12px', borderRadius: '12px', fontWeight: '900', cursor: 'pointer', boxShadow: '4px 4px 0px #1a1a1a', fontSize: '14px' },
+  cancelBtn: { flex: 1, background: '#ffffff', color: '#1a1a1a', border: '3px solid #1a1a1a', padding: '12px', borderRadius: '12px', fontWeight: '900', cursor: 'pointer', boxShadow: '4px 4px 0px #1a1a1a', fontSize: '14px' }
 };
 
 export default App;
