@@ -391,12 +391,11 @@ function App() {
 }
 
 const styles = {
-  appWrapper: { minHeight: '100vh', width: '100vw', display: 'flex', justifyContent: 'center', padding: '20px', position: 'relative', backgroundColor: '#FFD700' },
+  appWrapper: { minHeight: '100vh', width: '100vw', display: 'flex', justifyContent: 'center', padding: '20px', position: 'relative', backgroundColor: '#FFC200' }, // Reverted!
   container: { width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', paddingTop: '40px', paddingBottom: '60px' },
   logo: { fontSize: '48px', color: '#1a1a1a', marginBottom: '30px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '-1px' },
   mainCard: { background: '#ffffff', padding: '30px', borderRadius: '24px', width: '100%', border: '4px solid #1a1a1a', boxShadow: '8px 8px 0px #1a1a1a' },
   
-  // RESTORED THE DARK GRAY BOXES!
   input: { backgroundColor: '#333333', color: '#ffffff', width: '100%', padding: '16px', borderRadius: '12px', border: '3px solid #1a1a1a', fontSize: '18px', marginBottom: '20px', fontWeight: 'bold', outline: 'none' },
   smallInput: { backgroundColor: '#333333', color: '#ffffff', flex: 1, padding: '16px', borderRadius: '12px', border: '3px solid #1a1a1a', fontSize: '18px', fontWeight: 'bold', outline: 'none', textTransform: 'uppercase', minWidth: 0 },
   textarea: { backgroundColor: '#333333', color: '#ffffff', width: '100%', height: '120px', padding: '15px', borderRadius: '16px', border: '3px solid #1a1a1a', fontSize: '18px', marginBottom: '20px', fontWeight: 'bold', outline: 'none', resize: 'none' },

@@ -9,6 +9,6 @@ html, body {
   width: 100vw;
   height: 100vh;
   overflow-x: hidden;
-  background-color: #FFD700; /* Pure Gold/Yellow */
-  overscroll-behavior-y: none; 
+  background-color: #FFC200;
+  overscroll-behavior-y: none; /* Stops the bouncy scrolling on mobile! */
 }
