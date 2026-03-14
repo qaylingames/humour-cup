@@ -161,7 +161,7 @@ function App() {
 
       <audio ref={audioRef} src={BGM_TRACKS[bgmIndex]} loop />
 
-      {/* --- VIEW: HOME --- */}
+{/* --- VIEW: HOME --- */}
       {!room && (
         <div style={styles.container}>
           <h1 style={styles.logo}>🏆 Humour Cup</h1>
@@ -174,6 +174,16 @@ function App() {
               <button onClick={handleJoinRoom} className="btn-3d" style={styles.secondaryBtn}>Join</button>
             </div>
           </div>
+
+          {/* NEW HOW TO PLAY SECTION */}
+          <div style={styles.howToPlayBox}>
+            <h3 style={styles.howToPlayTitle}>How to play:</h3>
+            <p style={styles.howToPlayText}>♦ Write your humorous response on each scenario for others to vote on.</p>
+            <p style={styles.howToPlayText}>♦ Reply with your humour punches in the chat round after each scenario.</p>
+            <p style={styles.howToPlayText}>♦ Vote the ones you think humorous.</p>
+            <p style={styles.howToPlayText}>♦ The player with the maximum Humour XP gets the Humour Cup.</p>
+          </div>
+
         </div>
       )}
 
@@ -392,6 +402,9 @@ function App() {
 
 const styles = {
   appWrapper: { minHeight: '100vh', width: '100vw', display: 'flex', justifyContent: 'center', padding: '20px', position: 'relative', backgroundColor: '#FFC200' }, // Reverted!
+  howToPlayBox: { marginTop: '30px', padding: '20px', textAlign: 'left', width: '100%', border: '3px dashed #1a1a1a', borderRadius: '16px', backgroundColor: 'rgba(255, 255, 255, 0.3)' },
+  howToPlayTitle: { fontFamily: '"Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive', fontSize: '18px', fontWeight: '900', color: '#1a1a1a', marginBottom: '12px', textTransform: 'uppercase', textAlign: 'center' },
+  howToPlayText: { fontFamily: '"Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive', fontSize: '14px', color: '#1a1a1a', marginBottom: '8px', fontWeight: 'bold', lineHeight: '1.4' },
   container: { width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', paddingTop: '40px', paddingBottom: '60px' },
   logo: { fontSize: '48px', color: '#1a1a1a', marginBottom: '30px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '-1px' },
   mainCard: { background: '#ffffff', padding: '30px', borderRadius: '24px', width: '100%', border: '4px solid #1a1a1a', boxShadow: '8px 8px 0px #1a1a1a' },

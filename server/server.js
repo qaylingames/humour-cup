@@ -16,18 +16,18 @@ const io = new Server(server, {
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 const FALLBACK_VAULT = [
+  "You just realized you left the stove on, but you are currently at your own wedding. What is your next move?",
+  "Cop: 'Do you know why I pulled you over?'\nYou: ...",
+  "What is the absolute worst text message to receive from your boss at 2 AM on a Sunday?",
+  "Roommate 1: 'Did you eat my leftovers?'\nRoommate 2: 'No, but I did...'",
   "My browser history was leaked, and the hardest thing to explain is...",
-  "I was fired from the morgue today because I accidentally...",
-  "The worst possible thing to say right after a kiss is...",
-  "My dog finally learned to talk, and his first words to me were...",
-  "I got kicked out of the family group chat because I...",
-  "The real reason aliens lock their doors when flying past Earth is...",
-  "The doctor looked at my X-ray, sighed, and said...",
-  "I knew the blind date was over when they pulled out a...",
-  "The secret ingredient in my grandma's famous stew is...",
-  "The worst thing to accidentally text your boss is...",
-  "I won the lottery, but I spent it all in one day on...",
-  "My superpower is useless. Every time I sneeze, I..."
+  "What is a completely unacceptable thing to casually bring to a potluck?",
+  "You are stuck in an elevator for 10 hours with a mime. What is your opening line?",
+  "If my bank account could speak, right now it would aggressively yell...",
+  "Date: 'I only date people who are highly cultured.'\nYou: 'Oh yeah? Well I...'",
+  "What is the worst possible name for a brand new retirement home?",
+  "Your dog suddenly speaks perfect English, looks you dead in the eye, and says...",
+  "I knew the job interview was over when the CEO pulled out a ______."
 ];
 
 function getFallbackBatch() {
@@ -39,13 +39,20 @@ async function fetchScenarioBatch() {
   try {
     const model = genAI.getGenerativeModel({ 
       model: "gemini-2.5-flash",
-      generationConfig: { temperature: 1.4 } 
+      generationConfig: { temperature: 1.5 } // High temperature for maximum creativity!
     });
 
-    const prompt = `Generate exactly 5 completely different, highly creative, short, funny, slightly edgy, open-ended fill-in-the-blank scenarios for an adult party game. 
+    const prompt = `Generate exactly 5 completely different, highly creative, short, and funny prompts for an adult party game. 
+    CRITICAL RULE: Mix up the formats! Do NOT just use fill-in-the-blanks. Include a random, unpredictable variety of:
+    1. Absurd hypothetical questions (e.g., "What would you do if you left the stove on and you're 2 hours away?")
+    2. Funny dialogues to complete (e.g., "John: My work life sucks! \\nDaisy: ____")
+    3. Daily life awkward situations to comment on.
+    4. Weird text messages or emails to reply to.
+    5. A classic fill-in-the-blank (if you use a blank, use a line like ______ never the word [BLANK]).
+    
+    Make them casual, unexpected, sometimes formal but completely unhinged, and open-ended so players can write hilarious answers.
     (Anti-Cache Seed: ${Date.now()})
-    Return ONLY a valid JSON array of strings. Do not include markdown formatting or the word "json".
-    Example: ["scenario 1...", "scenario 2...", "scenario 3...", "scenario 4...", "scenario 5..."]`;
+    Return ONLY a valid JSON array of 5 strings. Do not include markdown formatting or the word "json".`;
 
     const result = await model.generateContent(prompt);
     let text = result.response.text().trim();
