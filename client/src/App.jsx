@@ -175,17 +175,22 @@ function App() {
             </div>
           </div>
 
-          {/* NEW HOW TO PLAY SECTION */}
+          {/* NEW ELITE HOW TO PLAY SECTION */}
           <div style={styles.howToPlayBox}>
-            <h3 style={styles.howToPlayTitle}>How to play:</h3>
-            <p style={styles.howToPlayText}>♦ Write your humorous response on each scenario for others to vote on.</p>
-            <p style={styles.howToPlayText}>♦ Reply with your humour punches in the chat round after each scenario.</p>
-            <p style={styles.howToPlayText}>♦ Vote the ones you think humorous.</p>
-            <p style={styles.howToPlayText}>♦ The player with the maximum Humour XP gets the Humour Cup.</p>
+            <div style={styles.howToPlayHeader}>
+              👑 Official Rulebook 👑
+            </div>
+            <div style={styles.howToPlayContent}>
+              <p style={styles.howToPlayText}><span style={styles.bullet}>♦</span> Write your humorous response on each scenario.</p>
+              <p style={styles.howToPlayText}><span style={styles.bullet}>♦</span> Reply with your humour punches in the chat round after each scenario.</p>
+              <p style={styles.howToPlayText}><span style={styles.bullet}>♦</span> Vote the ones you find humorous.</p>
+              <p style={styles.howToPlayText}><span style={styles.bullet}>♦</span> The player with the maximum Humour XP gets the Humour Cup.</p>
+            </div>
           </div>
-
         </div>
       )}
+
+      {/* --- VIEW: LOBBY --- */}
 
       {/* --- VIEW: LOBBY --- */}
       {room?.state === 'LOBBY' && (
@@ -402,9 +407,13 @@ function App() {
 
 const styles = {
   appWrapper: { minHeight: '100vh', width: '100vw', display: 'flex', justifyContent: 'center', padding: '20px', position: 'relative', backgroundColor: '#FFC200' }, // Reverted!
-  howToPlayBox: { marginTop: '30px', padding: '20px', textAlign: 'left', width: '100%', border: '3px dashed #1a1a1a', borderRadius: '16px', backgroundColor: 'rgba(255, 255, 255, 0.3)' },
-  howToPlayTitle: { fontFamily: '"Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive', fontSize: '18px', fontWeight: '900', color: '#1a1a1a', marginBottom: '12px', textTransform: 'uppercase', textAlign: 'center' },
-  howToPlayText: { fontFamily: '"Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive', fontSize: '14px', color: '#1a1a1a', marginBottom: '8px', fontWeight: 'bold', lineHeight: '1.4' },
+  
+  howToPlayBox: { marginTop: '40px', width: '100%', backgroundColor: '#ffffff', border: '4px solid #1a1a1a', borderRadius: '16px', boxShadow: '6px 6px 0px #1a1a1a', overflow: 'hidden', transform: 'rotate(-1.5deg)' },
+  howToPlayHeader: { backgroundColor: '#1a1a1a', color: '#FFC200', padding: '12px', fontSize: '16px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '2px', textAlign: 'center' },
+  howToPlayContent: { padding: '20px', textAlign: 'left' },
+  howToPlayText: { fontSize: '14px', color: '#1a1a1a', marginBottom: '12px', fontWeight: '800', lineHeight: '1.5', display: 'flex', alignItems: 'flex-start', gap: '8px' },
+  
+  bullet: { color: '#10b981', fontSize: '16px' }, // Emerald green diamond for that premium pop!
   container: { width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', paddingTop: '40px', paddingBottom: '60px' },
   logo: { fontSize: '48px', color: '#1a1a1a', marginBottom: '30px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '-1px' },
   mainCard: { background: '#ffffff', padding: '30px', borderRadius: '24px', width: '100%', border: '4px solid #1a1a1a', boxShadow: '8px 8px 0px #1a1a1a' },
