@@ -164,7 +164,8 @@ function App() {
 {/* --- VIEW: HOME --- */}
       {!room && (
         <div style={styles.container}>
-          <h1 style={styles.logo}>🏆 Humour Cup</h1>
+          {/* We swapped the text for your new custom logo! */}
+          <img src="/logo.png" alt="Humour Cup Logo" style={styles.mainLogo} />
           <div style={styles.mainCard}>
             <input placeholder="Your Funny Name" value={playerName} onChange={(e) => setPlayerName(e.target.value)} style={styles.input} />
             <button onClick={handleCreateRoom} className="btn-3d" style={styles.primaryBtn}>Create Game</button>
@@ -189,8 +190,6 @@ function App() {
           </div>
         </div>
       )}
-
-      {/* --- VIEW: LOBBY --- */}
 
       {/* --- VIEW: LOBBY --- */}
       {room?.state === 'LOBBY' && (
@@ -369,8 +368,8 @@ function App() {
 
         return (
           <div style={styles.container}>
-            <h1 className="animate-bounce" style={{fontSize:'100px', margin:'0 0 20px 0'}}>🏆</h1>
-            <h2 style={styles.phaseTitle}>Humour Cup</h2>
+            {/* The brand logo bounces for the winner! */}
+            <img src="/logo.png" alt="Humour Cup Logo" className="animate-bounce" style={{...styles.mainLogo, width: '250px'}} />
             <h3 style={{color: '#1a1a1a', textTransform: 'uppercase', fontWeight: '900', marginTop: '10px', marginBottom: '10px', fontSize: '24px'}}>
               {isTie ? 'Winners' : 'Winner'}
             </h3>
@@ -415,8 +414,8 @@ const styles = {
   
   bullet: { color: '#10b981', fontSize: '16px' }, // Emerald green diamond for that premium pop!
   container: { width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', paddingTop: '40px', paddingBottom: '60px' },
-  logo: { fontSize: '48px', color: '#1a1a1a', marginBottom: '30px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '-1px' },
-  mainCard: { background: '#ffffff', padding: '30px', borderRadius: '24px', width: '100%', border: '4px solid #1a1a1a', boxShadow: '8px 8px 0px #1a1a1a' },
+
+  mainLogo: { width: '85%', maxWidth: '320px', marginBottom: '25px', filter: 'drop-shadow(6px 6px 0px rgba(26, 26, 26, 0.4))' },  mainCard: { background: '#ffffff', padding: '30px', borderRadius: '24px', width: '100%', border: '4px solid #1a1a1a', boxShadow: '8px 8px 0px #1a1a1a' },
   
   input: { backgroundColor: '#333333', color: '#ffffff', width: '100%', padding: '16px', borderRadius: '12px', border: '3px solid #1a1a1a', fontSize: '18px', marginBottom: '20px', fontWeight: 'bold', outline: 'none' },
   smallInput: { backgroundColor: '#333333', color: '#ffffff', flex: 1, padding: '16px', borderRadius: '12px', border: '3px solid #1a1a1a', fontSize: '18px', fontWeight: 'bold', outline: 'none', textTransform: 'uppercase', minWidth: 0 },
