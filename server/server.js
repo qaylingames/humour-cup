@@ -25,9 +25,7 @@ const FALLBACK_VAULT = [
   "You are stuck in an elevator for 10 hours with a mime. What is your opening line?"
 ];
 
-// The live database of public community scenarios!
 const COMMUNITY_VAULT = [
-  // A few starter examples so it's not empty!
   { text: "The worst thing to hear the pilot say over the intercom is...", language: "English", category: "All Ages" },
   { text: "My superpower is useless. Every time I sneeze, I...", language: "English", category: "All Ages" },
   { text: "I knew the blind date was a disaster when they pulled out a...", language: "English", category: "18+" }
@@ -40,37 +38,34 @@ function getFallbackBatch() {
 
 async function fetchScenarioBatch(category) {
   try {
-    const model = genAI.getGenerativeModel({ 
-      model: "gemini-2.5-flash",
-      generationConfig: { temperature: 1.5 } 
-    });
+    const fetchPromise = (async () => {
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash", generationConfig: { temperature: 1.5 } });
+      const categoryRule = category === '18+' 
+        ? "CRITICAL: Make them edgy, adult-oriented, 18+ party game style."
+        : "CRITICAL: Must be completely family-friendly, clean, and appropriate for all ages. No 18+ content.";
 
-    const categoryRule = category === '18+' 
-      ? "CRITICAL: Make them edgy, adult-oriented, 18+ party game style."
-      : "CRITICAL: Must be completely family-friendly, clean, and appropriate for all ages. No 18+ content.";
+      const prompt = `Generate exactly 5 completely different, highly creative, short, and funny prompts for a party game. 
+      ${categoryRule}
+      Mix up the formats! Include a random variety of: 1. Absurd hypothetical questions. 2. Funny dialogues. 3. Daily life awkward situations. 4. Weird text messages.
+      (Anti-Cache Seed: ${Date.now()})
+      Return ONLY a valid JSON array of 5 strings. Do not include markdown formatting or the word "json".`;
 
-    const prompt = `Generate exactly 5 completely different, highly creative, short, and funny prompts for a party game. 
-    ${categoryRule}
-    Mix up the formats! Do NOT just use fill-in-the-blanks. Include a random variety of:
-    1. Absurd hypothetical questions.
-    2. Funny dialogues to complete (e.g., "John: ... \\nDaisy: ____")
-    3. Daily life awkward situations to comment on.
-    4. Weird text messages or emails to reply to.
-    
-    (Anti-Cache Seed: ${Date.now()})
-    Return ONLY a valid JSON array of 5 strings. Do not include markdown formatting or the word "json".`;
+      const result = await model.generateContent(prompt);
+      let text = result.response.text().trim();
+      const jsonMatch = text.match(/\[[\s\S]*\]/);
+      if (!jsonMatch) throw new Error("AI did not return a valid JSON array");
+      
+      const scenarios = JSON.parse(jsonMatch[0]);
+      if (Array.isArray(scenarios) && scenarios.length >= 3) return scenarios;
+      throw new Error("Invalid array length");
+    })();
 
-    const result = await model.generateContent(prompt);
-    let text = result.response.text().trim();
+    // THE AI SPEED LIMIT FIX: Give Gemini exactly 6 seconds. If it fails, instantly use the Vault!
+    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("AI taking too long!")), 6000));
     
-    const jsonMatch = text.match(/\[[\s\S]*\]/);
-    if (!jsonMatch) throw new Error("AI did not return a valid JSON array");
-    
-    const scenarios = JSON.parse(jsonMatch[0]);
-    if (Array.isArray(scenarios) && scenarios.length >= 3) return scenarios;
-    throw new Error("Invalid array length");
+    return await Promise.race([fetchPromise, timeoutPromise]);
   } catch (e) {
-    console.log("🚨 AI Error! Pulling from The Vault...", e.message);
+    console.log("🚨 AI Error or Timeout! Instantly pulling from The Vault...", e.message);
     return getFallbackBatch();
   }
 }
@@ -78,41 +73,37 @@ async function fetchScenarioBatch(category) {
 const rooms = {};
 const roomTimers = {}; 
 
+// Helper function to safely send room data without revealing secret scenarios
+function emitSafeRoomData(roomId) {
+  if (!rooms[roomId]) return;
+  const safeRoom = { ...rooms[roomId] };
+  delete safeRoom.secretCustomScenarios; // Hide the secrets!
+  io.to(roomId).emit('roomData', safeRoom);
+}
+
 io.on('connection', (socket) => {
   console.log(`🟢 Player Connected: ${socket.id}`);
 
-  // Fetch all public scenarios for the home screen library
-  socket.on('getPublicVault', (callback) => {
-    callback(COMMUNITY_VAULT);
-  });
+  socket.on('getPublicVault', (callback) => callback(COMMUNITY_VAULT));
 
-  // Moderation for public submissions
   socket.on('submitPublicScenario', async (data, callback) => {
     try {
       const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
       const prompt = `You are the strict but fair moderator for a party game called Humour Cup.
       A player submitted a custom scenario: "${data.text}"
-      Target Language: ${data.language}
-      Category: ${data.category}
-
-      Assess if this scenario is good for the game.
-      Criteria: 1. Makes sense and uses relatively simple words. 2. Has correct spelling/grammar. 3. Can be humorously responded to. 4. Fits the selected language and category.
+      Target Language: ${data.language} | Category: ${data.category}
+      Assess criteria: 1. Makes sense. 2. Correct spelling. 3. Humorous potential. 4. Fits category.
       Return ONLY a JSON object: {"accepted": boolean, "correctedText": "fixed text", "reason": "1-sentence explanation"}`;
 
       const result = await model.generateContent(prompt);
-      let text = result.response.text().trim();
-      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      const jsonMatch = result.response.text().trim().match(/\{[\s\S]*\}/);
       if (!jsonMatch) throw new Error("AI JSON Error");
       
       const assessment = JSON.parse(jsonMatch[0]);
-
-      if (assessment.accepted) {
-        COMMUNITY_VAULT.push({ text: assessment.correctedText, language: data.language, category: data.category });
-      }
+      if (assessment.accepted) COMMUNITY_VAULT.push({ text: assessment.correctedText, language: data.language, category: data.category });
       callback({ success: true, data: assessment });
     } catch (error) {
-      console.error("Moderation Error:", error);
-      callback({ success: false, message: "AI Moderator is overwhelmed! Try again later." });
+      callback({ success: false, message: "AI Moderator is busy! Try again." });
     }
   });
 
@@ -125,11 +116,12 @@ io.on('connection', (socket) => {
       roundData: null,
       scenarioBatch: [], 
       settings: { category: 'All Ages', source: 'AI', language: 'English' },
-      customScenarios: ['', '', ''] // 3 empty slots for Custom Mode
+      secretCustomScenarios: [], // The secret pool!
+      customCount: 0
     };
     socket.join(roomId);
     callback({ success: true, roomId: roomId });
-    io.to(roomId).emit('roomData', rooms[roomId]);
+    emitSafeRoomData(roomId);
   });
 
   socket.on('joinRoom', ({ roomId, playerName }, callback) => {
@@ -138,27 +130,27 @@ io.on('connection', (socket) => {
       rooms[roomCode].players.push({ id: socket.id, name: playerName, score: 0 });
       socket.join(roomCode);
       callback({ success: true });
-      io.to(roomCode).emit('roomData', rooms[roomCode]);
+      emitSafeRoomData(roomCode);
     } else {
       callback({ success: false, message: "Room not found!" });
     }
   });
 
-  // Real-time Settings Updates in Lobby
   socket.on('updateSettings', ({ roomId, settings }) => {
     const roomCode = roomId.toUpperCase();
     if (rooms[roomCode] && rooms[roomCode].state === 'LOBBY') {
       rooms[roomCode].settings = { ...rooms[roomCode].settings, ...settings };
-      io.to(roomCode).emit('roomData', rooms[roomCode]);
+      emitSafeRoomData(roomCode);
     }
   });
 
-  // Real-time Custom Scenario Typing in Lobby
-  socket.on('updateCustomScenario', ({ roomId, index, text }) => {
+  // NEW: Secret Custom Scenario Submission
+  socket.on('addSecretScenario', ({ roomId, text }) => {
     const roomCode = roomId.toUpperCase();
     if (rooms[roomCode] && rooms[roomCode].state === 'LOBBY') {
-      rooms[roomCode].customScenarios[index] = text;
-      io.to(roomCode).emit('roomData', rooms[roomCode]);
+      rooms[roomCode].secretCustomScenarios.push(text.trim());
+      rooms[roomCode].customCount = rooms[roomCode].secretCustomScenarios.length;
+      emitSafeRoomData(roomCode); // Updates the counter for everyone without showing the text
     }
   });
 
@@ -167,32 +159,29 @@ io.on('connection', (socket) => {
     const room = rooms[roomCode];
     if (room && room.players.length >= 2) {
       room.state = 'LAUNCHING'; 
-      io.to(roomCode).emit('roomData', room);
+      emitSafeRoomData(roomCode);
 
-      // Branch logic based on Lobby Settings!
+      // Branch logic based on Lobby Settings
       if (room.settings.source === 'Custom') {
-        room.scenarioBatch = room.customScenarios.map((s, i) => s.trim() ? s : `[Someone forgot to write Custom Scenario ${i+1}!]`);
+        const pool = [...room.secretCustomScenarios].sort(() => 0.5 - Math.random());
+        room.scenarioBatch = pool.slice(0, 3);
+        // If players didn't submit enough custom ones, quietly pad it with safe fallbacks
+        while (room.scenarioBatch.length < 3) room.scenarioBatch.push(getFallbackBatch()[0]);
       } else if (room.settings.source === 'Public') {
         const matchingPublic = COMMUNITY_VAULT.filter(s => s.category === room.settings.category && s.language === room.settings.language);
         if (matchingPublic.length >= 3) {
            const shuffled = [...matchingPublic].sort(() => 0.5 - Math.random());
            room.scenarioBatch = shuffled.slice(0, 3).map(s => s.text);
         } else {
-           // Not enough public scenarios yet, fallback to AI safely
            room.scenarioBatch = await fetchScenarioBatch(room.settings.category);
         }
       } else {
-        // AI Mode
         room.scenarioBatch = await fetchScenarioBatch(room.settings.category);
       }
 
       room.state = 'ANSWER_PHASE'; 
-      room.roundData = {
-        roundNumber: 1,
-        scenario: room.scenarioBatch.shift(), 
-        answers: []
-      };
-      io.to(roomCode).emit('roomData', room);
+      room.roundData = { roundNumber: 1, scenario: room.scenarioBatch.shift(), answers: [] };
+      emitSafeRoomData(roomCode);
     }
   });
 
@@ -200,17 +189,11 @@ io.on('connection', (socket) => {
     const roomCode = roomId.toUpperCase();
     const room = rooms[roomCode];
     if (room && room.state === 'ANSWER_PHASE') {
-      room.roundData.answers.push({
-        id: 'ans_' + Math.random().toString(36).substring(2,9),
-        playerId: socket.id,
-        text: answerText,
-        votes: [], replies: []
-      });
+      room.roundData.answers.push({ id: 'ans_' + Math.random().toString(36).substring(2,9), playerId: socket.id, text: answerText, votes: [], replies: [] });
 
       if (room.roundData.answers.length === room.players.length) {
         room.state = 'CHAT_PHASE';
-        const baseTime = room.players.length <= 2 ? 35000 : room.players.length * 15000;
-        room.roundData.endTime = Date.now() + baseTime;
+        room.roundData.endTime = Date.now() + (room.players.length <= 2 ? 35000 : room.players.length * 15000);
         room.roundData.donePlayers = [];
 
         if (roomTimers[roomCode]) clearInterval(roomTimers[roomCode]);
@@ -221,27 +204,26 @@ io.on('connection', (socket) => {
             if (room.roundData.roundNumber < 3) {
               room.state = 'INTERMISSION';
               room.roundData.intermissionEndTime = Date.now() + 7000; 
-              io.to(roomCode).emit('roomData', room);
+              emitSafeRoomData(roomCode);
 
               roomTimers[roomCode] = setInterval(() => {
                 if (Date.now() >= room.roundData.intermissionEndTime) {
                   clearInterval(roomTimers[roomCode]);
-                  const nextScenario = room.scenarioBatch.length > 0 ? room.scenarioBatch.shift() : getFallbackBatch()[0];
                   room.state = 'ANSWER_PHASE';
                   room.roundData.roundNumber++;
-                  room.roundData.scenario = nextScenario;
+                  room.roundData.scenario = room.scenarioBatch.length > 0 ? room.scenarioBatch.shift() : getFallbackBatch()[0];
                   room.roundData.answers = [];
-                  io.to(roomCode).emit('roomData', room);
+                  emitSafeRoomData(roomCode);
                 }
               }, 500);
             } else {
               room.state = 'RESULTS';
-              io.to(roomCode).emit('roomData', room);
+              emitSafeRoomData(roomCode);
             }
           }
         }, 500);
       }
-      io.to(roomCode).emit('roomData', room);
+      emitSafeRoomData(roomCode);
     }
   });
 
@@ -255,7 +237,7 @@ io.on('connection', (socket) => {
         room.roundData.endTime = Math.min(room.roundData.endTime + 15000, Date.now() + 45000);
         room.roundData.donePlayers = []; 
         io.to(roomCode).emit('newReplyAlert');
-        io.to(roomCode).emit('roomData', room);
+        emitSafeRoomData(roomCode);
       }
     }
   });
@@ -276,7 +258,7 @@ io.on('connection', (socket) => {
           }
         }
       }
-      io.to(roomCode).emit('roomData', room);
+      emitSafeRoomData(roomCode);
     }
   });
 
@@ -286,7 +268,7 @@ io.on('connection', (socket) => {
     if (room && room.state === 'CHAT_PHASE') {
       if (!room.roundData.donePlayers.includes(socket.id)) {
         room.roundData.donePlayers.push(socket.id);
-        io.to(roomCode).emit('roomData', room);
+        emitSafeRoomData(roomCode);
       }
     }
   });
@@ -299,8 +281,9 @@ io.on('connection', (socket) => {
       room.roundData = null; 
       room.players.forEach(p => p.score = 0); 
       room.scenarioBatch = []; 
-      room.customScenarios = ['', '', '']; // Reset custom inputs
-      io.to(roomCode).emit('roomData', room);
+      room.secretCustomScenarios = []; // Reset the pool for next game!
+      room.customCount = 0;
+      emitSafeRoomData(roomCode);
     }
   });
 

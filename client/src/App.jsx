@@ -26,13 +26,13 @@ function App() {
   const [joinCode, setJoinCode] = useState('');
   const [room, setRoom] = useState(null);
   
-  // Public Scenario Mod State
+  // Public & Secret Scenario States
   const [pubScenario, setPubScenario] = useState('');
   const [pubLang, setPubLang] = useState('English');
   const [pubCategory, setPubCategory] = useState('All Ages');
   const [pubStatus, setPubStatus] = useState(null); 
+  const [secretInput, setSecretInput] = useState(''); // NEW: For in-lobby custom typing!
   
-  // Public Vault Library State
   const [showVault, setShowVault] = useState(false);
   const [vaultData, setVaultData] = useState([]);
 
@@ -101,13 +101,16 @@ function App() {
   const handleJoinRoom = () => { playSound('click'); if (!playerName || !joinCode) alert("Fill all fields!"); else socket.emit('joinRoom', { roomId: joinCode, playerName }, (res) => !res.success && alert(res.message)); };
   const handleStartGame = () => { playSound('click'); socket.emit('startGame', room.id); };
   
-  // Lobby Settings Logic
   const handleSettingChange = (key, value) => {
     socket.emit('updateSettings', { roomId: room.id, settings: { [key]: value } });
   };
   
-  const handleCustomScenarioUpdate = (index, value) => {
-    socket.emit('updateCustomScenario', { roomId: room.id, index, text: value });
+  // NEW: Submitting a secret custom scenario
+  const handleSecretSubmit = () => {
+    if (!secretInput.trim()) return;
+    playSound('vote');
+    socket.emit('addSecretScenario', { roomId: room.id, text: secretInput });
+    setSecretInput(''); // Clear the box after submitting!
   };
 
   const handlePublicSubmit = () => {
@@ -258,7 +261,6 @@ function App() {
           
           <div style={styles.roomBadge}>ROOM CODE: {room.id}</div>
           
-          {/* LOBBY SETTINGS BLOCK */}
           <div style={{...styles.mainCard, marginBottom: '30px', textAlign: 'left'}}>
              <h3 style={{textTransform: 'uppercase', borderBottom: '3px solid #1a1a1a', paddingBottom: '10px', marginBottom: '15px'}}>⚙️ Game Settings</h3>
              
@@ -285,19 +287,22 @@ function App() {
                )}
              </div>
 
-             {/* CUSTOM SCENARIO INPUTS */}
+             {/* THE NEW SECRET CUSTOM SCENARIO UI */}
              {room.settings.source === 'Custom' && (
-               <div style={{backgroundColor: '#e5e7eb', padding: '15px', borderRadius: '12px', border: '3px dashed #1a1a1a'}}>
-                 <h4 style={{marginBottom: '10px', fontWeight: '900'}}>✍️ Write 3 Scenarios (Anyone can type!)</h4>
-                 {[0, 1, 2].map(i => (
-                   <input 
-                     key={i} 
-                     placeholder={`Scenario ${i + 1}...`} 
-                     value={room.customScenarios[i] || ''} 
-                     onChange={(e) => handleCustomScenarioUpdate(i, e.target.value)} 
-                     style={{...styles.input, marginBottom: '10px', padding: '10px', fontSize: '14px'}} 
-                   />
-                 ))}
+               <div style={{backgroundColor: '#e5e7eb', padding: '15px', borderRadius: '12px', border: '3px dashed #1a1a1a', textAlign: 'center'}}>
+                 <h4 style={{marginBottom: '10px', fontWeight: '900'}}>🤫 Secretly Add to the Game Mix!</h4>
+                 <input 
+                   placeholder={`Write a surprise scenario...`} 
+                   value={secretInput} 
+                   onChange={(e) => setSecretInput(e.target.value)} 
+                   style={{...styles.input, marginBottom: '10px', padding: '10px', fontSize: '14px'}} 
+                 />
+                 <button onClick={handleSecretSubmit} className="btn-3d" style={{...styles.primaryBtn, fontSize: '14px', padding: '10px'}}>
+                   Add to Pool
+                 </button>
+                 <p style={{marginTop: '10px', fontWeight: 'bold', color: '#10b981'}}>
+                   Total Custom Scenarios in Pool: {room.customCount || 0}
+                 </p>
                </div>
              )}
           </div>
