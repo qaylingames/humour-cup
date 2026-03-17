@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { io } from 'socket.io-client';
-import html2canvas from 'html2canvas'; // NEW IMAGE TOOL
+import html2canvas from 'html2canvas';
 
 const socket = io('https://humour-cup-server.onrender.com');
 
@@ -27,17 +27,15 @@ function App() {
   const [joinCode, setJoinCode] = useState('');
   const [room, setRoom] = useState(null);
   
-  // Public & Secret Scenario States
   const [pubScenario, setPubScenario] = useState('');
   const [pubLang, setPubLang] = useState('English');
   const [pubCategory, setPubCategory] = useState('All Ages');
   const [pubStatus, setPubStatus] = useState(null); 
-  const [secretInput, setSecretInput] = useState(''); // NEW: For in-lobby custom typing!
+  const [secretInput, setSecretInput] = useState(''); 
   
   const [showVault, setShowVault] = useState(false);
   const [vaultData, setVaultData] = useState([]);
 
-  // Gameplay State
   const [myAnswer, setMyAnswer] = useState('');
   const [replyText, setReplyText] = useState('');
   const [replyingToAnsId, setReplyingToAnsId] = useState(null);
@@ -46,6 +44,7 @@ function App() {
 
   const [bgmIndex, setBgmIndex] = useState(() => Math.floor(Math.random() * BGM_TRACKS.length));
   const audioRef = useRef(null);
+  const receiptRef = useRef(null);
   const prevPlayersCount = useRef(0);
   const prevGameState = useRef('');
   const prevRoundNumber = useRef(1);
@@ -102,17 +101,8 @@ function App() {
   const handleJoinRoom = () => { playSound('click'); if (!playerName || !joinCode) alert("Fill all fields!"); else socket.emit('joinRoom', { roomId: joinCode, playerName }, (res) => !res.success && alert(res.message)); };
   const handleStartGame = () => { playSound('click'); socket.emit('startGame', room.id); };
   
-  const handleSettingChange = (key, value) => {
-    socket.emit('updateSettings', { roomId: room.id, settings: { [key]: value } });
-  };
-  
-  // NEW: Submitting a secret custom scenario
-  const handleSecretSubmit = () => {
-    if (!secretInput.trim()) return;
-    playSound('vote');
-    socket.emit('addSecretScenario', { roomId: room.id, text: secretInput });
-    setSecretInput(''); // Clear the box after submitting!
-  };
+  const handleSettingChange = (key, value) => { socket.emit('updateSettings', { roomId: room.id, settings: { [key]: value } }); };
+  const handleSecretSubmit = () => { if (!secretInput.trim()) return; playSound('vote'); socket.emit('addSecretScenario', { roomId: room.id, text: secretInput }); setSecretInput(''); };
 
   const handlePublicSubmit = () => {
     if (!pubScenario.trim()) return;
@@ -135,13 +125,7 @@ function App() {
     });
   };
 
-  const openVaultLibrary = () => {
-    playSound('click');
-    socket.emit('getPublicVault', (data) => {
-      setVaultData(data);
-      setShowVault(true);
-    });
-  };
+  const openVaultLibrary = () => { playSound('click'); socket.emit('getPublicVault', (data) => { setVaultData(data); setShowVault(true); }); };
 
   const handleSubmitAnswer = (e) => { e.preventDefault(); playSound('click'); if (myAnswer) socket.emit('submitAnswer', { roomId: room.id, answerText: myAnswer }); setMyAnswer(''); };
   const handleSendReply = (answerId) => { playSound('click'); if (replyText) socket.emit('submitChatReply', { roomId: room.id, answerId: answerId, text: replyText }); setReplyText(''); setReplyingToAnsId(null); };
@@ -150,13 +134,12 @@ function App() {
   const handleInitReply = (ansId, prefix = "") => { playSound('click'); setReplyingToAnsId(ansId); setReplyText(prefix); };
   const handlePlayAgain = () => { playSound('click'); socket.emit('playAgain', { roomId: room.id }); };
 
-  const receiptRef = useRef(null);
   const handleSaveReceipt = () => {
     playSound('click');
     if (receiptRef.current) {
-      html2canvas(receiptRef.current, { backgroundColor: '#FFC200', scale: 2 }).then(canvas => {
+      html2canvas(receiptRef.current, { backgroundColor: '#fef3c7', scale: 2 }).then(canvas => {
         const link = document.createElement('a');
-        link.download = `HumourCup_Match_${room.id}.png`;
+        link.download = `HumourCup_Receipt_${room.id}.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();
       });
@@ -176,10 +159,10 @@ function App() {
         .loading-fill { height: 100%; background: #10b981; width: 0%; animation: loadBar 1.5s ease-in-out forwards; }
         @keyframes loadBar { 0% { width: 0%; } 100% { width: 100%; } }
         
-        /* NEW HUMOUR RAIN CSS */
+        /* UPDATED HUMOUR RAIN CSS */
         .emoji-rain { position: fixed; top: -50px; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; overflow: hidden; }
-        .falling-emoji { position: absolute; font-size: 35px; animation: fall linear forwards; opacity: 0.9; }
-        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+        .falling-emoji { position: absolute; font-size: 40px; animation: fall linear forwards; opacity: 0.95; }
+        @keyframes fall { to { transform: translateY(115vh) rotate(360deg); } }
       `}</style>
 
       <audio ref={audioRef} src={BGM_TRACKS[bgmIndex]} loop />
@@ -277,12 +260,10 @@ function App() {
         <div style={styles.container}>
           <h1 style={styles.logo}>🏆 Humour Cup</h1>
           <h2 style={styles.phaseTitle}>Lobby</h2>
-          
           <div style={styles.roomBadge}>ROOM CODE: {room.id}</div>
           
           <div style={{...styles.mainCard, marginBottom: '30px', textAlign: 'left'}}>
              <h3 style={{textTransform: 'uppercase', borderBottom: '3px solid #1a1a1a', paddingBottom: '10px', marginBottom: '15px'}}>⚙️ Game Settings</h3>
-             
              <div style={{display: 'flex', gap: '10px', marginBottom: '15px', flexWrap: 'wrap'}}>
                <div style={{flex: 1}}>
                  <label style={{fontWeight: '900', fontSize: '14px'}}>Category:</label>
@@ -306,22 +287,12 @@ function App() {
                )}
              </div>
 
-             {/* THE NEW SECRET CUSTOM SCENARIO UI */}
              {room.settings.source === 'Custom' && (
                <div style={{backgroundColor: '#e5e7eb', padding: '15px', borderRadius: '12px', border: '3px dashed #1a1a1a', textAlign: 'center'}}>
                  <h4 style={{marginBottom: '10px', fontWeight: '900'}}>🤫 Secretly Add to the Game Mix!</h4>
-                 <input 
-                   placeholder={`Write a surprise scenario...`} 
-                   value={secretInput} 
-                   onChange={(e) => setSecretInput(e.target.value)} 
-                   style={{...styles.input, marginBottom: '10px', padding: '10px', fontSize: '14px'}} 
-                 />
-                 <button onClick={handleSecretSubmit} className="btn-3d" style={{...styles.primaryBtn, fontSize: '14px', padding: '10px'}}>
-                   Add to Pool
-                 </button>
-                 <p style={{marginTop: '10px', fontWeight: 'bold', color: '#10b981'}}>
-                   Total Custom Scenarios in Pool: {room.customCount || 0}
-                 </p>
+                 <input placeholder={`Write a surprise scenario...`} value={secretInput} onChange={(e) => setSecretInput(e.target.value)} style={{...styles.input, marginBottom: '10px', padding: '10px', fontSize: '14px'}} />
+                 <button onClick={handleSecretSubmit} className="btn-3d" style={{...styles.primaryBtn, fontSize: '14px', padding: '10px'}}>Add to Pool</button>
+                 <p style={{marginTop: '10px', fontWeight: 'bold', color: '#10b981'}}>Total Custom Scenarios in Pool: {room.customCount || 0}</p>
                </div>
              )}
           </div>
@@ -334,10 +305,7 @@ function App() {
               </div>
             ))}
           </div>
-          
-          {isHost ? (
-            room.players.length >= 2 ? <button onClick={handleStartGame} className="btn-3d" style={styles.startBtn}>Launch Game 🚀</button> : <h3 className="animate-bounce" style={{color: '#ef4444', marginTop: '30px', fontWeight: '900', fontSize: '20px'}}>Waiting for at least 1 more player...</h3>
-          ) : <h3 className="animate-bounce" style={styles.loadingText}>Waiting for the host to start...</h3>}
+          {isHost ? (room.players.length >= 2 ? <button onClick={handleStartGame} className="btn-3d" style={styles.startBtn}>Launch Game 🚀</button> : <h3 className="animate-bounce" style={{color: '#ef4444', marginTop: '30px', fontWeight: '900', fontSize: '20px'}}>Waiting for at least 1 more player...</h3>) : <h3 className="animate-bounce" style={styles.loadingText}>Waiting for the host to start...</h3>}
         </div>
       )}
 
@@ -445,8 +413,7 @@ function App() {
             <div style={{width: '100%', marginBottom: '40px'}}>
               {sortedPlayers.map((p, i) => (
                 <div key={p.id} style={{display: 'flex', justifyContent: 'space-between', padding: '15px', background: '#fff', border: '3px solid #1a1a1a', borderRadius: '12px', marginBottom: '10px', fontWeight: 'bold', boxShadow: '4px 4px 0px #1a1a1a'}}>
-                  <span style={{fontSize: '18px'}}>#{i + 1} {p.name}</span>
-                  <span style={{fontSize: '18px', color: '#10b981'}}>{p.score} XP</span>
+                  <span style={{fontSize: '18px'}}>#{i + 1} {p.name}</span><span style={{fontSize: '18px', color: '#10b981'}}>{p.score} XP</span>
                 </div>
               ))}
             </div>
@@ -462,18 +429,17 @@ function App() {
         const winners = sortedPlayers.filter(p => p.score === highestScore);
         const isTie = winners.length > 1;
 
-        // Custom Humour Rain Arrays
-        const rainEmojis = ['😂', '🤣', '💀', '🏆', '🔥'];
+        // Spread out, exotic emoji rain
+        const rainEmojis = ['😂', '🤣', '💀', '🏆', '🔥', '🍆', '🍑', '🌶️', '🤡', '👽', '💩', '🦄', '🍻'];
 
         return (
           <div style={styles.container}>
-            {/* THE HUMOUR RAIN ANIMATION */}
             <div className="emoji-rain">
-              {Array.from({ length: 50 }).map((_, i) => (
+              {Array.from({ length: 30 }).map((_, i) => (
                 <span key={i} className="falling-emoji" style={{
                   left: `${Math.random() * 100}vw`,
-                  animationDuration: `${Math.random() * 3 + 2}s`,
-                  animationDelay: `${Math.random() * 0.5}s`
+                  animationDuration: `${Math.random() * 4 + 3}s`,
+                  animationDelay: `${Math.random() * 5}s`
                 }}>
                   {rainEmojis[Math.floor(Math.random() * rainEmojis.length)]}
                 </span>
@@ -489,38 +455,44 @@ function App() {
               <h3 style={{margin:'15px 0 0 0', color: '#1a1a1a', opacity: 0.8}}>{highestScore} XP</h3>
             </div>
 
-            {/* THE EXPORTABLE MATCH RECEIPT */}
-            <div ref={receiptRef} style={{width: '100%', padding: '20px', backgroundColor: '#FFC200', borderRadius: '16px', border: '4px solid #1a1a1a', marginBottom: '30px', textAlign: 'left'}}>
-              <h3 style={{color: '#1a1a1a', textTransform: 'uppercase', fontWeight: '900', textAlign: 'center', marginBottom: '20px'}}>📜 Match Receipt</h3>
-              
-              <h4 style={{fontWeight: '900', borderBottom: '2px solid #1a1a1a', paddingBottom: '5px', marginBottom: '10px'}}>Final Scoreboard</h4>
+            {/* PULLED SCOREBOARD ABOVE RECEIPT */}
+            <h3 style={{color: '#1a1a1a', textTransform: 'uppercase', fontWeight: '900', marginTop: '20px'}}>Final Scoreboard</h3>
+            <div style={{width: '100%', marginBottom: '40px'}}>
               {sortedPlayers.map((p, i) => (
-                <div key={p.id} style={{display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', marginBottom: '5px', fontSize: '14px'}}>
-                  <span>#{i + 1} {p.name}</span><span>{p.score} XP</span>
+                <div key={p.id} style={{display: 'flex', justifyContent: 'space-between', padding: '15px', background: '#fff', border: '3px solid #1a1a1a', borderRadius: '12px', marginBottom: '10px', fontWeight: 'bold', boxShadow: '4px 4px 0px #1a1a1a'}}>
+                  <span style={{fontSize: '18px'}}>#{i + 1} {p.name}</span><span style={{fontSize: '18px', color: '#10b981'}}>{p.score} XP</span>
                 </div>
               ))}
+            </div>
 
-              <h4 style={{fontWeight: '900', borderBottom: '2px solid #1a1a1a', paddingBottom: '5px', marginTop: '20px', marginBottom: '10px'}}>The Scenarios</h4>
+            {/* STYLED HUMOUR CUP RECEIPT */}
+            <div ref={receiptRef} style={styles.receiptBox}>
+              <h3 style={styles.receiptTitle}>🧾 Humour Cup Receipt</h3>
+              <p style={{textAlign: 'center', fontSize: '12px', opacity: 0.6, marginTop: '-15px', marginBottom: '20px'}}>Room Code: {room.id}</p>
+              
               {room.history && room.history.map((round, i) => (
-                <div key={i} style={{marginBottom: '15px', backgroundColor: '#fff', padding: '10px', borderRadius: '8px', border: '2px solid #1a1a1a'}}>
-                  <p style={{fontWeight: '900', fontSize: '14px', marginBottom: '8px'}}>Round {round.roundNumber}: "{round.scenario}"</p>
+                <div key={i} style={{marginBottom: '20px'}}>
+                  <p style={{fontWeight: '900', fontSize: '16px', marginBottom: '8px', color: '#1a1a1a'}}>Q{round.roundNumber}: "{round.scenario}"</p>
                   {round.answers.map(ans => {
                     const author = room.players.find(p => p.id === ans.playerId)?.name || "Unknown";
                     return (
-                      <div key={ans.id} style={{marginLeft: '10px', marginBottom: '5px'}}>
-                        <p style={{fontSize: '12px', color: '#666', margin: '0'}}><b>{author}:</b> "{ans.text}" (⭐ {ans.votes.length})</p>
+                      <div key={ans.id} style={{marginLeft: '15px', marginBottom: '8px', borderLeft: '3px solid #ccc', paddingLeft: '10px'}}>
+                        <p style={{fontSize: '14px', color: '#333', margin: '0'}}><b>{author}:</b> "{ans.text}" (⭐ {ans.votes.length})</p>
                         {ans.replies.map(rep => {
                           const repAuthor = room.players.find(p => p.id === rep.playerId)?.name || "Unknown";
-                          return <p key={rep.id} style={{fontSize: '11px', color: '#888', margin: '0 0 0 15px'}}>↳ <b>{repAuthor}:</b> {rep.text}</p>
+                          return <p key={rep.id} style={{fontSize: '13px', color: '#666', margin: '2px 0 0 0'}}>↳ <b>{repAuthor}:</b> {rep.text}</p>
                         })}
                       </div>
                     )
                   })}
                 </div>
               ))}
+              <div style={{borderTop: '2px dashed #1a1a1a', paddingTop: '10px', textAlign: 'center', fontWeight: 'bold', fontSize: '14px'}}>
+                Thanks for playing Humour Cup! 🏆
+              </div>
             </div>
 
-            <button onClick={handleSaveReceipt} className="btn-3d" style={{...styles.secondaryBtn, width: '100%', marginBottom: '20px', backgroundColor: '#10b981', color: '#fff'}}>📸 Save Match as Image</button>
+            <button onClick={handleSaveReceipt} className="btn-3d" style={{...styles.secondaryBtn, width: '100%', marginBottom: '20px', backgroundColor: '#10b981', color: '#fff'}}>📸 Save this Humour Cup receipt</button>
 
             {isHost ? <button onClick={handlePlayAgain} className="btn-3d" style={styles.primaryBtn}>Play Again (Host)</button> : <h3 className="animate-bounce" style={{color: '#1a1a1a', fontWeight: '900', fontSize: '20px'}}>Waiting for Host to Restart...</h3>}
           </div>
@@ -569,7 +541,11 @@ const styles = {
   cancelBtn: { flex: 1, background: '#ffffff', color: '#1a1a1a', border: '3px solid #1a1a1a', padding: '12px', borderRadius: '12px', fontWeight: '900', cursor: 'pointer', boxShadow: '4px 4px 0px #1a1a1a', fontSize: '14px' },
   dropdown: { flex: 1, backgroundColor: '#333333', color: '#ffffff', padding: '12px', borderRadius: '8px', border: '3px solid #1a1a1a', fontSize: '14px', fontWeight: 'bold', outline: 'none', cursor: 'pointer' },
   checklistWrapper: { marginTop: '20px', padding: '15px', backgroundColor: '#e5e7eb', borderRadius: '12px', border: '3px dashed #1a1a1a', textAlign: 'left' },
-  checklistItem: { fontSize: '14px', fontWeight: 'bold', color: '#1a1a1a', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }
+  checklistItem: { fontSize: '14px', fontWeight: 'bold', color: '#1a1a1a', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' },
+  
+  /* NEW RECEIPT STYLES */
+  receiptBox: { width: '100%', padding: '25px 20px', backgroundColor: '#fef3c7', borderRadius: '4px', border: '3px dashed #1a1a1a', marginBottom: '20px', textAlign: 'left', boxShadow: '6px 6px 0px #1a1a1a', fontFamily: '"Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive' },
+  receiptTitle: { color: '#1a1a1a', textTransform: 'uppercase', fontWeight: '900', textAlign: 'center', marginBottom: '20px', fontSize: '24px', borderBottom: '2px dashed #1a1a1a', paddingBottom: '15px' }
 };
 
 export default App;

@@ -3,7 +3,8 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+// NEW: Imported HarmCategory to disable strict AI safety filters for 18+ mode!
+const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require('@google/generative-ai');
 
 const app = express();
 app.use(cors());
@@ -14,6 +15,14 @@ const io = new Server(server, {
 });
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+// Disable the filters so 18+ actually works
+const safetySettings = [
+  { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_NONE },
+  { category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_NONE },
+  { category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, threshold: HarmBlockThreshold.BLOCK_NONE },
+  { category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_NONE },
+];
 
 const FALLBACK_VAULT = [
   "You just realized you left the stove on, but you are currently at your own wedding. What is your next move?",
@@ -39,10 +48,15 @@ function getFallbackBatch() {
 async function fetchScenarioBatch(category) {
   try {
     const fetchPromise = (async () => {
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash", generationConfig: { temperature: 1.5 } });
+      const model = genAI.getGenerativeModel({ 
+        model: "gemini-2.5-flash", 
+        generationConfig: { temperature: 1.5 },
+        safetySettings: category === '18+' ? safetySettings : undefined // Only unblock if 18+
+      });
+      
       const categoryRule = category === '18+' 
-        ? "CRITICAL: Make them edgy, adult-oriented, 18+ party game style."
-        : "CRITICAL: Must be completely family-friendly, clean, and appropriate for all ages. No 18+ content.";
+        ? "CRITICAL RULE: You MUST make these scenarios extremely edgy, dark comedy, dirty, and explicitly 18+ adult-oriented. Think exactly like the game 'Cards Against Humanity'."
+        : "CRITICAL RULE: Must be completely family-friendly, clean, and appropriate for all ages. No 18+ content.";
 
       const prompt = `Generate exactly 5 completely different, highly creative, short, and funny prompts for a party game. 
       ${categoryRule}
@@ -60,9 +74,7 @@ async function fetchScenarioBatch(category) {
       throw new Error("Invalid array length");
     })();
 
-    // THE AI SPEED LIMIT FIX: Give Gemini exactly 6 seconds. If it fails, instantly use the Vault!
     const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("AI taking too long!")), 6000));
-    
     return await Promise.race([fetchPromise, timeoutPromise]);
   } catch (e) {
     console.log("🚨 AI Error or Timeout! Instantly pulling from The Vault...", e.message);
@@ -73,11 +85,10 @@ async function fetchScenarioBatch(category) {
 const rooms = {};
 const roomTimers = {}; 
 
-// Helper function to safely send room data without revealing secret scenarios
 function emitSafeRoomData(roomId) {
   if (!rooms[roomId]) return;
   const safeRoom = { ...rooms[roomId] };
-  delete safeRoom.secretCustomScenarios; // Hide the secrets!
+  delete safeRoom.secretCustomScenarios; 
   io.to(roomId).emit('roomData', safeRoom);
 }
 
@@ -88,7 +99,7 @@ io.on('connection', (socket) => {
 
   socket.on('submitPublicScenario', async (data, callback) => {
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash", safetySettings });
       const prompt = `You are the strict but fair moderator for a party game called Humour Cup.
       A player submitted a custom scenario: "${data.text}"
       Target Language: ${data.language} | Category: ${data.category}
@@ -114,10 +125,10 @@ io.on('connection', (socket) => {
       state: 'LOBBY',
       players: [{ id: socket.id, name: playerName, score: 0 }],
       roundData: null,
-      history: [], // NEW: Stores past rounds for the receipt!
+      history: [],
       scenarioBatch: [], 
       settings: { category: 'All Ages', source: 'AI', language: 'English' },
-      secretCustomScenarios: [], // The secret pool!
+      secretCustomScenarios: [], 
       customCount: 0
     };
     socket.join(roomId);
@@ -145,13 +156,12 @@ io.on('connection', (socket) => {
     }
   });
 
-  // NEW: Secret Custom Scenario Submission
   socket.on('addSecretScenario', ({ roomId, text }) => {
     const roomCode = roomId.toUpperCase();
     if (rooms[roomCode] && rooms[roomCode].state === 'LOBBY') {
       rooms[roomCode].secretCustomScenarios.push(text.trim());
       rooms[roomCode].customCount = rooms[roomCode].secretCustomScenarios.length;
-      emitSafeRoomData(roomCode); // Updates the counter for everyone without showing the text
+      emitSafeRoomData(roomCode); 
     }
   });
 
@@ -162,11 +172,9 @@ io.on('connection', (socket) => {
       room.state = 'LAUNCHING'; 
       emitSafeRoomData(roomCode);
 
-      // Branch logic based on Lobby Settings
       if (room.settings.source === 'Custom') {
         const pool = [...room.secretCustomScenarios].sort(() => 0.5 - Math.random());
         room.scenarioBatch = pool.slice(0, 3);
-        // If players didn't submit enough custom ones, quietly pad it with safe fallbacks
         while (room.scenarioBatch.length < 3) room.scenarioBatch.push(getFallbackBatch()[0]);
       } else if (room.settings.source === 'Public') {
         const matchingPublic = COMMUNITY_VAULT.filter(s => s.category === room.settings.category && s.language === room.settings.language);
@@ -201,10 +209,10 @@ io.on('connection', (socket) => {
         roomTimers[roomCode] = setInterval(() => {
           if (Date.now() >= room.roundData.endTime || room.roundData.donePlayers.length === room.players.length) {
             clearInterval(roomTimers[roomCode]);
-
-            // NEW: Save a deep copy of the round to history before it gets deleted!
-            room.history.push(JSON.parse(JSON.stringify(room.roundData)));
             
+            // Save round to history!
+            room.history.push(JSON.parse(JSON.stringify(room.roundData)));
+
             if (room.roundData.roundNumber < 3) {
               room.state = 'INTERMISSION';
               room.roundData.intermissionEndTime = Date.now() + 7000; 
@@ -284,9 +292,9 @@ io.on('connection', (socket) => {
       room.state = 'LOBBY';
       room.roundData = null; 
       room.players.forEach(p => p.score = 0); 
+      room.history = []; // Reset history
       room.scenarioBatch = []; 
-      room.history = []; // NEW: Clear history!
-      room.secretCustomScenarios = []; // Reset the pool for next game!
+      room.secretCustomScenarios = []; 
       room.customCount = 0;
       emitSafeRoomData(roomCode);
     }
