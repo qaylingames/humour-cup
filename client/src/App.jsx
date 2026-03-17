@@ -88,7 +88,8 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (room?.state === 'CHAT_PHASE') {
+    // NEW: Added ANSWER_PHASE to the live timer logic!
+    if (room?.state === 'CHAT_PHASE' || room?.state === 'ANSWER_PHASE') {
       const interval = setInterval(() => setTimeLeft(Math.max(0, Math.ceil(((room.roundData?.endTime || Date.now()) - Date.now()) / 1000))), 200);
       return () => clearInterval(interval);
     } else if (room?.state === 'INTERMISSION') {
@@ -159,7 +160,6 @@ function App() {
         .loading-fill { height: 100%; background: #10b981; width: 0%; animation: loadBar 1.5s ease-in-out forwards; }
         @keyframes loadBar { 0% { width: 0%; } 100% { width: 100%; } }
         
-        /* UPDATED HUMOUR RAIN CSS */
         .emoji-rain { position: fixed; top: -50px; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; overflow: hidden; }
         .falling-emoji { position: absolute; font-size: 40px; animation: fall linear forwards; opacity: 0.95; }
         @keyframes fall { to { transform: translateY(115vh) rotate(360deg); } }
@@ -262,8 +262,8 @@ function App() {
           <h2 style={styles.phaseTitle}>Lobby</h2>
           <div style={styles.roomBadge}>ROOM CODE: {room.id}</div>
           
-          <div style={{...styles.mainCard, marginBottom: '30px', textAlign: 'left'}}>
-             <h3 style={{textTransform: 'uppercase', borderBottom: '3px solid #1a1a1a', paddingBottom: '10px', marginBottom: '15px'}}>⚙️ Game Settings</h3>
+          {/* REMOVED '⚙️ Game Settings' HEADING AS REQUESTED */}
+          <div style={{...styles.mainCard, marginBottom: '30px', textAlign: 'left', paddingTop: '20px'}}>
              <div style={{display: 'flex', gap: '10px', marginBottom: '15px', flexWrap: 'wrap'}}>
                <div style={{flex: 1}}>
                  <label style={{fontWeight: '900', fontSize: '14px'}}>Category:</label>
@@ -319,7 +319,7 @@ function App() {
         </div>
       )}
 
-      {/* --- VIEW: ANSWER --- */}
+      {/* --- VIEW: ANSWER PHASE --- */}
       {room?.state === 'ANSWER_PHASE' && (() => {
         const safeAnswers = room.roundData.answers || [];
         const hasSubmitted = safeAnswers.some(a => a.playerId === socket.id);
@@ -328,6 +328,8 @@ function App() {
           <div style={styles.container}>
             <h1 style={styles.logo}>🏆 Humour Cup</h1>
             <h2 style={styles.phaseTitle}>Scenario {currentRound}</h2>
+            {/* THE NEW 60-SECOND TIMER FOR SCENARIOS */}
+            <div style={styles.timerBadge}>⏳ {timeLeft} Seconds Left</div>
             <div style={styles.scenarioCard}>"{room.roundData.scenario}"</div>
             {!hasSubmitted ? (
               <form onSubmit={handleSubmitAnswer} style={styles.form}>
@@ -429,8 +431,7 @@ function App() {
         const winners = sortedPlayers.filter(p => p.score === highestScore);
         const isTie = winners.length > 1;
 
-        // Spread out, exotic emoji rain
-        const rainEmojis = ['😂', '🤣', '💀', '🏆', '🔥', '🍆', '🍑', '🌶️', '🤡', '👽', '💩', '🦄', '🍻'];
+        const rainEmojis = ['😂', '🤣', '💀', '🏆', '🔥', '🌶️', '👽', '🦄', '🍻'];
 
         return (
           <div style={styles.container}>
@@ -455,7 +456,6 @@ function App() {
               <h3 style={{margin:'15px 0 0 0', color: '#1a1a1a', opacity: 0.8}}>{highestScore} XP</h3>
             </div>
 
-            {/* PULLED SCOREBOARD ABOVE RECEIPT */}
             <h3 style={{color: '#1a1a1a', textTransform: 'uppercase', fontWeight: '900', marginTop: '20px'}}>Final Scoreboard</h3>
             <div style={{width: '100%', marginBottom: '40px'}}>
               {sortedPlayers.map((p, i) => (
@@ -465,7 +465,6 @@ function App() {
               ))}
             </div>
 
-            {/* STYLED HUMOUR CUP RECEIPT */}
             <div ref={receiptRef} style={styles.receiptBox}>
               <h3 style={styles.receiptTitle}>🧾 Humour Cup Receipt</h3>
               <p style={{textAlign: 'center', fontSize: '12px', opacity: 0.6, marginTop: '-15px', marginBottom: '20px'}}>Room Code: {room.id}</p>
@@ -542,8 +541,6 @@ const styles = {
   dropdown: { flex: 1, backgroundColor: '#333333', color: '#ffffff', padding: '12px', borderRadius: '8px', border: '3px solid #1a1a1a', fontSize: '14px', fontWeight: 'bold', outline: 'none', cursor: 'pointer' },
   checklistWrapper: { marginTop: '20px', padding: '15px', backgroundColor: '#e5e7eb', borderRadius: '12px', border: '3px dashed #1a1a1a', textAlign: 'left' },
   checklistItem: { fontSize: '14px', fontWeight: 'bold', color: '#1a1a1a', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' },
-  
-  /* NEW RECEIPT STYLES */
   receiptBox: { width: '100%', padding: '25px 20px', backgroundColor: '#fef3c7', borderRadius: '4px', border: '3px dashed #1a1a1a', marginBottom: '20px', textAlign: 'left', boxShadow: '6px 6px 0px #1a1a1a', fontFamily: '"Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive' },
   receiptTitle: { color: '#1a1a1a', textTransform: 'uppercase', fontWeight: '900', textAlign: 'center', marginBottom: '20px', fontSize: '24px', borderBottom: '2px dashed #1a1a1a', paddingBottom: '15px' }
 };

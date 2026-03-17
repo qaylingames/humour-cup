@@ -3,7 +3,6 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
-// NEW: Imported HarmCategory to disable strict AI safety filters for 18+ mode!
 const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require('@google/generative-ai');
 
 const app = express();
@@ -16,7 +15,6 @@ const io = new Server(server, {
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-// Disable the filters so 18+ actually works
 const safetySettings = [
   { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_NONE },
   { category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_NONE },
@@ -50,12 +48,13 @@ async function fetchScenarioBatch(category) {
     const fetchPromise = (async () => {
       const model = genAI.getGenerativeModel({ 
         model: "gemini-2.5-flash", 
-        generationConfig: { temperature: 1.5 },
-        safetySettings: category === '18+' ? safetySettings : undefined // Only unblock if 18+
+        generationConfig: { temperature: 1.6 }, // Pushed temperature slightly higher for wilder results
+        safetySettings: category === '18+' ? safetySettings : undefined 
       });
       
+      // THE NEW AGGRESSIVE 18+ PROMPT
       const categoryRule = category === '18+' 
-        ? "CRITICAL RULE: You MUST make these scenarios extremely edgy, dark comedy, dirty, and explicitly 18+ adult-oriented. Think exactly like the game 'Cards Against Humanity'."
+        ? "CRITICAL RULE: You MUST act as an uncensored, R-rated comedy writer. Create incredibly dirty, spicy, NSFW, and double-meaning scenarios. Use mature themes, sexual innuendos, dark humor, and strictly adult situations. DO NOT hold back. It must feel like an edgy 18+ party game."
         : "CRITICAL RULE: Must be completely family-friendly, clean, and appropriate for all ages. No 18+ content.";
 
       const prompt = `Generate exactly 5 completely different, highly creative, short, and funny prompts for a party game. 
@@ -90,6 +89,67 @@ function emitSafeRoomData(roomId) {
   const safeRoom = { ...rooms[roomId] };
   delete safeRoom.secretCustomScenarios; 
   io.to(roomId).emit('roomData', safeRoom);
+}
+
+// --- NEW CLEAN PHASE MANAGERS ---
+function startAnswerPhase(roomCode, scenario) {
+  const room = rooms[roomCode];
+  room.state = 'ANSWER_PHASE';
+  room.roundData = { roundNumber: (room.roundData?.roundNumber || 0) + 1, scenario: scenario, answers: [], endTime: Date.now() + 60000 }; // 60 SECONDS!
+  emitSafeRoomData(roomCode);
+
+  if (roomTimers[roomCode]) clearInterval(roomTimers[roomCode]);
+  roomTimers[roomCode] = setInterval(() => {
+    if (Date.now() >= room.roundData.endTime || room.roundData.answers.length === room.players.length) {
+      clearInterval(roomTimers[roomCode]);
+      // Auto-fill answers for slow players!
+      room.players.forEach(p => {
+        if (!room.roundData.answers.find(a => a.playerId === p.id)) {
+          room.roundData.answers.push({ id: 'ans_' + Math.random().toString(36).substring(2,9), playerId: p.id, text: "Too slow to think of a joke!", votes: [], replies: [] });
+        }
+      });
+      startChatPhase(roomCode);
+    }
+  }, 500);
+}
+
+function startChatPhase(roomCode) {
+  const room = rooms[roomCode];
+  room.state = 'CHAT_PHASE';
+  room.roundData.endTime = Date.now() + (room.players.length <= 2 ? 35000 : room.players.length * 15000);
+  room.roundData.donePlayers = [];
+  emitSafeRoomData(roomCode);
+
+  if (roomTimers[roomCode]) clearInterval(roomTimers[roomCode]);
+  roomTimers[roomCode] = setInterval(() => {
+    if (Date.now() >= room.roundData.endTime || room.roundData.donePlayers.length === room.players.length) {
+      clearInterval(roomTimers[roomCode]);
+      room.history.push(JSON.parse(JSON.stringify(room.roundData))); // Save for receipt
+
+      if (room.roundData.roundNumber < 3) {
+        startIntermission(roomCode);
+      } else {
+        room.state = 'RESULTS';
+        emitSafeRoomData(roomCode);
+      }
+    }
+  }, 500);
+}
+
+function startIntermission(roomCode) {
+  const room = rooms[roomCode];
+  room.state = 'INTERMISSION';
+  room.roundData.intermissionEndTime = Date.now() + 7000;
+  emitSafeRoomData(roomCode);
+
+  if (roomTimers[roomCode]) clearInterval(roomTimers[roomCode]);
+  roomTimers[roomCode] = setInterval(() => {
+    if (Date.now() >= room.roundData.intermissionEndTime) {
+      clearInterval(roomTimers[roomCode]);
+      const nextScenario = room.scenarioBatch.length > 0 ? room.scenarioBatch.shift() : getFallbackBatch()[0];
+      startAnswerPhase(roomCode, nextScenario);
+    }
+  }, 500);
 }
 
 io.on('connection', (socket) => {
@@ -188,9 +248,7 @@ io.on('connection', (socket) => {
         room.scenarioBatch = await fetchScenarioBatch(room.settings.category);
       }
 
-      room.state = 'ANSWER_PHASE'; 
-      room.roundData = { roundNumber: 1, scenario: room.scenarioBatch.shift(), answers: [] };
-      emitSafeRoomData(roomCode);
+      startAnswerPhase(roomCode, room.scenarioBatch.shift());
     }
   });
 
@@ -199,43 +257,8 @@ io.on('connection', (socket) => {
     const room = rooms[roomCode];
     if (room && room.state === 'ANSWER_PHASE') {
       room.roundData.answers.push({ id: 'ans_' + Math.random().toString(36).substring(2,9), playerId: socket.id, text: answerText, votes: [], replies: [] });
-
-      if (room.roundData.answers.length === room.players.length) {
-        room.state = 'CHAT_PHASE';
-        room.roundData.endTime = Date.now() + (room.players.length <= 2 ? 35000 : room.players.length * 15000);
-        room.roundData.donePlayers = [];
-
-        if (roomTimers[roomCode]) clearInterval(roomTimers[roomCode]);
-        roomTimers[roomCode] = setInterval(() => {
-          if (Date.now() >= room.roundData.endTime || room.roundData.donePlayers.length === room.players.length) {
-            clearInterval(roomTimers[roomCode]);
-            
-            // Save round to history!
-            room.history.push(JSON.parse(JSON.stringify(room.roundData)));
-
-            if (room.roundData.roundNumber < 3) {
-              room.state = 'INTERMISSION';
-              room.roundData.intermissionEndTime = Date.now() + 7000; 
-              emitSafeRoomData(roomCode);
-
-              roomTimers[roomCode] = setInterval(() => {
-                if (Date.now() >= room.roundData.intermissionEndTime) {
-                  clearInterval(roomTimers[roomCode]);
-                  room.state = 'ANSWER_PHASE';
-                  room.roundData.roundNumber++;
-                  room.roundData.scenario = room.scenarioBatch.length > 0 ? room.scenarioBatch.shift() : getFallbackBatch()[0];
-                  room.roundData.answers = [];
-                  emitSafeRoomData(roomCode);
-                }
-              }, 500);
-            } else {
-              room.state = 'RESULTS';
-              emitSafeRoomData(roomCode);
-            }
-          }
-        }, 500);
-      }
       emitSafeRoomData(roomCode);
+      // The interval in startAnswerPhase handles moving forward!
     }
   });
 
@@ -292,10 +315,11 @@ io.on('connection', (socket) => {
       room.state = 'LOBBY';
       room.roundData = null; 
       room.players.forEach(p => p.score = 0); 
-      room.history = []; // Reset history
+      room.history = []; 
       room.scenarioBatch = []; 
       room.secretCustomScenarios = []; 
       room.customCount = 0;
+      if (roomTimers[roomCode]) { clearInterval(roomTimers[roomCode]); delete roomTimers[roomCode]; }
       emitSafeRoomData(roomCode);
     }
   });
