@@ -153,14 +153,17 @@ function App() {
   const handlePublicSubmit = () => {
     if (!pubScenario.trim()) return;
     playSound('click');
-    setPubStatus({ type: 'loading', msg: '⏳ In queue for AI moderation...' });
+    setPubStatus({ type: 'loading', msg: 'AI is running checks...' });
     
     socket.emit('submitPublicScenario', { text: pubScenario, language: pubLang, category: pubCategory }, (res) => {
       if (res.success) {
         if (res.data.accepted) {
           playSound('vote'); // Happy chime!
-          setPubStatus({ type: 'success', msg: `✅ Accepted! ${res.data.reason}` });
-          setPubScenario(''); // Clear the box
+          setPubStatus({ type: 'success', msg: `✅ Submitted! ${res.data.reason}` });
+          setPubScenario(''); // Blank out the text box instantly
+          
+          // Hide the checklist after 6 seconds so they can go again
+          setTimeout(() => setPubStatus(null), 6000); 
         } else {
           playSound('alert'); // Error beep
           setPubStatus({ type: 'error', msg: `❌ Rejected: ${res.data.reason}` });
@@ -191,6 +194,8 @@ function App() {
 {/* --- VIEW: HOME --- */}
       {!room && (
         <div style={styles.container}>
+          
+          {/* 1. Main Login Card */}
           <h1 style={styles.logo}>🏆 Humour Cup</h1>
           <div style={styles.mainCard}>
             <input placeholder="Your Funny Name" value={playerName} onChange={(e) => setPlayerName(e.target.value)} style={styles.input} />
@@ -202,7 +207,7 @@ function App() {
             </div>
           </div>
 
-          {/* NEW ELITE HOW TO PLAY SECTION */}
+          {/* 2. Official Rulebook */}
           <div style={styles.howToPlayBox}>
             <div style={styles.howToPlayHeader}>
               👑 Official Rulebook 👑
@@ -214,16 +219,17 @@ function App() {
               <p style={styles.howToPlayText}><span style={styles.bullet}>♦</span> The player with the maximum Humour XP gets the Humour Cup.</p>
             </div>
           </div>
-        </div>
-      )}
 
-      {/* NEW PUBLIC SCENARIO SUBMISSION */}
+          {/* 3. Public Scenario Submission */}
           <div style={{...styles.howToPlayBox, marginTop: '20px', transform: 'rotate(0deg)'}}>
             <div style={{...styles.howToPlayHeader, backgroundColor: '#10b981', color: '#fff'}}>
               🌍 Submit a Public Scenario 🌍
             </div>
-            <div style={styles.howToPlayContent}>
-              <p style={{fontSize: '14px', fontWeight: 'bold', marginBottom: '15px'}}>Write your own scenario. If our AI approves it, future players will see it!</p>
+            <div style={{...styles.howToPlayContent, textAlign: 'center'}}>
+              
+              <p style={{fontSize: '14px', fontWeight: 'bold', marginBottom: '15px'}}>
+                Add your own scenario for humour cup. These come randomly to players opting for Public scenarios in the lobby.
+              </p>
               
               <textarea 
                 value={pubScenario} 
@@ -240,9 +246,12 @@ function App() {
                   <option>Spanish</option>
                   <option>French</option>
                   <option>Arabic</option>
-                  <option>Bengali</option>
+                  <option>Portuguese</option>
                   <option>Russian</option>
+                  <option>German</option>
                   <option>Japanese</option>
+                  <option>Korean</option>
+                  <option>Indonesian</option>
                 </select>
                 
                 <select value={pubCategory} onChange={(e) => setPubCategory(e.target.value)} style={styles.dropdown}>
@@ -252,20 +261,34 @@ function App() {
               </div>
 
               <button onClick={handlePublicSubmit} disabled={pubStatus?.type === 'loading'} className="btn-3d" style={{...styles.primaryBtn, padding: '12px', fontSize: '16px'}}>
-                Submit to AI
+                Submit
               </button>
 
-              {/* Dynamic Red/Green Status Text */}
+              {/* Dynamic Moderation Checklist */}
               {pubStatus && (
-                <div style={{
-                  marginTop: '15px', fontWeight: '900', fontSize: '14px',
-                  color: pubStatus.type === 'success' ? '#10b981' : pubStatus.type === 'error' ? '#ef4444' : '#fbbf24'
-                }}>
-                  {pubStatus.msg}
+                <div style={styles.checklistWrapper}>
+                  <div style={styles.checklistItem}>
+                    {pubStatus.type === 'loading' ? '⏳' : '✅'} Language & Category Match
+                  </div>
+                  <div style={styles.checklistItem}>
+                    {pubStatus.type === 'loading' ? '⏳' : pubStatus.type === 'success' ? '✅' : '❌'} Simple Words & Grammar
+                  </div>
+                  <div style={styles.checklistItem}>
+                    {pubStatus.type === 'loading' ? '⏳' : pubStatus.type === 'success' ? '✅' : '❌'} Humour Potential Evaluated
+                  </div>
+                  <div style={{
+                    marginTop: '12px', fontWeight: '900', fontSize: '14px',
+                    color: pubStatus.type === 'success' ? '#10b981' : pubStatus.type === 'error' ? '#ef4444' : '#fbbf24'
+                  }}>
+                    {pubStatus.msg}
+                  </div>
                 </div>
               )}
             </div>
           </div>
+          
+        </div>
+      )}
 
       {/* --- VIEW: LOBBY --- */}
       {room?.state === 'LOBBY' && (
@@ -489,6 +512,9 @@ const styles = {
   howToPlayText: { fontSize: '14px', color: '#1a1a1a', marginBottom: '12px', fontWeight: '800', lineHeight: '1.5', display: 'flex', alignItems: 'flex-start', gap: '8px' },
   
   dropdown: { flex: 1, backgroundColor: '#333333', color: '#ffffff', padding: '12px', borderRadius: '8px', border: '3px solid #1a1a1a', fontSize: '14px', fontWeight: 'bold', outline: 'none', cursor: 'pointer' },
+  
+  checklistWrapper: { marginTop: '20px', padding: '15px', backgroundColor: '#e5e7eb', borderRadius: '12px', border: '3px dashed #1a1a1a', textAlign: 'left' },
+  checklistItem: { fontSize: '14px', fontWeight: 'bold', color: '#1a1a1a', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' },
   
   bullet: { color: '#10b981', fontSize: '16px' }, // Emerald green diamond for that premium pop!
   container: { width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', paddingTop: '40px', paddingBottom: '60px' },
