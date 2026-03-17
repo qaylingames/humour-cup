@@ -228,7 +228,7 @@ function App() {
             <div style={{...styles.howToPlayContent, textAlign: 'center'}}>
               
               <p style={{fontSize: '14px', fontWeight: 'bold', marginBottom: '15px'}}>
-                Add your own scenario for humour cup. These come randomly to players opting for Public scenarios in the lobby.
+                Add your own scenario for Humour Cup. These come randomly to players opting for Public scenarios in the lobby.
               </p>
               
               <textarea 
@@ -515,7 +515,7 @@ const styles = {
   
   checklistWrapper: { marginTop: '20px', padding: '15px', backgroundColor: '#e5e7eb', borderRadius: '12px', border: '3px dashed #1a1a1a', textAlign: 'left' },
   checklistItem: { fontSize: '14px', fontWeight: 'bold', color: '#1a1a1a', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' },
-  
+
   bullet: { color: '#10b981', fontSize: '16px' }, // Emerald green diamond for that premium pop!
   container: { width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', paddingTop: '40px', paddingBottom: '60px' },
   logo: { fontSize: '48px', color: '#1a1a1a', marginBottom: '30px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '-1px' },

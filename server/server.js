@@ -290,9 +290,12 @@ io.on('connection', (socket) => {
 
       const result = await model.generateContent(prompt);
       let text = result.response.text().trim();
-      text = text.replace(/```json/gi, '').replace(/```/g, '').trim();
       
-      const assessment = JSON.parse(text);
+      // THE BULLETPROOF FIX: Extract ONLY the JSON brackets, ignoring any polite chat!
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) throw new Error("AI did not return a valid JSON object");
+      
+      const assessment = JSON.parse(jsonMatch[0]);
 
       if (assessment.accepted) {
         COMMUNITY_VAULT.push({
@@ -300,7 +303,6 @@ io.on('connection', (socket) => {
           language: data.language,
           category: data.category
         });
-        // We will mix this into the game in a future update!
       }
 
       callback({ success: true, data: assessment });
