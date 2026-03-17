@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { io } from 'socket.io-client';
+import html2canvas from 'html2canvas'; // NEW IMAGE TOOL
 
 const socket = io('https://humour-cup-server.onrender.com');
 
@@ -149,6 +150,19 @@ function App() {
   const handleInitReply = (ansId, prefix = "") => { playSound('click'); setReplyingToAnsId(ansId); setReplyText(prefix); };
   const handlePlayAgain = () => { playSound('click'); socket.emit('playAgain', { roomId: room.id }); };
 
+  const receiptRef = useRef(null);
+  const handleSaveReceipt = () => {
+    playSound('click');
+    if (receiptRef.current) {
+      html2canvas(receiptRef.current, { backgroundColor: '#FFC200', scale: 2 }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `HumourCup_Match_${room.id}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    }
+  };
+
   const isHost = room?.players[0]?.id === socket.id;
 
   return (
@@ -161,6 +175,11 @@ function App() {
         .loading-container { width: 100%; height: 30px; background: #fff; border: 4px solid #1a1a1a; border-radius: 15px; overflow: hidden; position: relative; box-shadow: 4px 4px 0px #1a1a1a; margin-top: 20px;}
         .loading-fill { height: 100%; background: #10b981; width: 0%; animation: loadBar 1.5s ease-in-out forwards; }
         @keyframes loadBar { 0% { width: 0%; } 100% { width: 100%; } }
+        
+        /* NEW HUMOUR RAIN CSS */
+        .emoji-rain { position: fixed; top: -50px; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; overflow: hidden; }
+        .falling-emoji { position: absolute; font-size: 35px; animation: fall linear forwards; opacity: 0.9; }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
       `}</style>
 
       <audio ref={audioRef} src={BGM_TRACKS[bgmIndex]} loop />
@@ -427,7 +446,7 @@ function App() {
               {sortedPlayers.map((p, i) => (
                 <div key={p.id} style={{display: 'flex', justifyContent: 'space-between', padding: '15px', background: '#fff', border: '3px solid #1a1a1a', borderRadius: '12px', marginBottom: '10px', fontWeight: 'bold', boxShadow: '4px 4px 0px #1a1a1a'}}>
                   <span style={{fontSize: '18px'}}>#{i + 1} {p.name}</span>
-                  <span style={{fontSize: '18px', color: '#10b981'}}>{p.score} pts</span>
+                  <span style={{fontSize: '18px', color: '#10b981'}}>{p.score} XP</span>
                 </div>
               ))}
             </div>
@@ -442,24 +461,67 @@ function App() {
         const highestScore = sortedPlayers[0].score;
         const winners = sortedPlayers.filter(p => p.score === highestScore);
         const isTie = winners.length > 1;
+
+        // Custom Humour Rain Arrays
+        const rainEmojis = ['😂', '🤣', '💀', '🏆', '🔥'];
+
         return (
           <div style={styles.container}>
+            {/* THE HUMOUR RAIN ANIMATION */}
+            <div className="emoji-rain">
+              {Array.from({ length: 50 }).map((_, i) => (
+                <span key={i} className="falling-emoji" style={{
+                  left: `${Math.random() * 100}vw`,
+                  animationDuration: `${Math.random() * 3 + 2}s`,
+                  animationDelay: `${Math.random() * 0.5}s`
+                }}>
+                  {rainEmojis[Math.floor(Math.random() * rainEmojis.length)]}
+                </span>
+              ))}
+            </div>
+
             <h1 style={styles.logo}>🏆 Humour Cup</h1>
             <h2 style={styles.phaseTitle}>Final Results</h2>
-            <h1 className="animate-bounce" style={{fontSize:'100px', margin:'0 0 20px 0'}}>🏆</h1>
+            
             <h3 style={{color: '#1a1a1a', textTransform: 'uppercase', fontWeight: '900', marginTop: '10px', marginBottom: '10px', fontSize: '24px'}}>{isTie ? 'Winners' : 'Winner'}</h3>
             <div style={styles.winnerCard}>
               {winners.map(w => <h1 key={w.id} style={{margin:'0 0 5px 0', color: '#1a1a1a', fontSize: '42px'}}>{w.name}</h1>)}
-              <h3 style={{margin:'15px 0 0 0', color: '#1a1a1a', opacity: 0.8}}>{highestScore} Points</h3>
+              <h3 style={{margin:'15px 0 0 0', color: '#1a1a1a', opacity: 0.8}}>{highestScore} XP</h3>
             </div>
-            <h3 style={{color: '#1a1a1a', textTransform: 'uppercase', fontWeight: '900', marginTop: '20px'}}>Final Scoreboard</h3>
-            <div style={{width: '100%', marginBottom: '40px'}}>
+
+            {/* THE EXPORTABLE MATCH RECEIPT */}
+            <div ref={receiptRef} style={{width: '100%', padding: '20px', backgroundColor: '#FFC200', borderRadius: '16px', border: '4px solid #1a1a1a', marginBottom: '30px', textAlign: 'left'}}>
+              <h3 style={{color: '#1a1a1a', textTransform: 'uppercase', fontWeight: '900', textAlign: 'center', marginBottom: '20px'}}>📜 Match Receipt</h3>
+              
+              <h4 style={{fontWeight: '900', borderBottom: '2px solid #1a1a1a', paddingBottom: '5px', marginBottom: '10px'}}>Final Scoreboard</h4>
               {sortedPlayers.map((p, i) => (
-                <div key={p.id} style={{display: 'flex', justifyContent: 'space-between', padding: '15px', background: '#fff', border: '3px solid #1a1a1a', borderRadius: '12px', marginBottom: '10px', fontWeight: 'bold', boxShadow: '4px 4px 0px #1a1a1a'}}>
-                  <span style={{fontSize: '18px'}}>#{i + 1} {p.name}</span><span style={{fontSize: '18px', color: '#10b981'}}>{p.score} pts</span>
+                <div key={p.id} style={{display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', marginBottom: '5px', fontSize: '14px'}}>
+                  <span>#{i + 1} {p.name}</span><span>{p.score} XP</span>
+                </div>
+              ))}
+
+              <h4 style={{fontWeight: '900', borderBottom: '2px solid #1a1a1a', paddingBottom: '5px', marginTop: '20px', marginBottom: '10px'}}>The Scenarios</h4>
+              {room.history && room.history.map((round, i) => (
+                <div key={i} style={{marginBottom: '15px', backgroundColor: '#fff', padding: '10px', borderRadius: '8px', border: '2px solid #1a1a1a'}}>
+                  <p style={{fontWeight: '900', fontSize: '14px', marginBottom: '8px'}}>Round {round.roundNumber}: "{round.scenario}"</p>
+                  {round.answers.map(ans => {
+                    const author = room.players.find(p => p.id === ans.playerId)?.name || "Unknown";
+                    return (
+                      <div key={ans.id} style={{marginLeft: '10px', marginBottom: '5px'}}>
+                        <p style={{fontSize: '12px', color: '#666', margin: '0'}}><b>{author}:</b> "{ans.text}" (⭐ {ans.votes.length})</p>
+                        {ans.replies.map(rep => {
+                          const repAuthor = room.players.find(p => p.id === rep.playerId)?.name || "Unknown";
+                          return <p key={rep.id} style={{fontSize: '11px', color: '#888', margin: '0 0 0 15px'}}>↳ <b>{repAuthor}:</b> {rep.text}</p>
+                        })}
+                      </div>
+                    )
+                  })}
                 </div>
               ))}
             </div>
+
+            <button onClick={handleSaveReceipt} className="btn-3d" style={{...styles.secondaryBtn, width: '100%', marginBottom: '20px', backgroundColor: '#10b981', color: '#fff'}}>📸 Save Match as Image</button>
+
             {isHost ? <button onClick={handlePlayAgain} className="btn-3d" style={styles.primaryBtn}>Play Again (Host)</button> : <h3 className="animate-bounce" style={{color: '#1a1a1a', fontWeight: '900', fontSize: '20px'}}>Waiting for Host to Restart...</h3>}
           </div>
         );

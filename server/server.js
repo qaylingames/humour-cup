@@ -114,6 +114,7 @@ io.on('connection', (socket) => {
       state: 'LOBBY',
       players: [{ id: socket.id, name: playerName, score: 0 }],
       roundData: null,
+      history: [], // NEW: Stores past rounds for the receipt!
       scenarioBatch: [], 
       settings: { category: 'All Ages', source: 'AI', language: 'English' },
       secretCustomScenarios: [], // The secret pool!
@@ -200,6 +201,9 @@ io.on('connection', (socket) => {
         roomTimers[roomCode] = setInterval(() => {
           if (Date.now() >= room.roundData.endTime || room.roundData.donePlayers.length === room.players.length) {
             clearInterval(roomTimers[roomCode]);
+
+            // NEW: Save a deep copy of the round to history before it gets deleted!
+            room.history.push(JSON.parse(JSON.stringify(room.roundData)));
             
             if (room.roundData.roundNumber < 3) {
               room.state = 'INTERMISSION';
@@ -281,6 +285,7 @@ io.on('connection', (socket) => {
       room.roundData = null; 
       room.players.forEach(p => p.score = 0); 
       room.scenarioBatch = []; 
+      room.history = []; // NEW: Clear history!
       room.secretCustomScenarios = []; // Reset the pool for next game!
       room.customCount = 0;
       emitSafeRoomData(roomCode);
