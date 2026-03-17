@@ -22,53 +22,55 @@ const FALLBACK_VAULT = [
   "Roommate 1: 'Did you eat my leftovers?'\nRoommate 2: 'No, but I did...'",
   "My browser history was leaked, and the hardest thing to explain is...",
   "What is a completely unacceptable thing to casually bring to a potluck?",
-  "You are stuck in an elevator for 10 hours with a mime. What is your opening line?",
-  "If my bank account could speak, right now it would aggressively yell...",
-  "Date: 'I only date people who are highly cultured.'\nYou: 'Oh yeah? Well I...'",
-  "What is the worst possible name for a brand new retirement home?",
-  "Your dog suddenly speaks perfect English, looks you dead in the eye, and says...",
-  "I knew the job interview was over when the CEO pulled out a ______."
+  "You are stuck in an elevator for 10 hours with a mime. What is your opening line?"
 ];
 
-const COMMUNITY_VAULT = []; // Stores approved public scenarios!
+// The live database of public community scenarios!
+const COMMUNITY_VAULT = [
+  // A few starter examples so it's not empty!
+  { text: "The worst thing to hear the pilot say over the intercom is...", language: "English", category: "All Ages" },
+  { text: "My superpower is useless. Every time I sneeze, I...", language: "English", category: "All Ages" },
+  { text: "I knew the blind date was a disaster when they pulled out a...", language: "English", category: "18+" }
+];
 
 function getFallbackBatch() {
   const shuffled = [...FALLBACK_VAULT].sort(() => 0.5 - Math.random());
   return shuffled.slice(0, 5); 
 }
 
-async function fetchScenarioBatch() {
+async function fetchScenarioBatch(category) {
   try {
     const model = genAI.getGenerativeModel({ 
       model: "gemini-2.5-flash",
-      generationConfig: { temperature: 1.5 } // High temperature for maximum creativity!
+      generationConfig: { temperature: 1.5 } 
     });
 
-    const prompt = `Generate exactly 5 completely different, highly creative, short, and funny prompts for an adult party game. 
-    CRITICAL RULE: Mix up the formats! Do NOT just use fill-in-the-blanks. Include a random, unpredictable variety of:
-    1. Absurd hypothetical questions (e.g., "What would you do if you left the stove on and you're 2 hours away?")
-    2. Funny dialogues to complete (e.g., "John: My work life sucks! \\nDaisy: ____")
+    const categoryRule = category === '18+' 
+      ? "CRITICAL: Make them edgy, adult-oriented, 18+ party game style."
+      : "CRITICAL: Must be completely family-friendly, clean, and appropriate for all ages. No 18+ content.";
+
+    const prompt = `Generate exactly 5 completely different, highly creative, short, and funny prompts for a party game. 
+    ${categoryRule}
+    Mix up the formats! Do NOT just use fill-in-the-blanks. Include a random variety of:
+    1. Absurd hypothetical questions.
+    2. Funny dialogues to complete (e.g., "John: ... \\nDaisy: ____")
     3. Daily life awkward situations to comment on.
     4. Weird text messages or emails to reply to.
-    5. A classic fill-in-the-blank (if you use a blank, use a line like ______ never the word [BLANK]).
     
-    Make them casual, unexpected, sometimes formal but completely unhinged, and open-ended so players can write hilarious answers.
     (Anti-Cache Seed: ${Date.now()})
     Return ONLY a valid JSON array of 5 strings. Do not include markdown formatting or the word "json".`;
 
     const result = await model.generateContent(prompt);
     let text = result.response.text().trim();
-    text = text.replace(/```json/gi, '').replace(/```/g, '').trim();
     
-    const scenarios = JSON.parse(text);
+    const jsonMatch = text.match(/\[[\s\S]*\]/);
+    if (!jsonMatch) throw new Error("AI did not return a valid JSON array");
     
-    if (Array.isArray(scenarios) && scenarios.length >= 3) {
-      return scenarios;
-    } else {
-      throw new Error("Invalid array format from AI");
-    }
+    const scenarios = JSON.parse(jsonMatch[0]);
+    if (Array.isArray(scenarios) && scenarios.length >= 3) return scenarios;
+    throw new Error("Invalid array length");
   } catch (e) {
-    console.log("🚨 AI LIMIT HIT OR ERROR! Silently pulling from The Vault...", e.message);
+    console.log("🚨 AI Error! Pulling from The Vault...", e.message);
     return getFallbackBatch();
   }
 }
@@ -79,6 +81,41 @@ const roomTimers = {};
 io.on('connection', (socket) => {
   console.log(`🟢 Player Connected: ${socket.id}`);
 
+  // Fetch all public scenarios for the home screen library
+  socket.on('getPublicVault', (callback) => {
+    callback(COMMUNITY_VAULT);
+  });
+
+  // Moderation for public submissions
+  socket.on('submitPublicScenario', async (data, callback) => {
+    try {
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+      const prompt = `You are the strict but fair moderator for a party game called Humour Cup.
+      A player submitted a custom scenario: "${data.text}"
+      Target Language: ${data.language}
+      Category: ${data.category}
+
+      Assess if this scenario is good for the game.
+      Criteria: 1. Makes sense and uses relatively simple words. 2. Has correct spelling/grammar. 3. Can be humorously responded to. 4. Fits the selected language and category.
+      Return ONLY a JSON object: {"accepted": boolean, "correctedText": "fixed text", "reason": "1-sentence explanation"}`;
+
+      const result = await model.generateContent(prompt);
+      let text = result.response.text().trim();
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) throw new Error("AI JSON Error");
+      
+      const assessment = JSON.parse(jsonMatch[0]);
+
+      if (assessment.accepted) {
+        COMMUNITY_VAULT.push({ text: assessment.correctedText, language: data.language, category: data.category });
+      }
+      callback({ success: true, data: assessment });
+    } catch (error) {
+      console.error("Moderation Error:", error);
+      callback({ success: false, message: "AI Moderator is overwhelmed! Try again later." });
+    }
+  });
+
   socket.on('createRoom', (playerName, callback) => {
     const roomId = Math.random().toString(36).substring(2, 6).toUpperCase(); 
     rooms[roomId] = {
@@ -87,24 +124,12 @@ io.on('connection', (socket) => {
       players: [{ id: socket.id, name: playerName, score: 0 }],
       roundData: null,
       scenarioBatch: [], 
-      isFetching: true
+      settings: { category: 'All Ages', source: 'AI', language: 'English' },
+      customScenarios: ['', '', ''] // 3 empty slots for Custom Mode
     };
     socket.join(roomId);
     callback({ success: true, roomId: roomId });
     io.to(roomId).emit('roomData', rooms[roomId]);
-
-    fetchScenarioBatch().then(batch => {
-      if (rooms[roomId]) {
-        rooms[roomId].scenarioBatch = batch;
-        rooms[roomId].isFetching = false;
-        
-        if (rooms[roomId].state === 'LAUNCHING') {
-           rooms[roomId].state = 'ANSWER_PHASE';
-           rooms[roomId].roundData = { roundNumber: 1, scenario: rooms[roomId].scenarioBatch.shift(), answers: [] };
-           io.to(roomId).emit('roomData', rooms[roomId]);
-        }
-      }
-    });
   });
 
   socket.on('joinRoom', ({ roomId, playerName }, callback) => {
@@ -119,22 +144,55 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('startGame', (roomId) => {
+  // Real-time Settings Updates in Lobby
+  socket.on('updateSettings', ({ roomId, settings }) => {
+    const roomCode = roomId.toUpperCase();
+    if (rooms[roomCode] && rooms[roomCode].state === 'LOBBY') {
+      rooms[roomCode].settings = { ...rooms[roomCode].settings, ...settings };
+      io.to(roomCode).emit('roomData', rooms[roomCode]);
+    }
+  });
+
+  // Real-time Custom Scenario Typing in Lobby
+  socket.on('updateCustomScenario', ({ roomId, index, text }) => {
+    const roomCode = roomId.toUpperCase();
+    if (rooms[roomCode] && rooms[roomCode].state === 'LOBBY') {
+      rooms[roomCode].customScenarios[index] = text;
+      io.to(roomCode).emit('roomData', rooms[roomCode]);
+    }
+  });
+
+  socket.on('startGame', async (roomId) => {
     const roomCode = roomId.toUpperCase();
     const room = rooms[roomCode];
     if (room && room.players.length >= 2) {
-      if (room.isFetching) {
-        room.state = 'LAUNCHING'; 
-        io.to(roomCode).emit('roomData', room);
+      room.state = 'LAUNCHING'; 
+      io.to(roomCode).emit('roomData', room);
+
+      // Branch logic based on Lobby Settings!
+      if (room.settings.source === 'Custom') {
+        room.scenarioBatch = room.customScenarios.map((s, i) => s.trim() ? s : `[Someone forgot to write Custom Scenario ${i+1}!]`);
+      } else if (room.settings.source === 'Public') {
+        const matchingPublic = COMMUNITY_VAULT.filter(s => s.category === room.settings.category && s.language === room.settings.language);
+        if (matchingPublic.length >= 3) {
+           const shuffled = [...matchingPublic].sort(() => 0.5 - Math.random());
+           room.scenarioBatch = shuffled.slice(0, 3).map(s => s.text);
+        } else {
+           // Not enough public scenarios yet, fallback to AI safely
+           room.scenarioBatch = await fetchScenarioBatch(room.settings.category);
+        }
       } else {
-        room.state = 'ANSWER_PHASE'; 
-        room.roundData = {
-          roundNumber: 1,
-          scenario: room.scenarioBatch.shift(), 
-          answers: []
-        };
-        io.to(roomCode).emit('roomData', room);
+        // AI Mode
+        room.scenarioBatch = await fetchScenarioBatch(room.settings.category);
       }
+
+      room.state = 'ANSWER_PHASE'; 
+      room.roundData = {
+        roundNumber: 1,
+        scenario: room.scenarioBatch.shift(), 
+        answers: []
+      };
+      io.to(roomCode).emit('roomData', room);
     }
   });
 
@@ -146,13 +204,11 @@ io.on('connection', (socket) => {
         id: 'ans_' + Math.random().toString(36).substring(2,9),
         playerId: socket.id,
         text: answerText,
-        votes: [],
-        replies: []
+        votes: [], replies: []
       });
 
       if (room.roundData.answers.length === room.players.length) {
         room.state = 'CHAT_PHASE';
-        
         const baseTime = room.players.length <= 2 ? 35000 : room.players.length * 15000;
         room.roundData.endTime = Date.now() + baseTime;
         room.roundData.donePlayers = [];
@@ -170,9 +226,7 @@ io.on('connection', (socket) => {
               roomTimers[roomCode] = setInterval(() => {
                 if (Date.now() >= room.roundData.intermissionEndTime) {
                   clearInterval(roomTimers[roomCode]);
-                  
                   const nextScenario = room.scenarioBatch.length > 0 ? room.scenarioBatch.shift() : getFallbackBatch()[0];
-                  
                   room.state = 'ANSWER_PHASE';
                   room.roundData.roundNumber++;
                   room.roundData.scenario = nextScenario;
@@ -197,17 +251,9 @@ io.on('connection', (socket) => {
     if (room && room.state === 'CHAT_PHASE') {
       const answer = room.roundData.answers.find(a => a.id === answerId);
       if (answer) {
-        answer.replies.push({
-          id: 'rep_' + Math.random().toString(36).substring(2,9),
-          playerId: socket.id,
-          text: text,
-          votes: []
-        });
-
-        // THE TIMER FIX: Always adds 15 seconds, capped at 45 seconds from RIGHT NOW!
+        answer.replies.push({ id: 'rep_' + Math.random().toString(36).substring(2,9), playerId: socket.id, text: text, votes: [] });
         room.roundData.endTime = Math.min(room.roundData.endTime + 15000, Date.now() + 45000);
         room.roundData.donePlayers = []; 
-        
         io.to(roomCode).emit('newReplyAlert');
         io.to(roomCode).emit('roomData', room);
       }
@@ -252,70 +298,13 @@ io.on('connection', (socket) => {
       room.state = 'LOBBY';
       room.roundData = null; 
       room.players.forEach(p => p.score = 0); 
-      room.isFetching = true;
       room.scenarioBatch = []; 
+      room.customScenarios = ['', '', '']; // Reset custom inputs
       io.to(roomCode).emit('roomData', room);
-
-      fetchScenarioBatch().then(batch => {
-        if (rooms[roomCode]) {
-          rooms[roomCode].scenarioBatch = batch;
-          rooms[roomCode].isFetching = false;
-        }
-      });
     }
   });
 
-  // --- PUBLIC SCENARIO MODERATOR ---
-  socket.on('submitPublicScenario', async (data, callback) => {
-    try {
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-      const prompt = `You are the strict but fair moderator for a party game called Humour Cup.
-      A player submitted a custom scenario: "${data.text}"
-      Target Language: ${data.language}
-      Category: ${data.category}
-
-      Assess if this scenario is good for the game.
-      Criteria:
-      1. Makes sense and uses relatively simple words.
-      2. Has correct spelling/grammar (fix minor typos if the core idea is good).
-      3. Can be humorously responded to by players.
-      4. Fits the selected language and category (18+ can be edgy, All Ages must be clean).
-
-      Return ONLY a JSON object with this exact structure (no markdown, no extra text):
-      {
-        "accepted": boolean,
-        "correctedText": "the text with fixed spelling, or the original if fine",
-        "reason": "A short, 1-sentence explanation of why it was approved or rejected"
-      }`;
-
-      const result = await model.generateContent(prompt);
-      let text = result.response.text().trim();
-      
-      // THE BULLETPROOF FIX: Extract ONLY the JSON brackets, ignoring any polite chat!
-      const jsonMatch = text.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) throw new Error("AI did not return a valid JSON object");
-      
-      const assessment = JSON.parse(jsonMatch[0]);
-
-      if (assessment.accepted) {
-        COMMUNITY_VAULT.push({
-          text: assessment.correctedText,
-          language: data.language,
-          category: data.category
-        });
-      }
-
-      callback({ success: true, data: assessment });
-
-    } catch (error) {
-      console.error("Moderation Error:", error);
-      callback({ success: false, message: "AI Moderator is overwhelmed! Try again later." });
-    }
-  });
-
-  socket.on('disconnect', () => {
-    console.log(`🔴 Player Disconnected: ${socket.id}`);
-  });
+  socket.on('disconnect', () => { console.log(`🔴 Player Disconnected: ${socket.id}`); });
 });
 
 const PORT = process.env.PORT || 3001;
