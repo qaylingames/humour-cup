@@ -30,6 +30,8 @@ const FALLBACK_VAULT = [
   "I knew the job interview was over when the CEO pulled out a ______."
 ];
 
+const COMMUNITY_VAULT = []; // Stores approved public scenarios!
+
 function getFallbackBatch() {
   const shuffled = [...FALLBACK_VAULT].sort(() => 0.5 - Math.random());
   return shuffled.slice(0, 5); 
@@ -260,6 +262,52 @@ io.on('connection', (socket) => {
           rooms[roomCode].isFetching = false;
         }
       });
+    }
+  });
+
+  // --- PUBLIC SCENARIO MODERATOR ---
+  socket.on('submitPublicScenario', async (data, callback) => {
+    try {
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+      const prompt = `You are the strict but fair moderator for a party game called Humour Cup.
+      A player submitted a custom scenario: "${data.text}"
+      Target Language: ${data.language}
+      Category: ${data.category}
+
+      Assess if this scenario is good for the game.
+      Criteria:
+      1. Makes sense and uses relatively simple words.
+      2. Has correct spelling/grammar (fix minor typos if the core idea is good).
+      3. Can be humorously responded to by players.
+      4. Fits the selected language and category (18+ can be edgy, All Ages must be clean).
+
+      Return ONLY a JSON object with this exact structure (no markdown, no extra text):
+      {
+        "accepted": boolean,
+        "correctedText": "the text with fixed spelling, or the original if fine",
+        "reason": "A short, 1-sentence explanation of why it was approved or rejected"
+      }`;
+
+      const result = await model.generateContent(prompt);
+      let text = result.response.text().trim();
+      text = text.replace(/```json/gi, '').replace(/```/g, '').trim();
+      
+      const assessment = JSON.parse(text);
+
+      if (assessment.accepted) {
+        COMMUNITY_VAULT.push({
+          text: assessment.correctedText,
+          language: data.language,
+          category: data.category
+        });
+        // We will mix this into the game in a future update!
+      }
+
+      callback({ success: true, data: assessment });
+
+    } catch (error) {
+      console.error("Moderation Error:", error);
+      callback({ success: false, message: "AI Moderator is overwhelmed! Try again later." });
     }
   });
 

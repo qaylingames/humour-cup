@@ -34,6 +34,12 @@ function App() {
   const [seenReplies, setSeenReplies] = useState(new Set());
   const [timeLeft, setTimeLeft] = useState(0);
 
+  // Public Scenario Form State
+  const [pubScenario, setPubScenario] = useState('');
+  const [pubLang, setPubLang] = useState('English');
+  const [pubCategory, setPubCategory] = useState('All Ages');
+  const [pubStatus, setPubStatus] = useState(null); // { type: 'loading' | 'success' | 'error', msg: '' }
+
   const [bgmIndex, setBgmIndex] = useState(() => Math.floor(Math.random() * BGM_TRACKS.length));
   const audioRef = useRef(null);
   const prevPlayersCount = useRef(0);
@@ -144,6 +150,27 @@ function App() {
   const handleInitReply = (ansId, prefix = "") => { playSound('click'); setReplyingToAnsId(ansId); setReplyText(prefix); };
   const handlePlayAgain = () => { playSound('click'); socket.emit('playAgain', { roomId: room.id }); };
 
+  const handlePublicSubmit = () => {
+    if (!pubScenario.trim()) return;
+    playSound('click');
+    setPubStatus({ type: 'loading', msg: '⏳ In queue for AI moderation...' });
+    
+    socket.emit('submitPublicScenario', { text: pubScenario, language: pubLang, category: pubCategory }, (res) => {
+      if (res.success) {
+        if (res.data.accepted) {
+          playSound('vote'); // Happy chime!
+          setPubStatus({ type: 'success', msg: `✅ Accepted! ${res.data.reason}` });
+          setPubScenario(''); // Clear the box
+        } else {
+          playSound('alert'); // Error beep
+          setPubStatus({ type: 'error', msg: `❌ Rejected: ${res.data.reason}` });
+        }
+      } else {
+        setPubStatus({ type: 'error', msg: `❌ ${res.message}` });
+      }
+    });
+  };
+
   const isHost = room?.players[0]?.id === socket.id;
 
   return (
@@ -189,6 +216,56 @@ function App() {
           </div>
         </div>
       )}
+
+      {/* NEW PUBLIC SCENARIO SUBMISSION */}
+          <div style={{...styles.howToPlayBox, marginTop: '20px', transform: 'rotate(0deg)'}}>
+            <div style={{...styles.howToPlayHeader, backgroundColor: '#10b981', color: '#fff'}}>
+              🌍 Submit a Public Scenario 🌍
+            </div>
+            <div style={styles.howToPlayContent}>
+              <p style={{fontSize: '14px', fontWeight: 'bold', marginBottom: '15px'}}>Write your own scenario. If our AI approves it, future players will see it!</p>
+              
+              <textarea 
+                value={pubScenario} 
+                onChange={(e) => setPubScenario(e.target.value)} 
+                placeholder="Type your custom scenario here..." 
+                style={{...styles.textarea, height: '80px', marginBottom: '10px'}} 
+              />
+              
+              <div style={{display: 'flex', gap: '10px', marginBottom: '15px'}}>
+                <select value={pubLang} onChange={(e) => setPubLang(e.target.value)} style={styles.dropdown}>
+                  <option>English</option>
+                  <option>Mandarin</option>
+                  <option>Hindi</option>
+                  <option>Spanish</option>
+                  <option>French</option>
+                  <option>Arabic</option>
+                  <option>Bengali</option>
+                  <option>Russian</option>
+                  <option>Japanese</option>
+                </select>
+                
+                <select value={pubCategory} onChange={(e) => setPubCategory(e.target.value)} style={styles.dropdown}>
+                  <option>All Ages</option>
+                  <option>18+</option>
+                </select>
+              </div>
+
+              <button onClick={handlePublicSubmit} disabled={pubStatus?.type === 'loading'} className="btn-3d" style={{...styles.primaryBtn, padding: '12px', fontSize: '16px'}}>
+                Submit to AI
+              </button>
+
+              {/* Dynamic Red/Green Status Text */}
+              {pubStatus && (
+                <div style={{
+                  marginTop: '15px', fontWeight: '900', fontSize: '14px',
+                  color: pubStatus.type === 'success' ? '#10b981' : pubStatus.type === 'error' ? '#ef4444' : '#fbbf24'
+                }}>
+                  {pubStatus.msg}
+                </div>
+              )}
+            </div>
+          </div>
 
       {/* --- VIEW: LOBBY --- */}
       {room?.state === 'LOBBY' && (
@@ -410,6 +487,8 @@ const styles = {
   howToPlayHeader: { backgroundColor: '#1a1a1a', color: '#FFC200', padding: '12px', fontSize: '16px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '2px', textAlign: 'center' },
   howToPlayContent: { padding: '20px', textAlign: 'left' },
   howToPlayText: { fontSize: '14px', color: '#1a1a1a', marginBottom: '12px', fontWeight: '800', lineHeight: '1.5', display: 'flex', alignItems: 'flex-start', gap: '8px' },
+  
+  dropdown: { flex: 1, backgroundColor: '#333333', color: '#ffffff', padding: '12px', borderRadius: '8px', border: '3px solid #1a1a1a', fontSize: '14px', fontWeight: 'bold', outline: 'none', cursor: 'pointer' },
   
   bullet: { color: '#10b981', fontSize: '16px' }, // Emerald green diamond for that premium pop!
   container: { width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', paddingTop: '40px', paddingBottom: '60px' },
