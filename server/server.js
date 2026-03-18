@@ -74,7 +74,8 @@ async function fetchScenarioBatch(category, language = 'English') {
       throw new Error("Invalid array length");
     })();
 
-    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("AI taking too long!")), 6000));
+    // FIXED: Increased the timeout to 15 seconds so the AI has time to translate!
+    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("AI taking too long!")), 15000));
     return await Promise.race([fetchPromise, timeoutPromise]);
   } catch (e) {
     console.log("🚨 AI Error or Timeout! Instantly pulling from The Vault...", e.message);
@@ -187,7 +188,6 @@ io.on('connection', (socket) => {
       roundData: null,
       history: [],
       scenarioBatch: [], 
-      // NEW: Initializes the room with the creator's current language
       settings: { category: 'All Ages', source: 'AI', language: language || 'English' },
       secretCustomScenarios: [], 
       customCount: 0
@@ -249,7 +249,6 @@ io.on('connection', (socket) => {
            room.scenarioBatch = await fetchScenarioBatch(room.settings.category, room.settings.language);
         }
       } else {
-        // Enforce AI Language Generation exactly to the room setting
         room.scenarioBatch = await fetchScenarioBatch('All Ages', room.settings.language);
       }
 

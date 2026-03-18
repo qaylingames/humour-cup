@@ -127,7 +127,7 @@ function App() {
         playSound('alert');
       }
     }
-  };
+  }; 
 
   const handlePublicSubmit = () => {
     if (!pubScenario.trim()) return;
