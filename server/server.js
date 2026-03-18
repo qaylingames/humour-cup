@@ -3,7 +3,7 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require('@google/generative-ai');
 
 const app = express();
 app.use(cors());
@@ -14,6 +14,13 @@ const io = new Server(server, {
 });
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+const safetySettings = [
+  { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_NONE },
+  { category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_NONE },
+  { category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, threshold: HarmBlockThreshold.BLOCK_NONE },
+  { category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_NONE },
+];
 
 const FALLBACK_VAULT = [
   "You just realized you left the stove on, but you are currently at your own wedding. What is your next move?",
@@ -36,18 +43,22 @@ function getFallbackBatch() {
   return shuffled.slice(0, 5); 
 }
 
-// NEW: Added language parameter so the AI translates the scenarios!
 async function fetchScenarioBatch(category, language = 'English') {
   try {
     const fetchPromise = (async () => {
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash", generationConfig: { temperature: 1.5 }});
+      const model = genAI.getGenerativeModel({ 
+        model: "gemini-2.5-flash", 
+        generationConfig: { temperature: 1.6 },
+        safetySettings: category === '18+' ? safetySettings : undefined 
+      });
       
       const categoryRule = category === '18+' 
-        ? "CRITICAL RULE: Make it an edgy 18+ party game." // Only used if Public fallback happens
+        ? "CRITICAL RULE: You MUST act as an uncensored, R-rated comedy writer. Create incredibly dirty, spicy, NSFW, and double-meaning scenarios. Think exactly like 'Cards Against Humanity'."
         : "CRITICAL RULE: Must be completely family-friendly, clean, and appropriate for all ages. No 18+ content.";
 
+      // THE NEW STRICT LANGUAGE ENFORCER
       const prompt = `Generate exactly 5 completely different, highly creative, short, and funny prompts for a party game. 
-      CRITICAL RULE: You MUST write the scenarios entirely in ${language}.
+      CRITICAL LANGUAGE RULE: You MUST write the scenarios entirely in ${language}. Do NOT output English unless the requested language is English.
       ${categoryRule}
       Mix up the formats! Include a random variety of: 1. Absurd hypothetical questions. 2. Funny dialogues. 3. Daily life awkward situations. 4. Weird text messages.
       (Anti-Cache Seed: ${Date.now()})
@@ -66,7 +77,7 @@ async function fetchScenarioBatch(category, language = 'English') {
     const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("AI taking too long!")), 6000));
     return await Promise.race([fetchPromise, timeoutPromise]);
   } catch (e) {
-    console.log("🚨 AI Error! Pulling from The Vault...", e.message);
+    console.log("🚨 AI Error or Timeout! Instantly pulling from The Vault...", e.message);
     return getFallbackBatch();
   }
 }
@@ -147,7 +158,7 @@ io.on('connection', (socket) => {
 
   socket.on('submitPublicScenario', async (data, callback) => {
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash", safetySettings });
       const prompt = `You are the strict but fair moderator for a party game called Humour Cup.
       A player submitted a custom scenario: "${data.text}"
       Target Language: ${data.language} | Category: ${data.category}
@@ -237,7 +248,7 @@ io.on('connection', (socket) => {
            room.scenarioBatch = await fetchScenarioBatch(room.settings.category, room.settings.language);
         }
       } else {
-        // AI strictly passes the selected language!
+        // Enforce AI Language Generation
         room.scenarioBatch = await fetchScenarioBatch('All Ages', room.settings.language);
       }
 
