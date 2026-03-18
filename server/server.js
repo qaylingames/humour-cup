@@ -53,12 +53,12 @@ async function fetchScenarioBatch(category, language = 'English') {
       });
       
       const categoryRule = category === '18+' 
-        ? "CRITICAL RULE: You MUST act as an uncensored, R-rated comedy writer. Create incredibly dirty, spicy, NSFW, and double-meaning scenarios. Think exactly like 'Cards Against Humanity'."
+        ? "CRITICAL RULE: You MUST act as an uncensored, R-rated comedy writer. Create dirty, spicy, and double-meaning scenarios."
         : "CRITICAL RULE: Must be completely family-friendly, clean, and appropriate for all ages. No 18+ content.";
 
-      // THE NEW STRICT LANGUAGE ENFORCER
       const prompt = `Generate exactly 5 completely different, highly creative, short, and funny prompts for a party game. 
-      CRITICAL LANGUAGE RULE: You MUST write the scenarios entirely in ${language}. Do NOT output English unless the requested language is English.
+      CRITICAL LANGUAGE RULE: You MUST write the scenarios entirely in ${language}. If ${language} is Hindi, use proper Devanagari script. Do NOT output English unless the requested language is English.
+      CRITICAL VOCABULARY RULE: Use very simple, common, everyday words. DO NOT use complex, formal, or tough vocabulary. Keep it easy to read.
       ${categoryRule}
       Mix up the formats! Include a random variety of: 1. Absurd hypothetical questions. 2. Funny dialogues. 3. Daily life awkward situations. 4. Weird text messages.
       (Anti-Cache Seed: ${Date.now()})
@@ -104,7 +104,7 @@ function startAnswerPhase(roomCode, scenario) {
       clearInterval(roomTimers[roomCode]);
       room.players.forEach(p => {
         if (!room.roundData.answers.find(a => a.playerId === p.id)) {
-          room.roundData.answers.push({ id: 'ans_' + Math.random().toString(36).substring(2,9), playerId: p.id, text: "Too slow to think of a joke!", votes: [], replies: [] });
+          room.roundData.answers.push({ id: 'ans_' + Math.random().toString(36).substring(2,9), playerId: p.id, text: "...", votes: [], replies: [] });
         }
       });
       startChatPhase(roomCode);
@@ -177,7 +177,8 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('createRoom', (playerName, callback) => {
+  socket.on('createRoom', (data, callback) => {
+    const { playerName, language } = data;
     const roomId = Math.random().toString(36).substring(2, 6).toUpperCase(); 
     rooms[roomId] = {
       id: roomId,
@@ -186,7 +187,8 @@ io.on('connection', (socket) => {
       roundData: null,
       history: [],
       scenarioBatch: [], 
-      settings: { category: 'All Ages', source: 'AI', language: 'English' },
+      // NEW: Initializes the room with the creator's current language
+      settings: { category: 'All Ages', source: 'AI', language: language || 'English' },
       secretCustomScenarios: [], 
       customCount: 0
     };
@@ -211,7 +213,6 @@ io.on('connection', (socket) => {
     const roomCode = roomId.toUpperCase();
     if (rooms[roomCode] && rooms[roomCode].state === 'LOBBY') {
       rooms[roomCode].settings = { ...rooms[roomCode].settings, ...settings };
-      // Force "All Ages" if they switch back to AI
       if (rooms[roomCode].settings.source === 'AI') {
         rooms[roomCode].settings.category = 'All Ages';
       }
@@ -248,7 +249,7 @@ io.on('connection', (socket) => {
            room.scenarioBatch = await fetchScenarioBatch(room.settings.category, room.settings.language);
         }
       } else {
-        // Enforce AI Language Generation
+        // Enforce AI Language Generation exactly to the room setting
         room.scenarioBatch = await fetchScenarioBatch('All Ages', room.settings.language);
       }
 
