@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
 import { io } from 'socket.io-client';
-import html2canvas from 'html2canvas';
 
 const socket = io('https://humour-cup-server.onrender.com');
 
@@ -19,6 +18,23 @@ const uiTranslations = {
   'Indonesian': { name: "Nama Lucumu", create: "Buat Game", orJoin: "ATAU GABUNG", code: "KODE", join: "Gabung", rulebook: "👑 Aturan Resmi 👑", rule1: "Tulis respons lucumu.", rule2: "Balas dengan candaan di ronde obrolan.", rule3: "Pilih yang menurutmu lucu.", rule4: "Pemain dengan XP terbanyak menang.", submitPub: "🌍 Kirim Skenario 🌍", pubDesc: "Tambahkan skenariomu sendiri.", pubPlace: "Ketik skenariomu di sini...", submit: "Kirim", lobby: "Lobi", roomCode: "KODE RUANG:", cat: "Kategori:", scen: "Skenario:", lang: "Bahasa:", secret: "🤫 Tambah diam-diam!", secPlace: "Tulis skenario kejutan...", addPool: "Tambah", totPool: "Total Skenario Khusus:", waitSquad: "Menunggu skuad...", host: "(Host)", launch: "Mulai Game 🚀", waitMore: "Menunggu 1 pemain lagi...", waitHost: "Menunggu host...", fetch: "Mengambil Skenario...", scenTitle: "Skenario", secLeft: "Detik Tersisa", typeHumour: "Ketik lucumu...", subHumour: "Kirim Kelucuan", waitSlow: "Menunggu yang lambat...", chatVote: "Ronde Obrolan & Pilih", humourBtn: "Lucu!", replyBtn: "Balas", repPlace: "Balas...", send: "Kirim", cancel: "Batal", done: "Saya Selesai Membaca!", waiting: "Menunggu...", upcoming: "Mendatang", enterRound: "Masuk Ronde", in: "dalam", load: "Memuat...", results: "Hasil Akhir", winners: "Pemenang", winner: "Pemenang", scoreboard: "Papan Skor", receipt: "🧾 Struk Humour Cup", thanks: "Terima kasih sudah bermain! 🏆", saveRec: "📸 Simpan struk ini", playAgain: "Main Lagi", waitRes: "Menunggu Host...", adminVault: "Brankas Admin", backHome: "⬅ Kembali", noScen: "Belum ada skenario!" },
   'Russian': { name: "Твое смешное имя", create: "Создать игру", orJoin: "ИЛИ ПРИСОЕДИНИТЬСЯ", code: "КОД", join: "Вход", rulebook: "👑 Правила 👑", rule1: "Напиши смешной ответ на сценарий.", rule2: "Отвечай шутками в чате.", rule3: "Голосуй за самые смешные.", rule4: "Игрок с наибольшим XP побеждает.", submitPub: "🌍 Предложить сценарий 🌍", pubDesc: "Добавь свой сценарий для игры.", pubPlace: "Введи свой сценарий здесь...", submit: "Отправить", lobby: "Лобби", roomCode: "КОД КОМНАТЫ:", cat: "Категория:", scen: "Сценарии:", lang: "Язык:", secret: "🤫 Добавить тайно!", secPlace: "Напиши сценарий-сюрприз...", addPool: "Добавить", totPool: "Всего сценариев:", waitSquad: "Ждем команду...", host: "(Хост)", launch: "Запуск 🚀", waitMore: "Ждем еще 1 игрока...", waitHost: "Ждем хоста...", fetch: "Получение...", scenTitle: "Сценарий", secLeft: "Секунд осталось", typeHumour: "Введи шутку...", subHumour: "Отправить", waitSlow: "Ждем остальных...", chatVote: "Чат и Голосование", humourBtn: "Смешно!", replyBtn: "Ответить", repPlace: "Ответить...", send: "Отправить", cancel: "Отмена", done: "Я прочитал!", waiting: "Ожидание...", upcoming: "Следующий", enterRound: "Начало раунда", in: "через", load: "Загрузка...", results: "Результаты", winners: "Победители", winner: "Победитель", scoreboard: "Счет", receipt: "🧾 Чек игры", thanks: "Спасибо за игру! 🏆", saveRec: "📸 Сохранить этот чек", playAgain: "Играть снова", waitRes: "Ждем хоста...", adminVault: "Хранилище Админа", backHome: "⬅ Назад", noScen: "Нет сценариев!" }
 };
+
+const sfxCache = {
+  click: new Audio('https://actions.google.com/sounds/v1/ui/button_click.ogg'),
+  create: new Audio('https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg'),
+  join: new Audio('https://actions.google.com/sounds/v1/cartoon/pop.ogg'), 
+  vote: new Audio('https://actions.google.com/sounds/v1/magic/magic_chime.ogg'), 
+  win: new Audio('https://actions.google.com/sounds/v1/crowds/crowd_cheer.ogg'),
+  alert: new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg')
+};
+
+const BGM_TRACKS = [
+  'https://ia903204.us.archive.org/16/items/MonkeysSpinningMonkeys/Monkeys%20Spinning%20Monkeys.mp3',
+  'https://ia800305.us.archive.org/30/items/SneakySnitch/Sneaky%20Snitch.mp3',
+  'https://ia903107.us.archive.org/15/items/FluffingADuck/Fluffing%20a%20Duck.mp3',
+  'https://ia801402.us.archive.org/27/items/TheBuilder_201511/The%20Builder.mp3',
+  'https://ia800201.us.archive.org/5/items/MerryGo/Merry%20Go.mp3'
+];
 
 function App() {
   const [appLang, setAppLang] = useState('English'); 
@@ -82,7 +98,6 @@ function App() {
 
       if (updatedRoom.state === 'RESULTS' && prevGameState.current !== 'RESULTS') playSound('win', 1.0);
       
-      // NEW: INSTANT ROOM LANGUAGE SYNC
       if (updatedRoom.settings?.language && updatedRoom.settings.language !== appLang) {
         setAppLang(updatedRoom.settings.language);
       }
@@ -105,7 +120,6 @@ function App() {
     }
   }, [room]);
 
-  // Pass appLang so the room defaults to the creator's language!
   const handleCreateRoom = () => { playSound('create'); if (!playerName) alert("Enter a name!"); else socket.emit('createRoom', { playerName, language: appLang }, () => {}); };
   const handleJoinRoom = () => { playSound('click'); if (!playerName || !joinCode) alert("Fill all fields!"); else socket.emit('joinRoom', { roomId: joinCode, playerName }, (res) => !res.success && alert(res.message)); };
   const handleStartGame = () => { playSound('click'); socket.emit('startGame', room.id); };
@@ -113,21 +127,21 @@ function App() {
   const handleSettingChange = (key, value) => { socket.emit('updateSettings', { roomId: room.id, settings: { [key]: value } }); };
   const handleSecretSubmit = () => { if (!secretInput.trim()) return; playSound('vote'); socket.emit('addSecretScenario', { roomId: room.id, text: secretInput }); setSecretInput(''); };
 
-  // THE SECRET VAULT LOGIN (Tap Title 5 Times)
+  // THE SECRET VAULT LOGIN 
   const handleLogoClick = () => {
     const newCount = logoClicks + 1;
     setLogoClicks(newCount);
     if (newCount >= 5) {
       setLogoClicks(0);
       const pwd = prompt("Admin Passcode:");
-      if (pwd === "72954") { // UPDATED PASSWORD
+      if (pwd === "72954") { 
         playSound('win');
         socket.emit('getPublicVault', (data) => { setVaultData(data); setShowVault(true); });
       } else {
         playSound('alert');
       }
     }
-  }; 
+  };
 
   const handlePublicSubmit = () => {
     if (!pubScenario.trim()) return;
@@ -157,21 +171,27 @@ function App() {
   const handleInitReply = (ansId, prefix = "") => { playSound('click'); setReplyingToAnsId(ansId); setReplyText(prefix); };
   const handlePlayAgain = () => { playSound('click'); socket.emit('playAgain', { roomId: room.id }); };
 
-  const handleSaveReceipt = () => {
+  // DYNAMIC IMPORT FIX TO PREVENT YELLOW SCREEN CRASHES
+  const handleSaveReceipt = async () => {
     playSound('click');
     if (receiptRef.current) {
-      html2canvas(receiptRef.current, { backgroundColor: '#fef3c7', scale: 2 }).then(canvas => {
+      try {
+        const html2canvasModule = await import('html2canvas');
+        const html2canvas = html2canvasModule.default || html2canvasModule;
+        
+        const canvas = await html2canvas(receiptRef.current, { backgroundColor: '#fef3c7', scale: 2 });
         const link = document.createElement('a');
         link.download = `HumourCup_Receipt_${room.id}.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();
-      });
+      } catch (err) {
+        console.error("Screenshot failed:", err);
+      }
     }
   };
 
   const isHost = room?.players[0]?.id === socket.id;
 
-  // YOUR EXACT EMOJI RAIN ARRAY
   const rainEmojis = ['😂', '🤣', '💀', '🏆', '🔥', '🌶️', '👽', '🦄', '🍻', '😆', '😁', '🫠', '😭', '🤟'];
 
   return (
@@ -189,7 +209,6 @@ function App() {
         @keyframes fall { to { transform: translateY(115vh) rotate(360deg); } }
       `}</style>
 
-      {/* --- SLEEK TRANSLATION DROPDOWN (ONLY ON HOME SCREEN) --- */}
       {!room && !showVault && (
         <div style={styles.translateWrapper}>
           <span style={{fontSize: '18px'}}>🌐</span>
@@ -201,7 +220,6 @@ function App() {
 
       <audio ref={audioRef} src={BGM_TRACKS[bgmIndex]} loop />
 
-      {/* --- VIEW: HOME SCREEN --- */}
       {!room && !showVault && (
         <div style={styles.container}>
           <h1 onClick={handleLogoClick} style={{...styles.logo, cursor: 'pointer', userSelect: 'none'}}>🏆 Humour Cup</h1>
@@ -245,9 +263,9 @@ function App() {
 
               {pubStatus && (
                 <div style={styles.checklistWrapper}>
-                  <div style={styles.checklistItem}>{pubStatus.type === 'loading' ? '⏳' : '✅'} Language & Category Match</div>
+                  <div style={styles.checklistItem}>{pubStatus.type === 'loading' ? '⏳' : '✅'} Language & Category</div>
                   <div style={styles.checklistItem}>{pubStatus.type === 'loading' ? '⏳' : pubStatus.type === 'success' ? '✅' : '❌'} Simple Words & Grammar</div>
-                  <div style={styles.checklistItem}>{pubStatus.type === 'loading' ? '⏳' : pubStatus.type === 'success' ? '✅' : '❌'} Humour Potential Evaluated</div>
+                  <div style={styles.checklistItem}>{pubStatus.type === 'loading' ? '⏳' : pubStatus.type === 'success' ? '✅' : '❌'} Humour Potential</div>
                   <div style={{ marginTop: '12px', fontWeight: '900', fontSize: '14px', color: pubStatus.type === 'success' ? '#10b981' : pubStatus.type === 'error' ? '#ef4444' : '#fbbf24' }}>
                     {pubStatus.msg}
                   </div>
@@ -258,7 +276,6 @@ function App() {
         </div>
       )}
 
-      {/* --- VIEW: ADMIN VAULT LIBRARY --- */}
       {!room && showVault && (
         <div style={{...styles.container, maxWidth: '800px'}}>
           <h1 style={styles.logo}>🏆 Humour Cup</h1>
@@ -283,7 +300,6 @@ function App() {
         </div>
       )}
 
-      {/* --- VIEW: LOBBY --- */}
       {room?.state === 'LOBBY' && (
         <div style={styles.container}>
           <h1 style={styles.logo}>🏆 Humour Cup</h1>
@@ -341,7 +357,6 @@ function App() {
         </div>
       )}
 
-      {/* --- VIEW: LAUNCHING --- */}
       {room?.state === 'LAUNCHING' && (
         <div style={styles.container}>
           <h1 style={styles.logo}>🏆 Humour Cup</h1>
@@ -351,7 +366,6 @@ function App() {
         </div>
       )}
 
-      {/* --- VIEW: ANSWER PHASE --- */}
       {room?.state === 'ANSWER_PHASE' && (() => {
         const safeAnswers = room.roundData.answers || [];
         const hasSubmitted = safeAnswers.some(a => a.playerId === socket.id);
@@ -372,7 +386,6 @@ function App() {
         );
       })()}
 
-      {/* --- VIEW: REAL-TIME CHAT & VOTE PHASE --- */}
       {room?.state === 'CHAT_PHASE' && (() => {
         const donePlayers = room.roundData.donePlayers || [];
         const safeAnswers = room.roundData.answers || [];
@@ -435,7 +448,6 @@ function App() {
         );
       })()}
 
-      {/* --- VIEW: INTERMISSION --- */}
       {room?.state === 'INTERMISSION' && (() => {
         const sortedPlayers = [...room.players].sort((a,b) => b.score - a.score);
         const nextRound = (room.roundData?.roundNumber || 1) + 1;
@@ -455,7 +467,6 @@ function App() {
         );
       })()}
 
-      {/* --- VIEW: RESULTS --- */}
       {room?.state === 'RESULTS' && (() => {
         const sortedPlayers = [...room.players].sort((a,b) => b.score - a.score);
         const highestScore = sortedPlayers[0].score;
@@ -572,8 +583,6 @@ const styles = {
   checklistItem: { fontSize: '14px', fontWeight: 'bold', color: '#1a1a1a', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' },
   receiptBox: { width: '100%', padding: '25px 20px', backgroundColor: '#fef3c7', borderRadius: '4px', border: '3px dashed #1a1a1a', marginBottom: '20px', textAlign: 'left', boxShadow: '6px 6px 0px #1a1a1a', fontFamily: '"Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive' },
   receiptTitle: { color: '#1a1a1a', textTransform: 'uppercase', fontWeight: '900', textAlign: 'center', marginBottom: '20px', fontSize: '24px', borderBottom: '2px dashed #1a1a1a', paddingBottom: '15px' },
-  
-  /* STYLES FOR THE FLOATING TRANSLATION DROPDOWN */
   translateWrapper: { position: 'absolute', top: '20px', left: '20px', zIndex: 1000, display: 'flex', alignItems: 'center', gap: '8px', background: '#fff', padding: '8px 12px', borderRadius: '50px', border: '3px solid #1a1a1a', boxShadow: '4px 4px 0px #1a1a1a' },
   translateSelect: { border: 'none', outline: 'none', background: 'transparent', fontSize: '14px', fontWeight: '900', color: '#1a1a1a', cursor: 'pointer' }
 };
