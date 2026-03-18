@@ -4,6 +4,15 @@ import html2canvas from 'html2canvas';
 
 const socket = io('https://humour-cup-server.onrender.com');
 
+// --- TRANSLATION DICTIONARY ---
+const uiTranslations = {
+  'English': { create: "Create Game", join: "Join", name: "Your Funny Name", lobby: "Lobby", start: "Launch Game 🚀", subHumour: "Submit Humour", done: "I'm Done Reading!", again: "Play Again (Host)" },
+  'Hindi': { create: "गेम बनाएं", join: "जुड़ें", name: "आपका मज़ेदार नाम", lobby: "लॉबी", start: "गेम शुरू करें 🚀", subHumour: "हास्य सबमिट करें", done: "पढ़ लिया!", again: "फिर से खेलें" },
+  'Spanish': { create: "Crear Juego", join: "Unirse", name: "Tu Nombre Divertido", lobby: "Vestíbulo", start: "Lanzar Juego 🚀", subHumour: "Enviar Humor", done: "¡Terminé de leer!", again: "Jugar de nuevo" },
+  'French': { create: "Créer un jeu", join: "Rejoindre", name: "Votre nom drôle", lobby: "Lobby", start: "Lancer le jeu 🚀", subHumour: "Soumettre l'humour", done: "J'ai fini de lire !", again: "Rejouer" },
+  // Fallbacks map natively to English if a language isn't fully translated here!
+};
+
 const sfxCache = {
   click: new Audio('https://actions.google.com/sounds/v1/ui/button_click.ogg'),
   create: new Audio('https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg'),
@@ -18,11 +27,12 @@ const BGM_TRACKS = [
   'https://ia800305.us.archive.org/30/items/SneakySnitch/Sneaky%20Snitch.mp3',
   'https://ia903107.us.archive.org/15/items/FluffingADuck/Fluffing%20a%20Duck.mp3',
   'https://ia801402.us.archive.org/27/items/TheBuilder_201511/The%20Builder.mp3',
-  'https://ia800201.us.archive.org/5/items/MerryGo/Merry%20Go.mp3',
-  'https://ia801407.us.archive.org/29/items/QuirkyDog/Quirky%20Dog.mp3'
+  'https://ia800201.us.archive.org/5/items/MerryGo/Merry%20Go.mp3'
 ];
 
 function App() {
+  const [appLang, setAppLang] = useState('English'); // Global UI Language Tracker
+  
   const [playerName, setPlayerName] = useState('');
   const [joinCode, setJoinCode] = useState('');
   const [room, setRoom] = useState(null);
@@ -35,6 +45,7 @@ function App() {
   
   const [showVault, setShowVault] = useState(false);
   const [vaultData, setVaultData] = useState([]);
+  const [logoClicks, setLogoClicks] = useState(0); // Secret Admin Tracker
 
   const [myAnswer, setMyAnswer] = useState('');
   const [replyText, setReplyText] = useState('');
@@ -48,6 +59,8 @@ function App() {
   const prevPlayersCount = useRef(0);
   const prevGameState = useRef('');
   const prevRoundNumber = useRef(1);
+
+  const t = (key) => uiTranslations[appLang]?.[key] || uiTranslations['English'][key] || key;
 
   const playSound = (soundName, vol = 1.0) => {
     try {
@@ -88,7 +101,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // NEW: Added ANSWER_PHASE to the live timer logic!
     if (room?.state === 'CHAT_PHASE' || room?.state === 'ANSWER_PHASE') {
       const interval = setInterval(() => setTimeLeft(Math.max(0, Math.ceil(((room.roundData?.endTime || Date.now()) - Date.now()) / 1000))), 200);
       return () => clearInterval(interval);
@@ -104,6 +116,22 @@ function App() {
   
   const handleSettingChange = (key, value) => { socket.emit('updateSettings', { roomId: room.id, settings: { [key]: value } }); };
   const handleSecretSubmit = () => { if (!secretInput.trim()) return; playSound('vote'); socket.emit('addSecretScenario', { roomId: room.id, text: secretInput }); setSecretInput(''); };
+
+  // SECRET ADMIN VAULT ACCESS (Click Logo 5 Times)
+  const handleLogoClick = () => {
+    const newCount = logoClicks + 1;
+    setLogoClicks(newCount);
+    if (newCount >= 5) {
+      setLogoClicks(0);
+      const pwd = prompt("Admin Passcode:");
+      if (pwd === "admin") {
+        playSound('win');
+        socket.emit('getPublicVault', (data) => { setVaultData(data); setShowVault(true); });
+      } else {
+        playSound('alert');
+      }
+    }
+  };
 
   const handlePublicSubmit = () => {
     if (!pubScenario.trim()) return;
@@ -125,8 +153,6 @@ function App() {
       }
     });
   };
-
-  const openVaultLibrary = () => { playSound('click'); socket.emit('getPublicVault', (data) => { setVaultData(data); setShowVault(true); }); };
 
   const handleSubmitAnswer = (e) => { e.preventDefault(); playSound('click'); if (myAnswer) socket.emit('submitAnswer', { roomId: room.id, answerText: myAnswer }); setMyAnswer(''); };
   const handleSendReply = (answerId) => { playSound('click'); if (replyText) socket.emit('submitChatReply', { roomId: room.id, answerId: answerId, text: replyText }); setReplyText(''); setReplyingToAnsId(null); };
@@ -165,27 +191,28 @@ function App() {
         @keyframes fall { to { transform: translateY(115vh) rotate(360deg); } }
       `}</style>
 
+      {/* TOP LEFT GLOBAL TRANSLATION DROPDOWN */}
+      <div style={{ position: 'absolute', top: '15px', left: '15px', zIndex: 1000 }}>
+        <select value={appLang} onChange={(e) => setAppLang(e.target.value)} style={{...styles.dropdown, padding: '8px', fontSize: '12px', width: 'auto'}}>
+          <option>English</option><option>Mandarin</option><option>Hindi</option><option>Spanish</option><option>French</option><option>Arabic</option><option>Portuguese</option><option>Russian</option><option>German</option><option>Japanese</option><option>Korean</option><option>Indonesian</option>
+        </select>
+      </div>
+
       <audio ref={audioRef} src={BGM_TRACKS[bgmIndex]} loop />
 
       {/* --- VIEW: HOME SCREEN --- */}
       {!room && !showVault && (
         <div style={styles.container}>
-          <h1 style={styles.logo}>🏆 Humour Cup</h1>
+          <h1 onClick={handleLogoClick} style={{...styles.logo, cursor: 'pointer', userSelect: 'none'}}>🏆 Humour Cup</h1>
           
           <div style={styles.mainCard}>
-            <input placeholder="Your Funny Name" value={playerName} onChange={(e) => setPlayerName(e.target.value)} style={styles.input} />
-            <button onClick={handleCreateRoom} className="btn-3d" style={styles.primaryBtn}>Create Game</button>
+            <input placeholder={t('name')} value={playerName} onChange={(e) => setPlayerName(e.target.value)} style={styles.input} />
+            <button onClick={handleCreateRoom} className="btn-3d" style={styles.primaryBtn}>{t('create')}</button>
             <div style={styles.divider}>OR JOIN A FRIEND</div>
             <div style={{display:'flex', gap:'10px', width: '100%'}}>
               <input placeholder="CODE" value={joinCode} onChange={(e) => setJoinCode(e.target.value)} style={styles.smallInput} maxLength={4} />
-              <button onClick={handleJoinRoom} className="btn-3d" style={styles.secondaryBtn}>Join</button>
+              <button onClick={handleJoinRoom} className="btn-3d" style={styles.secondaryBtn}>{t('join')}</button>
             </div>
-          </div>
-
-          <div style={{marginTop: '20px', width: '100%'}}>
-            <button onClick={openVaultLibrary} className="btn-3d" style={{...styles.secondaryBtn, width: '100%', backgroundColor: '#1a1a1a', color: '#FFC200', borderColor: '#FFC200'}}>
-              📚 Browse Public Vault
-            </button>
           </div>
 
           <div style={styles.howToPlayBox}>
@@ -230,11 +257,11 @@ function App() {
         </div>
       )}
 
-      {/* --- VIEW: VAULT LIBRARY --- */}
+      {/* --- VIEW: ADMIN VAULT LIBRARY --- */}
       {!room && showVault && (
         <div style={{...styles.container, maxWidth: '800px'}}>
           <h1 style={styles.logo}>🏆 Humour Cup</h1>
-          <h2 style={styles.phaseTitle}>Public Vault Library</h2>
+          <h2 style={styles.phaseTitle}>Admin Vault View</h2>
           <button onClick={() => setShowVault(false)} className="btn-3d" style={{...styles.secondaryBtn, marginBottom: '20px'}}>⬅ Back to Home</button>
           
           <div style={{width: '100%', display: 'flex', gap: '20px', flexWrap: 'wrap', justifyContent: 'center'}}>
@@ -259,27 +286,33 @@ function App() {
       {room?.state === 'LOBBY' && (
         <div style={styles.container}>
           <h1 style={styles.logo}>🏆 Humour Cup</h1>
-          <h2 style={styles.phaseTitle}>Lobby</h2>
+          <h2 style={styles.phaseTitle}>{t('lobby')}</h2>
           <div style={styles.roomBadge}>ROOM CODE: {room.id}</div>
           
-          {/* REMOVED '⚙️ Game Settings' HEADING AS REQUESTED */}
           <div style={{...styles.mainCard, marginBottom: '30px', textAlign: 'left', paddingTop: '20px'}}>
              <div style={{display: 'flex', gap: '10px', marginBottom: '15px', flexWrap: 'wrap'}}>
-               <div style={{flex: 1}}>
-                 <label style={{fontWeight: '900', fontSize: '14px'}}>Category:</label>
-                 <select disabled={!isHost} value={room.settings.category} onChange={(e) => handleSettingChange('category', e.target.value)} style={{...styles.dropdown, width: '100%', marginTop: '5px'}}>
-                   <option>All Ages</option><option>18+</option>
-                 </select>
-               </div>
+               
                <div style={{flex: 1}}>
                  <label style={{fontWeight: '900', fontSize: '14px'}}>Scenarios:</label>
                  <select disabled={!isHost} value={room.settings.source} onChange={(e) => handleSettingChange('source', e.target.value)} style={{...styles.dropdown, width: '100%', marginTop: '5px'}}>
                    <option>AI</option><option>Public</option><option>Custom</option>
                  </select>
                </div>
-               {room.settings.source === 'Public' && (
+
+               {/* HIDE 18+ COMPLETELY IF 'AI' IS SELECTED */}
+               {room.settings.source !== 'AI' && (
+                 <div style={{flex: 1}}>
+                   <label style={{fontWeight: '900', fontSize: '14px'}}>Category:</label>
+                   <select disabled={!isHost} value={room.settings.category} onChange={(e) => handleSettingChange('category', e.target.value)} style={{...styles.dropdown, width: '100%', marginTop: '5px'}}>
+                     <option>All Ages</option><option>18+</option>
+                   </select>
+                 </div>
+               )}
+
+               {/* SHOW LANGUAGE DROPDOWN FOR BOTH AI AND PUBLIC */}
+               {(room.settings.source === 'Public' || room.settings.source === 'AI') && (
                  <div style={{flex: '1 1 100%'}}>
-                   <label style={{fontWeight: '900', fontSize: '14px'}}>Public Language:</label>
+                   <label style={{fontWeight: '900', fontSize: '14px'}}>Language:</label>
                    <select disabled={!isHost} value={room.settings.language} onChange={(e) => handleSettingChange('language', e.target.value)} style={{...styles.dropdown, width: '100%', marginTop: '5px'}}>
                       <option>English</option><option>Mandarin</option><option>Hindi</option><option>Spanish</option><option>French</option><option>Arabic</option><option>Portuguese</option><option>Russian</option><option>German</option><option>Japanese</option><option>Korean</option><option>Indonesian</option>
                    </select>
@@ -305,7 +338,7 @@ function App() {
               </div>
             ))}
           </div>
-          {isHost ? (room.players.length >= 2 ? <button onClick={handleStartGame} className="btn-3d" style={styles.startBtn}>Launch Game 🚀</button> : <h3 className="animate-bounce" style={{color: '#ef4444', marginTop: '30px', fontWeight: '900', fontSize: '20px'}}>Waiting for at least 1 more player...</h3>) : <h3 className="animate-bounce" style={styles.loadingText}>Waiting for the host to start...</h3>}
+          {isHost ? (room.players.length >= 2 ? <button onClick={handleStartGame} className="btn-3d" style={styles.startBtn}>{t('start')}</button> : <h3 className="animate-bounce" style={{color: '#ef4444', marginTop: '30px', fontWeight: '900', fontSize: '20px'}}>Waiting for at least 1 more player...</h3>) : <h3 className="animate-bounce" style={styles.loadingText}>Waiting for the host to start...</h3>}
         </div>
       )}
 
@@ -328,13 +361,12 @@ function App() {
           <div style={styles.container}>
             <h1 style={styles.logo}>🏆 Humour Cup</h1>
             <h2 style={styles.phaseTitle}>Scenario {currentRound}</h2>
-            {/* THE NEW 60-SECOND TIMER FOR SCENARIOS */}
             <div style={styles.timerBadge}>⏳ {timeLeft} Seconds Left</div>
             <div style={styles.scenarioCard}>"{room.roundData.scenario}"</div>
             {!hasSubmitted ? (
               <form onSubmit={handleSubmitAnswer} style={styles.form}>
                 <textarea value={myAnswer} onChange={(e) => setMyAnswer(e.target.value)} placeholder="Type your humour..." style={styles.textarea} />
-                <button type="submit" className="btn-3d" style={styles.primaryBtn}>Submit Humour</button>
+                <button type="submit" className="btn-3d" style={styles.primaryBtn}>{t('subHumour')}</button>
               </form>
             ) : <h2 className="animate-bounce" style={styles.loadingText}>Waiting for slower humans... ({safeAnswers.length}/{room.players.length})</h2>}
           </div>
@@ -398,7 +430,7 @@ function App() {
               })}
             </div>
             <div style={{ marginTop: '30px', paddingBottom: '50px', width: '100%' }}>
-              <button onClick={handleDone} disabled={isDone} className="btn-3d" style={isDone ? styles.doneBtnActive : styles.primaryBtn}>{isDone ? `Waiting... (${donePlayers.length}/${room.players.length})` : "I'm Done Reading!"}</button>
+              <button onClick={handleDone} disabled={isDone} className="btn-3d" style={isDone ? styles.doneBtnActive : styles.primaryBtn}>{isDone ? `Waiting... (${donePlayers.length}/${room.players.length})` : t('done')}</button>
             </div>
           </div>
         );
@@ -431,7 +463,7 @@ function App() {
         const winners = sortedPlayers.filter(p => p.score === highestScore);
         const isTie = winners.length > 1;
 
-        const rainEmojis = ['😂', '🤣', '💀', '🏆', '🔥', '🌶️', '👽', '🦄', '🍻'];
+        const rainEmojis = ['😂', '🤣', '💀', '🏆', '🔥', '🍆', '🍑', '🌶️', '🤡', '👽', '💩', '🦄', '🍻'];
 
         return (
           <div style={styles.container}>
@@ -493,7 +525,7 @@ function App() {
 
             <button onClick={handleSaveReceipt} className="btn-3d" style={{...styles.secondaryBtn, width: '100%', marginBottom: '20px', backgroundColor: '#10b981', color: '#fff'}}>📸 Save this Humour Cup receipt</button>
 
-            {isHost ? <button onClick={handlePlayAgain} className="btn-3d" style={styles.primaryBtn}>Play Again (Host)</button> : <h3 className="animate-bounce" style={{color: '#1a1a1a', fontWeight: '900', fontSize: '20px'}}>Waiting for Host to Restart...</h3>}
+            {isHost ? <button onClick={handlePlayAgain} className="btn-3d" style={styles.primaryBtn}>{t('again')}</button> : <h3 className="animate-bounce" style={{color: '#1a1a1a', fontWeight: '900', fontSize: '20px'}}>Waiting for Host to Restart...</h3>}
           </div>
         );
       })()}

@@ -3,7 +3,7 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
-const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require('@google/generative-ai');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 const app = express();
 app.use(cors());
@@ -14,13 +14,6 @@ const io = new Server(server, {
 });
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
-const safetySettings = [
-  { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_NONE },
-  { category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_NONE },
-  { category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, threshold: HarmBlockThreshold.BLOCK_NONE },
-  { category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_NONE },
-];
 
 const FALLBACK_VAULT = [
   "You just realized you left the stove on, but you are currently at your own wedding. What is your next move?",
@@ -43,21 +36,18 @@ function getFallbackBatch() {
   return shuffled.slice(0, 5); 
 }
 
-async function fetchScenarioBatch(category) {
+// NEW: Added language parameter so the AI translates the scenarios!
+async function fetchScenarioBatch(category, language = 'English') {
   try {
     const fetchPromise = (async () => {
-      const model = genAI.getGenerativeModel({ 
-        model: "gemini-2.5-flash", 
-        generationConfig: { temperature: 1.6 }, // Pushed temperature slightly higher for wilder results
-        safetySettings: category === '18+' ? safetySettings : undefined 
-      });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash", generationConfig: { temperature: 1.5 }});
       
-      // THE NEW AGGRESSIVE 18+ PROMPT
       const categoryRule = category === '18+' 
-        ? "CRITICAL RULE: You MUST act as an uncensored, R-rated comedy writer. Create incredibly dirty, spicy, NSFW, and double-meaning scenarios. Use mature themes, sexual innuendos, dark humor, and strictly adult situations. DO NOT hold back. It must feel like an edgy 18+ party game."
+        ? "CRITICAL RULE: Make it an edgy 18+ party game." // Only used if Public fallback happens
         : "CRITICAL RULE: Must be completely family-friendly, clean, and appropriate for all ages. No 18+ content.";
 
       const prompt = `Generate exactly 5 completely different, highly creative, short, and funny prompts for a party game. 
+      CRITICAL RULE: You MUST write the scenarios entirely in ${language}.
       ${categoryRule}
       Mix up the formats! Include a random variety of: 1. Absurd hypothetical questions. 2. Funny dialogues. 3. Daily life awkward situations. 4. Weird text messages.
       (Anti-Cache Seed: ${Date.now()})
@@ -76,7 +66,7 @@ async function fetchScenarioBatch(category) {
     const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("AI taking too long!")), 6000));
     return await Promise.race([fetchPromise, timeoutPromise]);
   } catch (e) {
-    console.log("🚨 AI Error or Timeout! Instantly pulling from The Vault...", e.message);
+    console.log("🚨 AI Error! Pulling from The Vault...", e.message);
     return getFallbackBatch();
   }
 }
@@ -91,18 +81,16 @@ function emitSafeRoomData(roomId) {
   io.to(roomId).emit('roomData', safeRoom);
 }
 
-// --- NEW CLEAN PHASE MANAGERS ---
 function startAnswerPhase(roomCode, scenario) {
   const room = rooms[roomCode];
   room.state = 'ANSWER_PHASE';
-  room.roundData = { roundNumber: (room.roundData?.roundNumber || 0) + 1, scenario: scenario, answers: [], endTime: Date.now() + 60000 }; // 60 SECONDS!
+  room.roundData = { roundNumber: (room.roundData?.roundNumber || 0) + 1, scenario: scenario, answers: [], endTime: Date.now() + 60000 }; 
   emitSafeRoomData(roomCode);
 
   if (roomTimers[roomCode]) clearInterval(roomTimers[roomCode]);
   roomTimers[roomCode] = setInterval(() => {
     if (Date.now() >= room.roundData.endTime || room.roundData.answers.length === room.players.length) {
       clearInterval(roomTimers[roomCode]);
-      // Auto-fill answers for slow players!
       room.players.forEach(p => {
         if (!room.roundData.answers.find(a => a.playerId === p.id)) {
           room.roundData.answers.push({ id: 'ans_' + Math.random().toString(36).substring(2,9), playerId: p.id, text: "Too slow to think of a joke!", votes: [], replies: [] });
@@ -124,7 +112,7 @@ function startChatPhase(roomCode) {
   roomTimers[roomCode] = setInterval(() => {
     if (Date.now() >= room.roundData.endTime || room.roundData.donePlayers.length === room.players.length) {
       clearInterval(roomTimers[roomCode]);
-      room.history.push(JSON.parse(JSON.stringify(room.roundData))); // Save for receipt
+      room.history.push(JSON.parse(JSON.stringify(room.roundData))); 
 
       if (room.roundData.roundNumber < 3) {
         startIntermission(roomCode);
@@ -159,7 +147,7 @@ io.on('connection', (socket) => {
 
   socket.on('submitPublicScenario', async (data, callback) => {
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash", safetySettings });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
       const prompt = `You are the strict but fair moderator for a party game called Humour Cup.
       A player submitted a custom scenario: "${data.text}"
       Target Language: ${data.language} | Category: ${data.category}
@@ -212,6 +200,10 @@ io.on('connection', (socket) => {
     const roomCode = roomId.toUpperCase();
     if (rooms[roomCode] && rooms[roomCode].state === 'LOBBY') {
       rooms[roomCode].settings = { ...rooms[roomCode].settings, ...settings };
+      // Force "All Ages" if they switch back to AI
+      if (rooms[roomCode].settings.source === 'AI') {
+        rooms[roomCode].settings.category = 'All Ages';
+      }
       emitSafeRoomData(roomCode);
     }
   });
@@ -242,10 +234,11 @@ io.on('connection', (socket) => {
            const shuffled = [...matchingPublic].sort(() => 0.5 - Math.random());
            room.scenarioBatch = shuffled.slice(0, 3).map(s => s.text);
         } else {
-           room.scenarioBatch = await fetchScenarioBatch(room.settings.category);
+           room.scenarioBatch = await fetchScenarioBatch(room.settings.category, room.settings.language);
         }
       } else {
-        room.scenarioBatch = await fetchScenarioBatch(room.settings.category);
+        // AI strictly passes the selected language!
+        room.scenarioBatch = await fetchScenarioBatch('All Ages', room.settings.language);
       }
 
       startAnswerPhase(roomCode, room.scenarioBatch.shift());
@@ -258,7 +251,6 @@ io.on('connection', (socket) => {
     if (room && room.state === 'ANSWER_PHASE') {
       room.roundData.answers.push({ id: 'ans_' + Math.random().toString(36).substring(2,9), playerId: socket.id, text: answerText, votes: [], replies: [] });
       emitSafeRoomData(roomCode);
-      // The interval in startAnswerPhase handles moving forward!
     }
   });
 
