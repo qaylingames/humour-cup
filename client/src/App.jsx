@@ -222,7 +222,7 @@ function App() {
         .animated-logo-main {
            animation: unified-wobble-breathe 5s infinite ease-in-out;
            max-width: 100%;
-           width: 330px; /* Kept slightly smaller on mobile to avoid overlap */
+           width: 370px; /* Kept slightly smaller on mobile to avoid overlap */
            height: auto;
            cursor: pointer;
            user-select: none;
