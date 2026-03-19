@@ -3,6 +3,85 @@ import { io } from 'socket.io-client';
 
 const socket = io('https://humour-cup-server.onrender.com');
 
+// --- 1. THE NEW ANIMATED LOGO COMPONENT ---
+const AnimatedLogo = () => {
+  const word1 = "HUMOUR".split("");
+  const word2 = "CUP".split("");
+
+  return (
+    <div style={logoStyles.wrapper}>
+      {/* Sparkles (Independent Sequential Rotation) */}
+      <svg style={{...logoStyles.sparkle, top: '20px', left: '-10px'}} className="spark-1" width="30" height="30" viewBox="0 0 20 20">
+        <path d="M 10 0 L 12 8 L 20 10 L 12 12 L 10 20 L 8 12 L 0 10 L 8 8 Z" fill="#FFC200" stroke="#4a2e1b" strokeWidth="1.5" />
+      </svg>
+      <svg style={{...logoStyles.sparkle, top: '50px', left: '-30px'}} className="spark-2" width="20" height="20" viewBox="0 0 20 20">
+        <path d="M 10 0 L 12 8 L 20 10 L 12 12 L 10 20 L 8 12 L 0 10 L 8 8 Z" fill="#fff" stroke="#4a2e1b" strokeWidth="1.5" />
+      </svg>
+      <svg style={{...logoStyles.sparkle, top: '10px', right: '-15px'}} className="spark-3" width="25" height="25" viewBox="0 0 20 20">
+        <path d="M 10 0 L 12 8 L 20 10 L 12 12 L 10 20 L 8 12 L 0 10 L 8 8 Z" fill="#FFC200" stroke="#4a2e1b" strokeWidth="1.5" />
+      </svg>
+      <svg style={{...logoStyles.sparkle, top: '60px', right: '-35px'}} className="spark-4" width="15" height="15" viewBox="0 0 20 20">
+        <path d="M 10 0 L 12 8 L 20 10 L 12 12 L 10 20 L 8 12 L 0 10 L 8 8 Z" fill="#fff" stroke="#4a2e1b" strokeWidth="1.5" />
+      </svg>
+
+      {/* The Smiling Mouth (Clean Vector) */}
+      <svg width="300" height="150" viewBox="0 0 300 150" style={{ position: 'absolute', bottom: '0', left: '50%', transform: 'translateX(-50%)', zIndex: 1 }}>
+        {/* Main Mouth Shape */}
+        <path d="M 20 40 Q 150 70 280 40 Q 150 170 20 40" fill="#fffae6" stroke="#4a2e1b" strokeWidth="8" strokeLinejoin="round" />
+        {/* Horizontal Teeth Line */}
+        <path d="M 40 75 Q 150 95 260 75" fill="none" stroke="#4a2e1b" strokeWidth="4" strokeLinecap="round" />
+        {/* Cheek lines */}
+        <path d="M 20 40 Q 10 20 25 10" fill="none" stroke="#4a2e1b" strokeWidth="4" strokeLinecap="round" />
+        <path d="M 280 40 Q 290 20 275 10" fill="none" stroke="#4a2e1b" strokeWidth="4" strokeLinecap="round" />
+      </svg>
+
+      {/* Letter-by-Letter Sponge Animation Container */}
+      <div style={{ position: 'absolute', top: '15px', left: '0', width: '100%', height: '100%', zIndex: 2, pointerEvents: 'none' }}>
+        {word1.map((char, i) => (
+          <span key={`h-${i}`} className="sponge-letter" style={{
+            ...logoStyles.letter,
+            transform: `translate(-50%, 0) rotate(${i * 8 - 20}deg) translateY(${Math.abs(i - 2.5) * 5}px)`,
+            left: `${15 + (i * 14)}%`,
+            animationDelay: `${i * 0.1}s`,
+            fontSize: '52px'
+          }}>
+            {char}
+          </span>
+        ))}
+        {word2.map((char, i) => (
+          <span key={`c-${i}`} className="sponge-letter" style={{
+            ...logoStyles.letter,
+            transform: `translate(-50%, 0) rotate(${i * 10 - 10}deg) translateY(${Math.abs(i - 1) * -5}px)`,
+            left: `${35 + (i * 15)}%`,
+            top: '75px',
+            animationDelay: `${0.8 + (i * 0.1)}s`,
+            fontSize: '48px',
+            color: '#FFD700'
+          }}>
+            {char}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const logoStyles = {
+  wrapper: { position: 'relative', width: '300px', height: '180px', margin: '0 auto 30px auto', userSelect: 'none' },
+  sparkle: { position: 'absolute', zIndex: 0 },
+  letter: {
+    position: 'absolute',
+    display: 'inline-block',
+    fontFamily: '"Fredoka One", "Titan One", "Comic Sans MS", cursive',
+    fontWeight: '900',
+    color: '#FFC200',
+    WebkitTextStroke: '3px #4a2e1b', 
+    textShadow: 'none',
+    top: '0'
+  }
+};
+
+// --- 2. THE FULL 12-LANGUAGE TRANSLATION DICTIONARY ---
 const uiTranslations = {
   'English': { name: "Your Funny Name", create: "Create Room", orJoin: "OR JOIN A FRIEND", code: "CODE", join: "Join", rulebook: "👑 How to Play Humour Cup? 👑", rule1: "Write your humorous response on each scenario.", rule2: "Reply with your humour punches in the chat round after each scenario.", rule3: "Vote the ones you find humorous.", rule4: "The player with the maximum Humour XP gets the Humour Cup.", submitPub: "🌍 Submit a Public Scenario 🌍", pubDesc: "Add your own scenario for humour cup. These come randomly to players opting for Public scenarios in the lobby.", pubPlace: "Type your custom scenario here...", submit: "Submit", lobby: "Lobby", roomCode: "ROOM CODE:", cat: "Category:", scen: "Scenarios:", lang: "Language:", secret: "🤫 Secretly Add to the Game Mix!", secPlace: "Write a surprise scenario...", addPool: "Add to Pool", totPool: "Total Custom Scenarios in Pool:", waitSquad: "Waiting for the squad...", host: "(Host)", launch: "Launch Game 🚀", waitMore: "Waiting for at least 1 more player...", waitHost: "Waiting for the host to start...", fetch: "Fetching Scenarios...", scenTitle: "Scenario", secLeft: "Seconds Left", typeHumour: "Type your humour...", subHumour: "Submit Humour", waitSlow: "Waiting for slower humans...", chatVote: "Chat & Vote Round", humourBtn: "Humorous!", replyBtn: "Reply", repPlace: "Reply...", send: "Send", cancel: "Cancel", done: "I'm Done Reading!", waiting: "Waiting...", upcoming: "Upcoming", enterRound: "Entering Round-", in: "in", seconds: "seconds", load: "Loading...", results: "Final Results", winners: "Winners", winner: "Winner", scoreboard: "Final Scoreboard", receipt: "🧾 Humour Cup Receipt", thanks: "Thanks for playing Humour Cup! 🏆", saveRec: "📸 Save this Humour Cup receipt", playAgain: "Play Again (Host)", waitRes: "Waiting for Host to Restart...", adminVault: "Admin Vault View", backHome: "⬅ Back to Home", noScen: "No scenarios yet!" },
   'Hindi': { name: "आपका मज़ेदार नाम", create: "रूम बनाएं", orJoin: "या दोस्त से जुड़ें", code: "कोड", join: "जुड़ें", rulebook: "👑 ह्यूमर कप कैसे खेलें? 👑", rule1: "प्रत्येक परिदृश्य पर अपनी मज़ेदार प्रतिक्रिया लिखें।", rule2: "परिदृश्य के बाद चैट राउंड में अपने हास्य का जवाब दें।", rule3: "जो आपको मज़ेदार लगें, उन्हें वोट दें।", rule4: "सबसे अधिक ह्यूमर XP वाले खिलाड़ी को ह्यूमर कप मिलता है।", submitPub: "🌍 सार्वजनिक परिदृश्य जमा करें 🌍", pubDesc: "ह्यूमर कप के लिए अपना परिदृश्य जोड़ें।", pubPlace: "अपना कस्टम परिदृश्य यहां टाइप करें...", submit: "जमा करें", lobby: "लॉबी", roomCode: "रूम कोड:", cat: "श्रेणी:", scen: "परिदृश्य:", lang: "भाषा:", secret: "🤫 चुपके से गेम में जोड़ें!", secPlace: "एक परिदृश्य लिखें...", addPool: "पूल में जोड़ें", totPool: "पूल में कुल कस्टम परिदृश्य:", waitSquad: "स्क्वाड की प्रतीक्षा में...", host: "(होस्ट)", launch: "गेम शुरू करें 🚀", waitMore: "1 और खिलाड़ी की प्रतीक्षा में...", waitHost: "होस्ट के शुरू करने की प्रतीक्षा में...", fetch: "परिदृश्य प्राप्त कर रहा है...", scenTitle: "परिदृश्य", secLeft: "सेकंड शेष", typeHumour: "अपना हास्य टाइप करें...", subHumour: "हास्य जमा करें", waitSlow: "धीमे इंसानों की प्रतीक्षा में...", chatVote: "चैट और वोट राउंड", humourBtn: "मज़ेदार!", replyBtn: "उत्तर दें", repPlace: "उत्तर...", send: "भेजें", cancel: "रद्द करें", done: "पढ़ना समाप्त कर लिया!", waiting: "प्रतीक्षा में...", upcoming: "आगामी", enterRound: "राउंड-", in: "में प्रवेश", seconds: "सेकंड में", load: "लोड हो रहा है...", results: "अंतिम परिणाम", winners: "विजेता", winner: "विजेता", scoreboard: "अंतिम स्कोरबोर्ड", receipt: "🧾 ह्यूमर कप रसीद", thanks: "खेलने के लिए धन्यवाद! 🏆", saveRec: "📸 यह रसीद सहेजें", playAgain: "फिर से खेलें (होस्ट)", waitRes: "होस्ट की प्रतीक्षा में...", adminVault: "एडमिन वॉल्ट", backHome: "⬅ वापस", noScen: "कोई परिदृश्य नहीं!" },
@@ -13,11 +92,12 @@ const uiTranslations = {
   'Portuguese': { name: "Seu Nome Engraçado", create: "Criar Sala", orJoin: "OU ENTRAR", code: "CÓDIGO", join: "Entrar", rulebook: "👑 Como jogar a Copa do Humor? 👑", rule1: "Escreva sua resposta humorística.", rule2: "Responda no chat após cada cenário.", rule3: "Vote nas mais engraçadas.", rule4: "O jogador com mais XP ganha.", submitPub: "🌍 Enviar Cenário Público 🌍", pubDesc: "Adicione seu próprio cenário.", pubPlace: "Digite seu cenário aqui...", submit: "Enviar", lobby: "Lobby", roomCode: "CÓDIGO DA SALA:", cat: "Categoria:", scen: "Cenários:", lang: "Idioma:", secret: "🤫 Adicionar em segredo!", secPlace: "Escreva um cenário surpresa...", addPool: "Adicionar", totPool: "Total de cenários:", waitSquad: "Esperando a equipe...", host: "(Host)", launch: "Lançar Jogo 🚀", waitMore: "Esperando mais 1 jogador...", waitHost: "Esperando o host...", fetch: "Buscando Cenários...", scenTitle: "Cenário", secLeft: "Segundos Restantes", typeHumour: "Digite seu humor...", subHumour: "Enviar Humor", waitSlow: "Esperando os lentos...", chatVote: "Rodada de Chat e Votos", humourBtn: "Engraçado!", replyBtn: "Responder", repPlace: "Responder...", send: "Enviar", cancel: "Cancelar", done: "Terminei de ler!", waiting: "Esperando...", upcoming: "Próximo", enterRound: "Entrando na Rodada-", in: "em", seconds: "segundos", load: "Carregando...", results: "Resultados Finais", winners: "Vencedores", winner: "Vencedor", scoreboard: "Placar Final", receipt: "🧾 Recibo da Copa", thanks: "Obrigado por jogar! 🏆", saveRec: "📸 Salvar este recibo", playAgain: "Jogar Novamente", waitRes: "Esperando o host...", adminVault: "Cofre Admin", backHome: "⬅ Voltar", noScen: "Sem cenários!" },
   'German': { name: "Dein lustiger Name", create: "Raum erstellen", orJoin: "ODER BEITRETEN", code: "CODE", join: "Beitreten", rulebook: "👑 Wie spielt man den Humor Cup? 👑", rule1: "Schreibe deine humorvolle Antwort.", rule2: "Antworte mit Witzen in der Chat-Runde.", rule3: "Stimme für die lustigsten ab.", rule4: "Der Spieler mit den meisten XP gewinnt.", submitPub: "🌍 Szenario einreichen 🌍", pubDesc: "Füge dein eigenes Szenario hinzu.", pubPlace: "Tippe dein Szenario hier...", submit: "Einreichen", lobby: "Lobby", roomCode: "RAUMCODE:", cat: "Kategorie:", scen: "Szenarien:", lang: "Sprache:", secret: "🤫 Heimlich hinzufügen!", secPlace: "Schreibe ein Überraschungs-Szenario...", addPool: "Hinzufügen", totPool: "Gesamte eigene Szenarien:", waitSquad: "Warten auf das Team...", host: "(Host)", launch: "Spiel starten 🚀", waitMore: "Warten auf 1 weiteren Spieler...", waitHost: "Warten auf den Host...", fetch: "Lade Szenarien...", scenTitle: "Szenario", secLeft: "Sekunden übrig", typeHumour: "Tippe deinen Humor...", subHumour: "Humor einreichen", waitSlow: "Warten auf die Langsamen...", chatVote: "Chat & Abstimmung", humourBtn: "Witzig!", replyBtn: "Antworten", repPlace: "Antworten...", send: "Senden", cancel: "Abbrechen", done: "Ich bin fertig!", waiting: "Warten...", upcoming: "Kommend", enterRound: "Runde-", in: "in", seconds: "Sekunden", load: "Lädt...", results: "Endergebnisse", winners: "Gewinner", winner: "Gewinner", scoreboard: "Endstand", receipt: "🧾 Humor Cup Beleg", thanks: "Danke fürs Spielen! 🏆", saveRec: "📸 Beleg speichern", playAgain: "Nochmal spielen", waitRes: "Warten auf Host...", adminVault: "Admin-Tresor", backHome: "⬅ Zurück", noScen: "Noch keine Szenarien!" },
   'Japanese': { name: "あなたの面白い名前", create: "ルームを作成", orJoin: "または参加", code: "コード", join: "参加", rulebook: "👑 ユーモアカップの遊び方 👑", rule1: "各お題に面白い回答を書きます。", rule2: "チャットでジョークを返信します。", rule3: "面白いものに投票します。", rule4: "XPが最も多いプレイヤーの勝ちです。", submitPub: "🌍 公開お題を投稿 🌍", pubDesc: "自分のお題を追加してください。", pubPlace: "ここにお題を入力...", submit: "送信", lobby: "ロビー", roomCode: "ルームコード:", cat: "カテゴリー:", scen: "お題:", lang: "言語:", secret: "🤫 こっそり追加！", secPlace: "サプライズお題を書く...", addPool: "追加", totPool: "カスタムお題の合計:", waitSquad: "チームを待っています...", host: "(ホスト)", launch: "ゲーム開始 🚀", waitMore: "あと1人待っています...", waitHost: "ホストを待っています...", fetch: "お題を取得中...", scenTitle: "お題", secLeft: "残り秒数", typeHumour: "ユーモアを入力...", subHumour: "送信", waitSlow: "他のプレイヤーを待っています...", chatVote: "チャット＆投票", humourBtn: "面白い！", replyBtn: "返信", repPlace: "返信...", send: "送信", cancel: "キャンセル", done: "読み終わりました！", waiting: "待機中...", upcoming: "次", enterRound: "ラウンド-", in: "開始まで", seconds: "秒", load: "ロード中...", results: "最終結果", winners: "勝者", winner: "勝者", scoreboard: "最終スコアボード", receipt: "🧾 ユーモアカップのレシート", thanks: "遊んでくれてありがとう！🏆", saveRec: "📸 このレシートを保存", playAgain: "もう一度プレイ", waitRes: "ホストを待っています...", adminVault: "管理者", backHome: "⬅ 戻る", noScen: "まだお題がありません！" },
-  'Korean': { name: "재미있는 이름", create: "방 만들기", orJoin: "또는 참가", code: "코드", join: "참가", rulebook: "👑 유머 컵 플레이 방법 👑", rule1: "각 시나리오에 재미있는 답변을 쓰세요.", rule2: "채팅 라운드에서 농담을 주고받으세요.", 시나리오: "재미있는 것에 투표하세요.", rule4: "가장 많은 XP를 얻은 사람이 승리합니다.", submitPub: "🌍 공개 시나리오 제출 🌍", pubDesc: "나만의 시나리오를 추가하세요.", pubPlace: "여기에 시나리오를 입력하세요...", submit: "제출", lobby: "로비", roomCode: "방 코드:", cat: "카테고리:", scen: "시나리오:", lang: "언어:", secret: "🤫 몰래 추가하기!", secPlace: "깜짝 시나리오 쓰기...", addPool: "추가", totPool: "총 커스텀 시나리오:", waitSquad: "팀을 기다리는 중...", host: "(방장)", launch: "게임 시작 🚀", waitMore: "1명 더 기다리는 중...", waitHost: "방장을 기다리는 중...", fetch: "시나리오 가져오는 중...", scenTitle: "시나리오", secLeft: "초 남음", typeHumour: "유머를 입력하세요...", subHumour: "제출", waitSlow: "다른 플레이어 기다리는 중...", chatVote: "채팅 및 투표 라운드", humourBtn: "웃겨요!", replyBtn: "답글", repPlace: "답글...", send: "보내기", cancel: "취소", done: "다 읽었어요!", waiting: "대기 중...", upcoming: "다음", enterRound: "라운드-", in: "시작까지", seconds: "초", load: "로딩 중...", results: "최종 결과", winners: "우승자", winner: "우승자", scoreboard: "최종 점수판", receipt: "🧾 유머 컵 영수증", thanks: "플레이해주셔서 감사합니다! 🏆", saveRec: "📸 이 영수증 저장", playAgain: "다시 플레이", waitRes: "방장을 기다리는 중...", adminVault: "관리자 금고", backHome: "⬅ 뒤로", noScen: "아직 시나리오가 없습니다!" },
+  'Korean': { name: "재미있는 이름", create: "방 만들기", orJoin: "또는 참가", code: "코드", join: "참가", rulebook: "👑 유머 컵 플레이 방법 👑", rule1: "각 시나리오에 재미있는 답변을 쓰세요.", rule2: "채팅 라운드에서 농담을 주고받으세요.", rule3: "재미있는 것에 투표하세요.", rule4: "가장 많은 XP를 얻은 사람이 승리합니다.", submitPub: "🌍 공개 시나리오 제출 🌍", pubDesc: "나만의 시나리오를 추가하세요.", pubPlace: "여기에 시나리오를 입력하세요...", submit: "제출", lobby: "로비", roomCode: "방 코드:", cat: "카테고리:", scen: "시나리오:", lang: "언어:", secret: "🤫 몰래 추가하기!", secPlace: "깜짝 시나리오 쓰기...", addPool: "추가", totPool: "총 커스텀 시나리오:", waitSquad: "팀을 기다리는 중...", host: "(방장)", launch: "게임 시작 🚀", waitMore: "1명 더 기다리는 중...", waitHost: "방장을 기다리는 중...", fetch: "시나리오 가져오는 중...", scenTitle: "시나리오", secLeft: "초 남음", typeHumour: "유머를 입력하세요...", subHumour: "제출", waitSlow: "다른 플레이어 기다리는 중...", chatVote: "채팅 및 투표 라운드", humourBtn: "웃겨요!", replyBtn: "답글", repPlace: "답글...", send: "보내기", cancel: "취소", done: "다 읽었어요!", waiting: "대기 중...", upcoming: "다음", enterRound: "라운드-", in: "시작까지", seconds: "초", load: "로딩 중...", results: "최종 결과", winners: "우승자", winner: "우승자", scoreboard: "최종 점수판", receipt: "🧾 유머 컵 영수증", thanks: "플레이해주셔서 감사합니다! 🏆", saveRec: "📸 이 영수증 저장", playAgain: "다시 플레이", waitRes: "방장을 기다리는 중...", adminVault: "관리자 금고", backHome: "⬅ 뒤로", noScen: "아직 시나리오가 없습니다!" },
   'Indonesian': { name: "Nama Lucumu", create: "Buat Ruang", orJoin: "ATAU GABUNG", code: "KODE", join: "Gabung", rulebook: "👑 Cara Bermain Humour Cup? 👑", rule1: "Tulis respons lucumu.", rule2: "Balas dengan candaan di ronde obrolan.", rule3: "Pilih yang menurutmu lucu.", rule4: "Pemain dengan XP terbanyak menang.", submitPub: "🌍 Kirim Skenario 🌍", pubDesc: "Tambahkan skenariomu sendiri.", pubPlace: "Ketik skenariomu di sini...", submit: "Kirim", lobby: "Lobi", roomCode: "KODE RUANG:", cat: "Kategori:", scen: "Skenario:", lang: "Bahasa:", secret: "🤫 Tambah diam-diam!", secPlace: "Tulis skenario kejutan...", addPool: "Tambah", totPool: "Total Skenario Khusus:", waitSquad: "Menunggu skuad...", host: "(Host)", launch: "Mulai Game 🚀", waitMore: "Menunggu 1 pemain lagi...", waitHost: "Menunggu host...", fetch: "Mengambil Skenario...", scenTitle: "Skenario", secLeft: "Detik Tersisa", typeHumour: "Ketik lucumu...", subHumour: "Kirim Kelucuan", waitSlow: "Menunggu yang lambat...", chatVote: "Ronde Obrolan & Pilih", humourBtn: "Lucu!", replyBtn: "Balas", repPlace: "Balas...", send: "Kirim", cancel: "Batal", done: "Saya Selesai Membaca!", waiting: "Menunggu...", upcoming: "Mendatang", enterRound: "Masuk Ronde-", in: "dalam", seconds: "detik", load: "Memuat...", results: "Hasil Akhir", winners: "Pemenang", winner: "Pemenang", scoreboard: "Papan Skor", receipt: "🧾 Struk Humour Cup", thanks: "Terima kasih sudah bermain! 🏆", saveRec: "📸 Simpan struk ini", playAgain: "Main Lagi", waitRes: "Menunggu Host...", adminVault: "Brankas Admin", backHome: "⬅ Kembali", noScen: "Belum ada skenario!" },
   'Russian': { name: "Твое смешное имя", create: "Создать комнату", orJoin: "ИЛИ ПРИСОЕДИНИТЬСЯ", code: "КОД", join: "Вход", rulebook: "👑 Как играть в Кубок Юмора? 👑", rule1: "Напиши смешной ответ на сценарий.", rule2: "Отвечай шутками в чате.", rule3: "Голосуй за самые смешные.", rule4: "Игрок с наибольшим XP побеждает.", submitPub: "🌍 Предложить сценарий 🌍", pubDesc: "Добавь свой сценарий для игры.", pubPlace: "Введи свой сценарий здесь...", submit: "Отправить", lobby: "Лобби", roomCode: "КОД КОМНАТЫ:", cat: "Категория:", scen: "Сценарии:", lang: "Язык:", secret: "🤫 Добавить тайно!", secPlace: "Напиши сценарий-сюрприз...", addPool: "Добавить", totPool: "Всего сценариев:", waitSquad: "Ждем команду...", host: "(Хост)", launch: "Запуск 🚀", waitMore: "Ждем еще 1 игрока...", waitHost: "Ждем хоста...", fetch: "Получение...", scenTitle: "Сценарий", secLeft: "Секунд осталось", typeHumour: "Введи шутку...", subHumour: "Отправить", waitSlow: "Ждем остальных...", chatVote: "Чат и Голосование", humourBtn: "Смешно!", replyBtn: "Ответить", repPlace: "Ответить...", send: "Отправить", cancel: "Отмена", done: "Я прочитал!", waiting: "Ожидание...", upcoming: "Следующий", enterRound: "Начало раунда-", in: "через", seconds: "секунд", load: "Загрузка...", results: "Результаты", winners: "Победители", winner: "Победитель", scoreboard: "Счет", receipt: "🧾 Чек игры", thanks: "Спасибо за игру! 🏆", saveRec: "📸 Сохранить этот чек", playAgain: "Играть снова", waitRes: "Ждем хоста...", adminVault: "Хранилище Админа", backHome: "⬅ Назад", noScen: "Нет сценариев!" }
 };
 
+// --- 3. APP LOGIC ---
 const sfxCache = {
   click: new Audio('https://actions.google.com/sounds/v1/ui/button_click.ogg'),
   create: new Audio('https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg'),
@@ -37,28 +117,24 @@ const BGM_TRACKS = [
 
 function App() {
   const [appLang, setAppLang] = useState('English'); 
-  
   const [playerName, setPlayerName] = useState('');
   const [joinCode, setJoinCode] = useState('');
   const [room, setRoom] = useState(null);
-  
   const [pubScenario, setPubScenario] = useState('');
   const [pubLang, setPubLang] = useState('English');
   const [pubCategory, setPubCategory] = useState('All Ages');
   const [pubStatus, setPubStatus] = useState(null); 
   const [secretInput, setSecretInput] = useState(''); 
-  
   const [showVault, setShowVault] = useState(false);
   const [vaultData, setVaultData] = useState([]);
   const [logoClicks, setLogoClicks] = useState(0); 
-
   const [myAnswer, setMyAnswer] = useState('');
   const [replyText, setReplyText] = useState('');
   const [replyingToAnsId, setReplyingToAnsId] = useState(null);
   const [seenReplies, setSeenReplies] = useState(new Set());
   const [timeLeft, setTimeLeft] = useState(0);
-
   const [bgmIndex, setBgmIndex] = useState(() => Math.floor(Math.random() * BGM_TRACKS.length));
+  
   const audioRef = useRef(null);
   const receiptRef = useRef(null);
   const prevPlayersCount = useRef(0);
@@ -122,7 +198,6 @@ function App() {
   const handleCreateRoom = () => { playSound('create'); if (!playerName) alert("Enter a name!"); else socket.emit('createRoom', { playerName, language: appLang }, () => {}); };
   const handleJoinRoom = () => { playSound('click'); if (!playerName || !joinCode) alert("Fill all fields!"); else socket.emit('joinRoom', { roomId: joinCode, playerName }, (res) => !res.success && alert(res.message)); };
   const handleStartGame = () => { playSound('click'); socket.emit('startGame', room.id); };
-  
   const handleSettingChange = (key, value) => { socket.emit('updateSettings', { roomId: room.id, settings: { [key]: value } }); };
   const handleSecretSubmit = () => { if (!secretInput.trim()) return; playSound('vote'); socket.emit('addSecretScenario', { roomId: room.id, text: secretInput }); setSecretInput(''); };
 
@@ -175,7 +250,6 @@ function App() {
       try {
         const html2canvasModule = await import('html2canvas');
         const html2canvas = html2canvasModule.default || html2canvasModule;
-        
         const canvas = await html2canvas(receiptRef.current, { backgroundColor: '#fef3c7', scale: 2 });
         const link = document.createElement('a');
         link.download = `HumourCup_Receipt_${room.id}.png`;
@@ -188,7 +262,6 @@ function App() {
   };
 
   const isHost = room?.players[0]?.id === socket.id;
-
   const rainEmojis = ['😂', '🤣', '💀', '🏆', '🔥', '🌶️', '👽', '🦄', '🍻', '😆', '😁', '🫠', '😭', '🤟'];
 
   return (
@@ -205,23 +278,33 @@ function App() {
         .falling-emoji { position: absolute; font-size: 40px; animation: fall linear forwards; opacity: 0.95; }
         @keyframes fall { to { transform: translateY(115vh) rotate(360deg); } }
 
-        /* --- SINGLE IMAGE UNIFIED LOGO ANIMATION --- */
-        @keyframes unified-wobble-breathe { 
-          0%, 100% { transform: scale(1) rotate(0deg); filter: drop-shadow(4px 4px 0px rgba(0,0,0,0.5)); }
-          25% { transform: scale(1.03) rotate(-3deg); filter: drop-shadow(6px 6px 0px rgba(0,0,0,0.6)); }
-          50% { transform: scale(1) rotate(2deg); filter: drop-shadow(4px 4px 0px rgba(0,0,0,0.5)); }
-          75% { transform: scale(1.03) rotate(-1deg); filter: drop-shadow(5px 5px 0px rgba(0,0,0,0.6)); }
+        /* --- THE LOGO CSS ANIMATIONS --- */
+        /* Sponge/Spring Wobble for Individual Letters */
+        @keyframes sponge-wobble {
+          0%, 30%, 100% { transform: scale(1); }
+          5% { transform: scale(1.25, 0.75); } /* Squish flat */
+          10% { transform: scale(0.75, 1.25); } /* Stretch tall */
+          15% { transform: scale(1.1, 0.9); }
+          20% { transform: scale(0.95, 1.05); }
+          25% { transform: scale(1); }
+        }
+        .sponge-letter {
+          animation: sponge-wobble 6s infinite;
+          transform-origin: center bottom;
         }
 
-        .animated-logo-main {
-           animation: unified-wobble-breathe 5s infinite ease-in-out;
-           max-width: 320px;
-           width: 100%;
-           height: auto;
-           cursor: pointer;
-           user-select: none;
-           margin-bottom: 25px;
+        /* Independent Sparkle Rotation */
+        @keyframes spark-rotate {
+          0%, 20%, 100% { transform: rotate(0deg) scale(1); }
+          5% { transform: rotate(45deg) scale(1.2); }
+          10% { transform: rotate(90deg) scale(1.4); }
+          15% { transform: rotate(135deg) scale(1.2); }
+          18% { transform: rotate(180deg) scale(1); }
         }
+        .spark-1 { animation: spark-rotate 5s 0s infinite ease-in-out; transform-origin: center; }
+        .spark-2 { animation: spark-rotate 6s 1.5s infinite ease-in-out; transform-origin: center; }
+        .spark-3 { animation: spark-rotate 7s 3s infinite ease-in-out; transform-origin: center; }
+        .spark-4 { animation: spark-rotate 5s 4.5s infinite ease-in-out; transform-origin: center; }
       `}</style>
 
       {!room && !showVault && (
@@ -235,15 +318,12 @@ function App() {
 
       <audio ref={audioRef} src={BGM_TRACKS[bgmIndex]} loop />
 
-      {/* --- SINGLE IMAGE LOGO --- */}
       <div style={styles.container}>
          
-         <img 
-           src="/finale-logo.png" 
-           alt="Humour Cup Logo" 
-           className="animated-logo-main"
-           onClick={handleLogoClick}
-         />
+         {/* INJECTING THE BRAND NEW ANIMATED LOGO COMPONENT */}
+         <div onClick={handleLogoClick} style={{cursor: 'pointer'}}>
+           <AnimatedLogo />
+         </div>
 
         {/* --- VIEW: HOME SCREEN --- */}
         {!room && !showVault && (
@@ -606,8 +686,6 @@ const styles = {
   dropdown: { flex: 1, backgroundColor: '#333333', color: '#ffffff', padding: '15px', borderRadius: '8px', border: '3px solid #1a1a1a', fontSize: '16px', fontWeight: 'bold', outline: 'none', cursor: 'pointer' },
   checklistWrapper: { marginTop: '25px', padding: '20px', backgroundColor: '#e5e7eb', borderRadius: '12px', border: '3px dashed #1a1a1a', textAlign: 'left' },
   checklistItem: { fontSize: '16px', fontWeight: 'bold', color: '#1a1a1a', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '10px' },
-  receiptBox: { width: '100%', padding: '30px 25px', backgroundColor: '#fef3c7', borderRadius: '4px', border: '3px dashed #1a1a1a', marginBottom: '25px', textAlign: 'left', boxShadow: '6px 6px 0px #1a1a1a', fontFamily: '"Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive' },
-  receiptTitle: { color: '#1a1a1a', textTransform: 'uppercase', fontWeight: '900', textAlign: 'center', marginBottom: '25px', fontSize: '26px', borderBottom: '2px dashed #1a1a1a', paddingBottom: '18px' },
   translateWrapper: { position: 'absolute', top: '20px', left: '20px', zIndex: 1000, display: 'flex', alignItems: 'center', gap: '8px', background: '#fff', padding: '8px 12px', borderRadius: '50px', border: '3px solid #1a1a1a', boxShadow: '4px 4px 0px #1a1a1a' },
   translateSelect: { border: 'none', outline: 'none', background: 'transparent', fontSize: '16px', fontWeight: '900', color: '#1a1a1a', cursor: 'pointer' }
 };
