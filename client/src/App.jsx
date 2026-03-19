@@ -207,10 +207,10 @@ function App() {
 
         /* --- PREVIOUS UNIFIED WOBBLE/BREATHE ANIMATION --- */
         @keyframes unified-wobble-breathe { 
-          0%, 100% { transform: scale(1) rotate(0deg); filter: drop-shadow(4px 4px 0px #1a1a1a); }
-          25% { transform: scale(1.03) rotate(-3deg); filter: drop-shadow(6px 6px 0px #1a1a1a); }
-          50% { transform: scale(1) rotate(2deg); filter: drop-shadow(4px 4px 0px #1a1a1a); }
-          75% { transform: scale(1.03) rotate(-1deg); filter: drop-shadow(5px 5px 0px #1a1a1a); }
+          0%, 100% { transform: scale(1) rotate(0deg); }
+          25% { transform: scale(1.03) rotate(-3deg); }
+          50% { transform: scale(1) rotate(2deg); }
+          75% { transform: scale(1.03) rotate(-1deg); }
         }
 
         .animated-logo-main {
