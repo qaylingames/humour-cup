@@ -57,10 +57,13 @@ async function fetchScenarioBatch(category, language = 'English') {
         : "CRITICAL RULE: Must be completely family-friendly, clean, and appropriate for all ages. No 18+ content.";
 
       const prompt = `Generate exactly 5 completely different, highly creative, short, and funny prompts for a party game. 
-      CRITICAL LANGUAGE RULE: You MUST write the scenarios entirely in ${language}. If ${language} is Hindi, use proper Devanagari script. Do NOT output English unless the requested language is English.
-      CRITICAL VOCABULARY RULE: Use very simple, common, everyday words. DO NOT use complex, formal, or tough vocabulary. Keep it easy to read.
+      CRITICAL RULES:
+      1. Use simple and common words.
+      2. Keep the scenario short, though a few can be slightly longer ONLY if they are very interesting.
+      CRITICAL LANGUAGE RULE: You MUST write the scenarios entirely in ${language}. If ${language} is Hindi, use Hinglish (Hindi in English letters). Do NOT output English unless the requested language is English.
+      CRITICAL VOCABULARY RULE: Use simple, common, everyday words. DO NOT use complex, formal, or tough vocabulary. Keep it easy to read.
       ${categoryRule}
-      Mix up the formats! Include a random variety of: 1. Absurd hypothetical questions. 2. Funny dialogues. 3. Daily life awkward situations. 4. Weird text messages.
+      Mix up the formats! Include a random variety of: 1. Absurd hypothetical questions. 2. Funny dialogues. 3. Daily life awkward situations. 4. Weird text messages. 5. out of the box. 6. weird situations. 7. different genres. 8. embarrassing moments. 9. immature stuff. 10. freaky things. 11. dumb things. 12. daily life. 13. failures. 14. meme stuff. 15. all the 5 Ws and 1H funny questions.
       (Anti-Cache Seed: ${Date.now()})
       Return ONLY a valid JSON array of 5 strings. Do not include markdown formatting or the word "json".`;
 
