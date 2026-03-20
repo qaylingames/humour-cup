@@ -30,14 +30,14 @@ const scenarioSchema = new mongoose.Schema({
 const Scenario = mongoose.model('Scenario', scenarioSchema);
 
 // --- THE AUTO-MODERATOR BACKGROUND WORKER ---
-// Runs every 60 seconds to moderate scenarios sitting in the 'Pending' queue
 setInterval(async () => {
   try {
     const pendingScenarios = await Scenario.find({ status: 'Pending' }).limit(3);
     if (pendingScenarios.length === 0) return; 
 
     console.log(`🔍 Auto-Moderator found ${pendingScenarios.length} pending scenarios...`);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash", safetySettings });
+    // NEW: Upgraded to Flash-Lite for maximum free tier usage
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite", safetySettings });
 
     for (let p of pendingScenarios) {
       try {
@@ -103,8 +103,9 @@ function getFallbackBatch() {
 async function fetchScenarioBatch(category, language = 'English', isSeeding = false) {
   try {
     const fetchPromise = (async () => {
+      // NEW: Upgraded to Flash-Lite
       const model = genAI.getGenerativeModel({ 
-        model: "gemini-1.5-flash", 
+        model: "gemini-2.5-flash-lite", 
         generationConfig: { temperature: 1.6 },
         safetySettings: category === '18+' ? safetySettings : undefined 
       });
@@ -137,10 +138,7 @@ async function fetchScenarioBatch(category, language = 'English', isSeeding = fa
     const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("AI Timeout")), 15000));
     return await Promise.race([fetchPromise, timeoutPromise]);
   } catch (e) {
-    // If seeding, crash up to the seeder so it waits 60 seconds.
     if (isSeeding) throw e; 
-    
-    // If it's a live game room, pull from the emergency vault!
     console.log("🚨 AI Error or Timeout! Pulling from Vault...", e.message);
     return getFallbackBatch();
   }
@@ -163,7 +161,6 @@ async function seedDatabase() {
         console.log(`📡 [${lang}] Progress: ${currentCount}/${targetCount}. Requesting batch...`);
         const category = Math.random() > 0.5 ? 'All Ages' : '18+';
         
-        // Pass "true" so the fetcher knows we are seeding
         const batch = await fetchScenarioBatch(category, lang, true); 
         
         const scenarioObjects = batch.map(text => ({
@@ -173,15 +170,14 @@ async function seedDatabase() {
         await Scenario.insertMany(scenarioObjects, { ordered: false });
         
       } catch (err) {
-        // Ignore duplicate errors, but pause for 60 seconds on any API Quota errors!
         if (err.code !== 11000 && (!err.writeErrors || err.writeErrors[0].code !== 11000)) {
            console.error(`❌ API Limit Hit for ${lang}: ${err.message}. Pausing for 60 seconds...`);
            await new Promise(resolve => setTimeout(resolve, 60000));
         }
       }
       
-      // GUARANTEED COOLDOWN: Wait exactly 6 seconds between every single request (~10 requests per minute max)
-      await new Promise(resolve => setTimeout(resolve, 6000));
+      // OPTIMIZED COOLDOWN: 4.5 seconds = ~13 requests per minute. Keeps us safely under the 15 RPM limit!
+      await new Promise(resolve => setTimeout(resolve, 4500));
       currentCount = await Scenario.countDocuments({ language: lang, source: 'AI' }); 
     }
     console.log(`✅ [${lang}] Seeding Complete!`);
@@ -282,7 +278,8 @@ io.on('connection', (socket) => {
       const exists = await Scenario.findOne({ text: data.text });
       if (exists) return callback({ success: false, message: "Whoops! Someone already submitted this scenario." });
 
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash", safetySettings });
+      // NEW: Upgraded to Flash-Lite
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite", safetySettings });
       const prompt = `You are the strict but fair moderator for a party game called Humour Cup.
       A player submitted a custom scenario: "${data.text}"
       Target Language: ${data.language} | Category: ${data.category}
