@@ -37,7 +37,7 @@ setInterval(async () => {
     if (pendingScenarios.length === 0) return; 
 
     console.log(`🔍 Auto-Moderator found ${pendingScenarios.length} pending scenarios...`);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash", safetySettings });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash", safetySettings });
 
     for (let p of pendingScenarios) {
       try {
@@ -104,7 +104,7 @@ async function fetchScenarioBatch(category, language = 'English', isSeeding = fa
   try {
     const fetchPromise = (async () => {
       const model = genAI.getGenerativeModel({ 
-        model: "gemini-2.5-flash", 
+        model: "gemini-1.5-flash", 
         generationConfig: { temperature: 1.6 },
         safetySettings: category === '18+' ? safetySettings : undefined 
       });
@@ -282,7 +282,7 @@ io.on('connection', (socket) => {
       const exists = await Scenario.findOne({ text: data.text });
       if (exists) return callback({ success: false, message: "Whoops! Someone already submitted this scenario." });
 
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash", safetySettings });
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash", safetySettings });
       const prompt = `You are the strict but fair moderator for a party game called Humour Cup.
       A player submitted a custom scenario: "${data.text}"
       Target Language: ${data.language} | Category: ${data.category}
