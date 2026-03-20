@@ -18,7 +18,6 @@ const uiTranslations = {
   'Russian': { name: "Твое смешное имя", create: "Создать комнату", orJoin: "ИЛИ ПРИСОЕДИНИТЬСЯ", code: "КОД", join: "Вход", rulebook: "👑 Как играть 👑", rule1: "Напиши смешной ответ на сценарий.", rule2: "Отвечай шутками в чате.", rule3: "Голосуй за самые смешные.", rule4: "Игрок с наибольшим XP побеждает.", submitPub: "🌍 Предложить сценарий 🌍", pubDesc: "Добавь свой сценарий для игры. Они случайным образом выпадают игрокам, выбравшим публичные сценарии в лобби.", pubPlace: "Введи свой сценарий здесь...", submit: "Отправить", lobby: "Лобби", roomCode: "КОД КОМНАТЫ:", cat: "Категория:", scen: "Сценарии:", lang: "Язык:", secret: "🤫 Добавить тайно!", secPlace: "Напиши сценарий-сюрприз...", addPool: "Добавить", totPool: "Всего сценариев:", waitSquad: "Ждем команду...", host: "(Хост)", launch: "Запуск 🚀", waitMore: "Ждем еще 1 игрока...", waitHost: "Ждем хоста...", fetch: "Получение...", scenTitle: "Сценарий", secLeft: "Секунд осталось", typeHumour: "Введи шутку...", subHumour: "Отправить", waitSlow: "Ждем остальных...", chatVote: "Чат и Голосование", humourBtn: "Смешно!", replyBtn: "Ответить", repPlace: "Ответить...", send: "Отправить", cancel: "Отмена", done: "Я прочитал!", waiting: "Ожидание...", upcoming: "Следующий", enterRound: "Начало раунда-", in: "через", seconds: "секунд", load: "Загрузка...", results: "Результаты", winners: "Победители", winner: "Победитель", scoreboard: "Счет", receipt: "🧾 MATCH RECEIPT", thanks: "Спасибо за игру! 🏆", saveRec: "📸 Сохранить этот чек", playAgain: "Играть снова", waitRes: "Ждем хоста...", adminVault: "Хранилище Админа", backHome: "⬅ Назад", noScen: "Нет сценариев!" }
 };
 
-// Updated with funny, cartoon-style sound effects
 const sfxCache = {
   click: new Audio('https://actions.google.com/sounds/v1/cartoon/pop.ogg'), 
   create: new Audio('https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg'),
@@ -42,7 +41,6 @@ function App() {
   const [joinCode, setJoinCode] = useState('');
   const [room, setRoom] = useState(null);
   
-  // SYNC: Defaults form to app language and category choice
   const [pubScenario, setPubScenario] = useState('');
   const [pubLang, setPubLang] = useState('English');
   const [pubCategory, setPubCategory] = useState('All Ages');
@@ -52,6 +50,10 @@ function App() {
   const [showVault, setShowVault] = useState(false);
   const [vaultData, setVaultData] = useState([]);
   const [logoClicks, setLogoClicks] = useState(0); 
+
+  // Admin Dashboard State
+  const [isAdminMode, setIsAdminMode] = useState(false);
+  const [seedingStats, setSeedingStats] = useState({});
 
   const [myAnswer, setMyAnswer] = useState('');
   const [replyText, setReplyText] = useState('');
@@ -66,38 +68,27 @@ function App() {
   const prevGameState = useRef('');
   const prevRoundNumber = useRef(1);
 
+  const targets = { 'English': 10000, 'Hindi': 1000, 'Spanish': 1000, 'French': 1000, 'Mandarin': 1000, 'Japanese': 1000, 'Russian': 1000, 'Portuguese': 1000, 'German': 1000, 'Korean': 1000, 'Arabic': 1000, 'Indonesian': 1000 };
+
   const t = (key) => uiTranslations[appLang]?.[key] || uiTranslations['English'][key] || key;
 
-  // Sync Public Form Language when App language changes
-  useEffect(() => {
-    setPubLang(appLang);
-  }, [appLang]);
+  useEffect(() => { setPubLang(appLang); }, [appLang]);
 
-  // Robust play sound function handling auto-play errors
   const playSound = (soundName, vol = 1.0) => {
     try {
       const sound = sfxCache[soundName];
-      if (sound) { 
-        sound.volume = vol; 
-        sound.currentTime = 0; 
-        sound.play().catch(e => console.log('Audio blocked', e)); 
-      }
+      if (sound) { sound.volume = vol; sound.currentTime = 0; sound.play().catch(() => {}); }
     } catch(e) {}
   };
 
   const unlockAudio = () => {
     if (audioRef.current && audioRef.current.paused) {
       audioRef.current.volume = 0.05; 
-      audioRef.current.play().catch(e => console.log('BGM blocked', e));
+      audioRef.current.play().catch(() => {});
     }
   };
 
-  useEffect(() => { 
-    if (audioRef.current) { 
-      audioRef.current.volume = 0.05; 
-      audioRef.current.play().catch(e => console.log('BGM blocked', e)); 
-    } 
-  }, [bgmIndex]);
+  useEffect(() => { if (audioRef.current) { audioRef.current.volume = 0.05; audioRef.current.play().catch(() => {}); } }, [bgmIndex]);
 
   useEffect(() => {
     socket.on('roomData', (updatedRoom) => {
@@ -125,11 +116,8 @@ function App() {
     return () => { socket.off('roomData'); socket.off('newReplyAlert'); };
   }, [appLang]);
 
-  // Scroll to top automatically when game reaches RESULTS
   useEffect(() => {
-    if (room?.state === 'RESULTS') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    if (room?.state === 'RESULTS') { window.scrollTo({ top: 0, behavior: 'smooth' }); }
   }, [room?.state]);
 
   useEffect(() => {
@@ -142,10 +130,11 @@ function App() {
     }
   }, [room]);
 
+  const refreshStats = () => { socket.emit('getSeedingStats', (data) => setSeedingStats(data)); };
+
   const handleCreateRoom = () => { playSound('create'); if (!playerName) alert("Enter a name!"); else socket.emit('createRoom', { playerName, language: appLang }, () => {}); };
   const handleJoinRoom = () => { playSound('click'); if (!playerName || !joinCode) alert("Fill all fields!"); else socket.emit('joinRoom', { roomId: joinCode, playerName }, (res) => !res.success && alert(res.message)); };
   const handleStartGame = () => { playSound('click'); socket.emit('startGame', room.id); };
-  
   const handleSettingChange = (key, value) => { socket.emit('updateSettings', { roomId: room.id, settings: { [key]: value } }); };
   const handleSecretSubmit = () => { if (!secretInput.trim()) return; playSound('vote'); socket.emit('addSecretScenario', { roomId: room.id, text: secretInput }); setSecretInput(''); };
 
@@ -157,7 +146,8 @@ function App() {
       const pwd = prompt("Admin Passcode:");
       if (pwd === "72954") { 
         playSound('win');
-        socket.emit('getPublicVault', (data) => { setVaultData(data); setShowVault(true); });
+        refreshStats();
+        setIsAdminMode(true);
       } else {
         playSound('alert');
       }
@@ -170,16 +160,12 @@ function App() {
     setPubStatus({ type: 'loading', msg: '⏳' });
     socket.emit('submitPublicScenario', { text: pubScenario, language: pubLang, category: pubCategory }, (res) => {
       if (res.success) {
-        if (res.data.accepted) {
-          playSound('vote'); 
-          setPubStatus({ type: 'success', msg: `✅ ${res.data.reason}` });
-          setPubScenario(''); // We ONLY clear the text. The Category and Language states safely persist!
-          setTimeout(() => setPubStatus(null), 6000); 
-        } else {
-          playSound('alert'); 
-          setPubStatus({ type: 'error', msg: `❌ ${res.data.reason}` });
-        }
+        playSound('vote'); 
+        setPubStatus({ type: 'success', msg: `✅ ${res.data.reason}` });
+        setPubScenario(''); 
+        setTimeout(() => setPubStatus(null), 6000); 
       } else {
+        playSound('alert'); 
         setPubStatus({ type: 'error', msg: `❌ ${res.message}` });
       }
     });
@@ -198,20 +184,16 @@ function App() {
       try {
         const html2canvasModule = await import('html2canvas');
         const html2canvas = html2canvasModule.default || html2canvasModule;
-        
         const canvas = await html2canvas(receiptRef.current, { backgroundColor: '#FFC200', scale: 2 });
         const link = document.createElement('a');
         link.download = `HumourCup_Receipt_${room.id}.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();
-      } catch (err) {
-        console.error("Screenshot failed:", err);
-      }
+      } catch (err) {}
     }
   };
 
   const isHost = room?.players[0]?.id === socket.id;
-
   const rainEmojis = ['😂', '🤣', '💀', '🏆', '🔥', '🌶️', '👽', '🦄', '🍻', '😆', '😁', '🫠', '😭', '🤟'];
 
   return (
@@ -227,60 +209,62 @@ function App() {
         .emoji-rain { position: fixed; top: -50px; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; overflow: hidden; }
         .falling-emoji { position: absolute; font-size: 40px; animation: fall linear forwards; opacity: 0.95; }
         @keyframes fall { to { transform: translateY(115vh) rotate(360deg); } }
-
-        /* --- PREVIOUS UNIFIED WOBBLE/BREATHE ANIMATION --- */
         @keyframes unified-wobble-breathe { 
           0%, 100% { transform: scale(1) rotate(0deg); }
           25% { transform: scale(1.03) rotate(-3deg); }
           50% { transform: scale(1) rotate(2deg); }
           75% { transform: scale(1.03) rotate(-1deg); }
         }
-
         .animated-logo-main {
            animation: unified-wobble-breathe 5s infinite ease-in-out;
-           max-width: 100%;
-           width: 450px; /* Kept slightly smaller on mobile to avoid overlap */
-           height: auto;
-           cursor: pointer;
-           user-select: none;
-           margin-bottom: 20px;
+           max-width: 100%; width: 450px; height: auto; cursor: pointer; user-select: none;
+           margin-bottom: 20px; margin-top: 30px; 
         }
       `}</style>
 
-      {!room && !showVault && (
+      {!room && !showVault && !isAdminMode && (
         <div style={styles.translateWrapper}>
           <span style={{fontSize: '16px'}}>🌐</span>
           <select value={appLang} onChange={(e) => setAppLang(e.target.value)} style={styles.translateSelect}>
-            <option value="English">EN</option>
-            <option value="Mandarin">ZH</option>
-            <option value="Hindi">HI</option>
-            <option value="Spanish">ES</option>
-            <option value="French">FR</option>
-            <option value="Arabic">AR</option>
-            <option value="Portuguese">PT</option>
-            <option value="Russian">RU</option>
-            <option value="German">DE</option>
-            <option value="Japanese">JA</option>
-            <option value="Korean">KO</option>
-            <option value="Indonesian">ID</option>
+            <option value="English">EN</option><option value="Mandarin">ZH</option><option value="Hindi">HI</option><option value="Spanish">ES</option><option value="French">FR</option><option value="Arabic">AR</option><option value="Portuguese">PT</option><option value="Russian">RU</option><option value="German">DE</option><option value="Japanese">JA</option><option value="Korean">KO</option><option value="Indonesian">ID</option>
           </select>
         </div>
       )}
 
       <audio ref={audioRef} src={BGM_TRACKS[bgmIndex]} loop />
 
-      {/* --- SINGLE PNG LOGO WITH ANIMATION --- */}
       <div style={styles.container}>
-         
-         <img 
-           src="/finale-logo.png" 
-           alt="Humour Cup Logo" 
-           className="animated-logo-main"
-           onClick={handleLogoClick}
-         />
+         <img src="/finale-logo.png" alt="Humour Cup Logo" className="animated-logo-main" onClick={handleLogoClick} />
+
+        {/* --- VIEW: ADMIN DASHBOARD --- */}
+        {isAdminMode && !room && (
+          <div style={{width: '100%', maxWidth: '600px', backgroundColor: '#fff', padding: '30px', borderRadius: '16px', border: '4px solid #1a1a1a', boxShadow: '8px 8px 0px #1a1a1a', marginBottom: '40px'}}>
+            <h2 style={styles.phaseTitle}>🌱 SEEDING DATA</h2>
+            <div style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
+               <button onClick={refreshStats} className="btn-3d" style={{...styles.secondaryBtn, flex: 1, backgroundColor: '#10b981', color: '#fff'}}>🔄 REFRESH</button>
+               <button onClick={() => setIsAdminMode(false)} className="btn-3d" style={{...styles.secondaryBtn, flex: 1}}>❌ CLOSE</button>
+            </div>
+            <div>
+              {Object.entries(targets).map(([lang, target]) => {
+                const current = seedingStats[lang] || 0;
+                const percent = Math.min(100, (current / target) * 100);
+                return (
+                  <div key={lang} style={{marginBottom: '20px', textAlign: 'left'}}>
+                    <div style={{display: 'flex', justifyContent: 'space-between', fontWeight: '900', fontSize: '14px', marginBottom: '5px'}}>
+                      <span>{lang}</span><span>{current.toLocaleString()} / {target.toLocaleString()}</span>
+                    </div>
+                    <div style={{width: '100%', height: '12px', background: '#eee', borderRadius: '10px', overflow: 'hidden', border: '2px solid #1a1a1a'}}>
+                      <div style={{width: `${percent}%`, height: '100%', background: percent === 100 ? '#10b981' : '#fbbf24', transition: 'width 0.5s ease'}}></div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* --- VIEW: HOME SCREEN --- */}
-        {!room && !showVault && (
+        {!room && !showVault && !isAdminMode && (
           <>
             <div style={styles.mainCard}>
               <input placeholder={t('name')} value={playerName} onChange={(e) => setPlayerName(e.target.value)} style={styles.input} />
@@ -335,7 +319,7 @@ function App() {
         )}
 
         {/* --- VIEW: ADMIN VAULT LIBRARY --- */}
-        {!room && showVault && (
+        {!room && showVault && !isAdminMode && (
           <div style={{width: '100%', maxWidth: '800px'}}>
             <h2 style={styles.phaseTitle}>{t('adminVault')}</h2>
             <button onClick={() => setShowVault(false)} className="btn-3d" style={{...styles.secondaryBtn, marginBottom: '20px'}}>{t('backHome')}</button>
@@ -546,7 +530,6 @@ function App() {
                 ))}
               </div>
 
-              {/* Added bottom margin to push results down away from logo */}
               <div style={{marginTop: '20px'}}></div>
               
               <h3 style={{color: '#1a1a1a', textTransform: 'uppercase', fontWeight: '900', marginTop: '10px', marginBottom: '10px', fontSize: '24px'}}>{isTie ? t('winners') : t('winner')}</h3>
@@ -555,9 +538,8 @@ function App() {
                 <h3 style={{margin:'15px 0 0 0', color: '#1a1a1a', opacity: 0.8}}>{highestScore} XP</h3>
               </div>
 
-              {/* REDESIGNED MATCH RECEIPT */}
               <div ref={receiptRef} style={styles.receiptBox}>
-                <h2 style={styles.receiptTitle}>📜 {t('receipt')}</h2>
+                <h2 style={styles.receiptTitle}>{t('receipt')}</h2>
                 
                 <h3 style={styles.receiptSectionTitle}>Final Scoreboard</h3>
                 <div style={styles.receiptScoreboard}>
@@ -603,16 +585,12 @@ function App() {
 
 const styles = {
   appWrapper: { minHeight: '100vh', width: '100vw', display: 'flex', justifyContent: 'center', padding: '20px', position: 'relative', backgroundColor: '#FFC200' }, 
-  
   howToPlayBox: { marginTop: '40px', width: '100%', backgroundColor: '#ffffff', border: '4px solid #1a1a1a', borderRadius: '16px', boxShadow: '6px 6px 0px #1a1a1a', overflow: 'hidden', transform: 'rotate(-1.5deg)' },
   howToPlayHeader: { backgroundColor: '#1a1a1a', color: '#FFC200', padding: '12px', fontSize: '18px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '2px', textAlign: 'center' },
   howToPlayContent: { padding: '25px', textAlign: 'left' },
   howToPlayText: { fontSize: '15px', color: '#1a1a1a', marginBottom: '15px', fontWeight: '800', lineHeight: '1.6', display: 'flex', alignItems: 'flex-start', gap: '8px' },
   bullet: { color: '#10b981', fontSize: '16px' }, 
-  
-  // INCREASED padding top safely clears absolutely positioned elements
   container: { width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', paddingTop: '60px', paddingBottom: '60px' },
-  
   mainCard: { background: '#ffffff', padding: '40px', borderRadius: '24px', width: '100%', border: '4px solid #1a1a1a', boxShadow: '10px 10px 0px #1a1a1a' },
   input: { backgroundColor: '#333333', color: '#ffffff', width: '100%', padding: '20px', borderRadius: '12px', border: '3px solid #1a1a1a', fontSize: '20px', marginBottom: '25px', fontWeight: 'bold', outline: 'none' },
   smallInput: { backgroundColor: '#333333', color: '#ffffff', flex: 1, padding: '20px', borderRadius: '12px', border: '3px solid #1a1a1a', fontSize: '20px', fontWeight: 'bold', outline: 'none', textTransform: 'uppercase', minWidth: 0 },
@@ -645,7 +623,6 @@ const styles = {
   checklistWrapper: { marginTop: '25px', padding: '20px', backgroundColor: '#e5e7eb', borderRadius: '12px', border: '3px dashed #1a1a1a', textAlign: 'left' },
   checklistItem: { fontSize: '16px', fontWeight: 'bold', color: '#1a1a1a', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '10px' },
   
-  // MATCH RECEIPT STYLES
   receiptBox: { width: '100%', padding: '25px', backgroundColor: '#FFC200', borderRadius: '16px', border: '4px solid #1a1a1a', marginBottom: '30px', textAlign: 'left', boxShadow: '6px 6px 0px #1a1a1a', fontFamily: '"Fredoka One", "Titan One", "Comic Sans MS", sans-serif' },
   receiptTitle: { color: '#1a1a1a', textTransform: 'uppercase', fontWeight: '900', textAlign: 'center', marginBottom: '20px', fontSize: '22px' },
   receiptSectionTitle: { color: '#1a1a1a', fontSize: '18px', fontWeight: '900', borderBottom: '3px solid #1a1a1a', paddingBottom: '5px', marginBottom: '15px', marginTop: '20px' },

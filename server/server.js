@@ -7,44 +7,79 @@ const mongoose = require('mongoose');
 const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require('@google/generative-ai');
 
 // --- DATABASE CONNECTION ---
-// Make sure your real password is in here before you push!
-const uri = "mongodb+srv://qaylingames:Adollarr1vastava@cluster.aiywpvw.mongodb.net/?appName=Cluster";
+const uri = "mongodb+srv://qaylingames:Adollarr1vastava@cluster.aiywpvw.mongodb.net/HumourCup?retryWrites=true&w=majority&appName=Cluster";
 
 mongoose.connect(uri)
-  .then(() => console.log("🚀 Humour Cup Database Connected!"))
+  .then(() => {
+    console.log("🚀 Humour Cup Database Connected!");
+    // seedDatabase(); // <-- KEEP COMMENTED OUT ONCE SEEDING IS DONE
+  })
   .catch(err => console.error("❌ Database connection error:", err));
 
 // --- THE SCENARIO SCHEMA ---
 const scenarioSchema = new mongoose.Schema({
-  text: { type: String, required: true, unique: true }, // <-- UNIQUE: TRUE STOPS REPEATS
+  text: { type: String, required: true, unique: true },
   language: { type: String, required: true, index: true },
   category: { type: String, required: true, index: true },
   source: { type: String, default: 'AI' }, 
-  status: { type: String, default: 'Approved' }, 
+  status: { type: String, default: 'Approved' }, // 'Approved' or 'Pending'
   createdAt: { type: Date, default: Date.now }
 });
 
 const Scenario = mongoose.model('Scenario', scenarioSchema);
 
+// --- THE AUTO-MODERATOR BACKGROUND WORKER ---
+// Runs every 60 seconds to moderate scenarios sitting in the 'Pending' queue
+setInterval(async () => {
+  try {
+    const pendingScenarios = await Scenario.find({ status: 'Pending' }).limit(3);
+    if (pendingScenarios.length === 0) return; // Nothing to do
+
+    console.log(`🔍 Auto-Moderator found ${pendingScenarios.length} pending scenarios...`);
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash", safetySettings });
+
+    for (let p of pendingScenarios) {
+      try {
+        const prompt = `You are the strict but fair moderator for a party game called Humour Cup.
+        A player submitted a custom scenario: "${p.text}"
+        Target Language: ${p.language} | Category: ${p.category}
+        Assess criteria: 1. Makes sense. 2. Correct spelling. 3. Humorous potential. 4. Fits category.
+        Return ONLY a JSON object: {"accepted": boolean, "correctedText": "fixed text", "reason": "1-sentence explanation"}`;
+
+        const result = await model.generateContent(prompt);
+        const jsonMatch = result.response.text().trim().match(/\{[\s\S]*\}/);
+        
+        if (jsonMatch) {
+          const assessment = JSON.parse(jsonMatch[0]);
+          if (assessment.accepted) {
+            await Scenario.findByIdAndUpdate(p._id, { text: assessment.correctedText, status: 'Approved' });
+            console.log(`✅ Queue Approved: "${p.text}"`);
+          } else {
+            await Scenario.findByIdAndDelete(p._id);
+            console.log(`❌ Queue Rejected: "${p.text}" (${assessment.reason})`);
+          }
+        }
+        // Wait 4 seconds between moderation checks to respect Gemini API limits
+        await new Promise(resolve => setTimeout(resolve, 4000));
+      } catch (err) {
+        console.log("⚠️ Moderation hit API limit, will try again next minute.");
+        break; // Stop loop and try again in 60 seconds
+      }
+    }
+  } catch (e) {
+    console.error("Queue processor error:", e.message);
+  }
+}, 60000);
+
 // --- THE SEEDER LOGIC ---
 async function seedDatabase() {
   const targets = {
-    'English': 10000,
-    'Hindi': 1000,
-    'Spanish': 1000,
-    'French': 1000,
-    'Mandarin': 1000,
-    'Japanese': 1000,
-    'Russian': 1000,
-    'Portuguese': 1000,
-    'German': 1000,
-    'Korean': 1000,
-    'Arabic': 1000,
-    'Indonesian': 1000
+    'English': 10000, 'Hindi': 1000, 'Spanish': 1000, 'French': 1000,
+    'Mandarin': 1000, 'Japanese': 1000, 'Russian': 1000, 'Portuguese': 1000,
+    'German': 1000, 'Korean': 1000, 'Arabic': 1000, 'Indonesian': 1000
   };
 
   console.log("🌱 Starting Database Seeding...");
-
   for (const [lang, targetCount] of Object.entries(targets)) {
     let currentCount = await Scenario.countDocuments({ language: lang, source: 'AI' });
     
@@ -55,21 +90,14 @@ async function seedDatabase() {
         const batch = await fetchScenarioBatch(category, lang);
         
         const scenarioObjects = batch.map(text => ({
-          text,
-          language: lang,
-          category: category,
-          source: 'AI',
-          status: 'Approved'
+          text, language: lang, category: category, source: 'AI', status: 'Approved'
         }));
 
-        // ordered: false allows MongoDB to skip duplicates but save the rest!
         await Scenario.insertMany(scenarioObjects, { ordered: false });
-        
-        currentCount = await Scenario.countDocuments({ language: lang, source: 'AI' }); // Recount exactly
+        currentCount = await Scenario.countDocuments({ language: lang, source: 'AI' }); 
         await new Promise(resolve => setTimeout(resolve, 5000)); 
 
       } catch (err) {
-        // If the error is just a duplicate key (E11000), ignore it and continue. Otherwise, pause.
         if (err.code !== 11000) {
            console.error(`❌ Batch failed for ${lang}:`, err.message);
            await new Promise(resolve => setTimeout(resolve, 60000));
@@ -81,17 +109,12 @@ async function seedDatabase() {
   console.log("🌳 ALL LANGUAGES SEEDED SUCCESSFULLY!");
 }
 
-// THE SEEDER IS TURNED ON! When you push this to Render, it will start generating automatically.
-seedDatabase();
-
 // --- SERVER SETUP ---
 const app = express();
 app.use(cors());
 const server = http.createServer(app);
 
-const io = new Server(server, {
-  cors: { origin: "*", methods: ["GET", "POST"] }
-});
+const io = new Server(server, { cors: { origin: "*", methods: ["GET", "POST"] } });
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
@@ -107,14 +130,11 @@ const FALLBACK_VAULT = [
   "Cop: 'Do you know why I pulled you over?'\nYou: ...",
   "What is the absolute worst text message to receive from your boss at 2 AM on a Sunday?",
   "Roommate 1: 'Did you eat my leftovers?'\nRoommate 2: 'No, but I did...'",
-  "My browser history was leaked, and the hardest thing to explain is...",
-  "What is a completely unacceptable thing to casually bring to a potluck?",
-  "You are stuck in an elevator for 10 hours with a mime. What is your opening line?"
+  "My browser history was leaked, and the hardest thing to explain is..."
 ];
 
 function getFallbackBatch() {
-  const shuffled = [...FALLBACK_VAULT].sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, 5); 
+  return [...FALLBACK_VAULT].sort(() => 0.5 - Math.random()).slice(0, 5); 
 }
 
 async function fetchScenarioBatch(category, language = 'English') {
@@ -142,19 +162,18 @@ async function fetchScenarioBatch(category, language = 'English') {
       Return ONLY a valid JSON array of 5 strings. Do not include markdown formatting or the word "json".`;
 
       const result = await model.generateContent(prompt);
-      let text = result.response.text().trim();
-      const jsonMatch = text.match(/\[[\s\S]*\]/);
-      if (!jsonMatch) throw new Error("AI did not return a valid JSON array");
+      const jsonMatch = result.response.text().trim().match(/\[[\s\S]*\]/);
+      if (!jsonMatch) throw new Error("AI JSON array error");
       
       const scenarios = JSON.parse(jsonMatch[0]);
       if (Array.isArray(scenarios) && scenarios.length >= 3) return scenarios;
       throw new Error("Invalid array length");
     })();
 
-    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("AI taking too long!")), 15000));
+    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("AI Timeout")), 15000));
     return await Promise.race([fetchPromise, timeoutPromise]);
   } catch (e) {
-    console.log("🚨 AI Error or Timeout! Instantly pulling from The Vault...", e.message);
+    console.log("🚨 AI Error or Timeout! Pulling from Vault...", e.message);
     return getFallbackBatch();
   }
 }
@@ -231,24 +250,29 @@ function startIntermission(roomCode) {
 io.on('connection', (socket) => {
   console.log(`🟢 Player Connected: ${socket.id}`);
 
-  // Fetch Public scenarios from the Database Vault
+  // Fetch Seeding Stats for Dashboard
+  socket.on('getSeedingStats', async (callback) => {
+    try {
+      const stats = await Scenario.aggregate([{ $group: { _id: "$language", count: { $sum: 1 } } }]);
+      const formatted = {};
+      stats.forEach(s => formatted[s._id] = s.count);
+      callback(formatted);
+    } catch(e) { callback({}); }
+  });
+
+  // Fetch Public Vault
   socket.on('getPublicVault', async (callback) => {
     try {
       const publicScenarios = await Scenario.find({ source: 'Public', status: 'Approved' }).lean();
       callback(publicScenarios);
-    } catch(e) {
-      callback([]);
-    }
+    } catch(e) { callback([]); }
   });
 
-  // Submit and Moderate Public Scenarios
+  // Submit Public Scenario (Attempts direct moderation, falls back to queue)
   socket.on('submitPublicScenario', async (data, callback) => {
     try {
-      // Prevent duplicates before even asking the AI
       const exists = await Scenario.findOne({ text: data.text });
-      if (exists) {
-        return callback({ success: false, message: "Whoops! Someone already submitted this scenario." });
-      }
+      if (exists) return callback({ success: false, message: "Whoops! Someone already submitted this scenario." });
 
       const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash", safetySettings });
       const prompt = `You are the strict but fair moderator for a party game called Humour Cup.
@@ -262,32 +286,18 @@ io.on('connection', (socket) => {
       if (!jsonMatch) throw new Error("AI JSON Error");
       
       const assessment = JSON.parse(jsonMatch[0]);
-      
       if (assessment.accepted) {
         try {
-          await new Scenario({
-            text: assessment.correctedText,
-            language: data.language,
-            category: data.category,
-            source: 'Public',
-            status: 'Approved'
-          }).save();
+          await new Scenario({ text: assessment.correctedText, language: data.language, category: data.category, source: 'Public', status: 'Approved' }).save();
         } catch(dbErr) {
           if (dbErr.code === 11000) return callback({ success: false, message: "Whoops! This scenario already exists." });
         }
       }
       callback({ success: true, data: assessment });
     } catch (error) {
-      // THE QUEUE FIX: If AI rate limits, save it as Pending!
       try {
-        await new Scenario({
-          text: data.text,
-          language: data.language,
-          category: data.category,
-          source: 'Public',
-          status: 'Pending'
-        }).save();
-        callback({ success: true, data: { accepted: true, reason: "Saved to queue for moderation!" } });
+        await new Scenario({ text: data.text, language: data.language, category: data.category, source: 'Public', status: 'Pending' }).save();
+        callback({ success: true, data: { accepted: true, reason: "Saved to queue for moderation! Thanks!" } });
       } catch (dbErr) {
         callback({ success: false, message: "Server busy or duplicate scenario." });
       }
@@ -298,15 +308,10 @@ io.on('connection', (socket) => {
     const { playerName, language } = data;
     const roomId = Math.random().toString(36).substring(2, 6).toUpperCase(); 
     rooms[roomId] = {
-      id: roomId,
-      state: 'LOBBY',
-      players: [{ id: socket.id, name: playerName, score: 0 }],
-      roundData: null,
-      history: [],
-      scenarioBatch: [], 
+      id: roomId, state: 'LOBBY', players: [{ id: socket.id, name: playerName, score: 0 }],
+      roundData: null, history: [], scenarioBatch: [], 
       settings: { category: 'All Ages', source: 'AI', language: language || 'English' },
-      secretCustomScenarios: [], 
-      customCount: 0
+      secretCustomScenarios: [], customCount: 0
     };
     socket.join(roomId);
     callback({ success: true, roomId: roomId });
@@ -329,9 +334,7 @@ io.on('connection', (socket) => {
     const roomCode = roomId.toUpperCase();
     if (rooms[roomCode] && rooms[roomCode].state === 'LOBBY') {
       rooms[roomCode].settings = { ...rooms[roomCode].settings, ...settings };
-      if (rooms[roomCode].settings.source === 'AI') {
-        rooms[roomCode].settings.category = 'All Ages';
-      }
+      if (rooms[roomCode].settings.source === 'AI') rooms[roomCode].settings.category = 'All Ages';
       emitSafeRoomData(roomCode);
     }
   });
@@ -370,11 +373,10 @@ io.on('connection', (socket) => {
              room.scenarioBatch = await fetchScenarioBatch(room.settings.category, room.settings.language);
           }
         } catch(e) {
-           console.error("DB Fetch Error on game start", e);
+           console.error("DB Fetch Error", e);
            room.scenarioBatch = getFallbackBatch().slice(0, 3);
         }
       }
-
       startAnswerPhase(roomCode, room.scenarioBatch.shift());
     }
   });
@@ -441,10 +443,7 @@ io.on('connection', (socket) => {
       room.state = 'LOBBY';
       room.roundData = null; 
       room.players.forEach(p => p.score = 0); 
-      room.history = []; 
-      room.scenarioBatch = []; 
-      room.secretCustomScenarios = []; 
-      room.customCount = 0;
+      room.history = []; room.scenarioBatch = []; room.secretCustomScenarios = []; room.customCount = 0;
       if (roomTimers[roomCode]) { clearInterval(roomTimers[roomCode]); delete roomTimers[roomCode]; }
       emitSafeRoomData(roomCode);
     }
