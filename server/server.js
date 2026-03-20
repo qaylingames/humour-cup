@@ -8,7 +8,7 @@ const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require('@googl
 
 // --- DATABASE CONNECTION ---
 // Make sure your real password is in here before you push!
-const uri = "mongodb+srv://qaylingames:<db_password>@cluster.aiywpvw.mongodb.net/?appName=Cluster";
+const uri = "mongodb+srv://qaylingames:Adollarr1vastava@cluster.aiywpvw.mongodb.net/?appName=Cluster";
 
 mongoose.connect(uri)
   .then(() => console.log("🚀 Humour Cup Database Connected!"))
