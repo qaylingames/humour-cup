@@ -7,12 +7,13 @@ const mongoose = require('mongoose');
 const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require('@google/generative-ai');
 
 // --- DATABASE CONNECTION ---
+// REMEMBER to put your actual alphanumeric password here before pushing!
 const uri = "mongodb+srv://qaylingames:Adollarr1vastava@cluster.aiywpvw.mongodb.net/HumourCup?retryWrites=true&w=majority&appName=Cluster";
 
 mongoose.connect(uri)
   .then(() => {
     console.log("🚀 Humour Cup Database Connected!");
-    // seedDatabase(); // <-- KEEP COMMENTED OUT ONCE SEEDING IS DONE
+    seedDatabase(); // Starts seeding ONLY after DB connects
   })
   .catch(err => console.error("❌ Database connection error:", err));
 
@@ -33,7 +34,7 @@ const Scenario = mongoose.model('Scenario', scenarioSchema);
 setInterval(async () => {
   try {
     const pendingScenarios = await Scenario.find({ status: 'Pending' }).limit(3);
-    if (pendingScenarios.length === 0) return; // Nothing to do
+    if (pendingScenarios.length === 0) return; 
 
     console.log(`🔍 Auto-Moderator found ${pendingScenarios.length} pending scenarios...`);
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash", safetySettings });
@@ -59,55 +60,16 @@ setInterval(async () => {
             console.log(`❌ Queue Rejected: "${p.text}" (${assessment.reason})`);
           }
         }
-        // Wait 4 seconds between moderation checks to respect Gemini API limits
         await new Promise(resolve => setTimeout(resolve, 4000));
       } catch (err) {
         console.log("⚠️ Moderation hit API limit, will try again next minute.");
-        break; // Stop loop and try again in 60 seconds
+        break; 
       }
     }
   } catch (e) {
     console.error("Queue processor error:", e.message);
   }
 }, 60000);
-
-// --- THE SEEDER LOGIC ---
-async function seedDatabase() {
-  const targets = {
-    'English': 10000, 'Hindi': 1000, 'Spanish': 1000, 'French': 1000,
-    'Mandarin': 1000, 'Japanese': 1000, 'Russian': 1000, 'Portuguese': 1000,
-    'German': 1000, 'Korean': 1000, 'Arabic': 1000, 'Indonesian': 1000
-  };
-
-  console.log("🌱 Starting Database Seeding...");
-  for (const [lang, targetCount] of Object.entries(targets)) {
-    let currentCount = await Scenario.countDocuments({ language: lang, source: 'AI' });
-    
-    while (currentCount < targetCount) {
-      try {
-        console.log(`📡 [${lang}] Progress: ${currentCount}/${targetCount}. Requesting batch...`);
-        const category = Math.random() > 0.5 ? 'All Ages' : '18+';
-        const batch = await fetchScenarioBatch(category, lang);
-        
-        const scenarioObjects = batch.map(text => ({
-          text, language: lang, category: category, source: 'AI', status: 'Approved'
-        }));
-
-        await Scenario.insertMany(scenarioObjects, { ordered: false });
-        currentCount = await Scenario.countDocuments({ language: lang, source: 'AI' }); 
-        await new Promise(resolve => setTimeout(resolve, 5000)); 
-
-      } catch (err) {
-        if (err.code !== 11000) {
-           console.error(`❌ Batch failed for ${lang}:`, err.message);
-           await new Promise(resolve => setTimeout(resolve, 60000));
-        }
-      }
-    }
-    console.log(`✅ [${lang}] Seeding Complete!`);
-  }
-  console.log("🌳 ALL LANGUAGES SEEDED SUCCESSFULLY!");
-}
 
 // --- SERVER SETUP ---
 const app = express();
@@ -137,7 +99,8 @@ function getFallbackBatch() {
   return [...FALLBACK_VAULT].sort(() => 0.5 - Math.random()).slice(0, 5); 
 }
 
-async function fetchScenarioBatch(category, language = 'English') {
+// --- UPDATED AI FETCH LOGIC ---
+async function fetchScenarioBatch(category, language = 'English', isSeeding = false) {
   try {
     const fetchPromise = (async () => {
       const model = genAI.getGenerativeModel({ 
@@ -162,8 +125,9 @@ async function fetchScenarioBatch(category, language = 'English') {
       Return ONLY a valid JSON array of 5 strings. Do not include markdown formatting or the word "json".`;
 
       const result = await model.generateContent(prompt);
-      const jsonMatch = result.response.text().trim().match(/\[[\s\S]*\]/);
-      if (!jsonMatch) throw new Error("AI JSON array error");
+      let text = result.response.text().trim();
+      const jsonMatch = text.match(/\[[\s\S]*\]/);
+      if (!jsonMatch) throw new Error("AI did not return a valid JSON array");
       
       const scenarios = JSON.parse(jsonMatch[0]);
       if (Array.isArray(scenarios) && scenarios.length >= 3) return scenarios;
@@ -173,9 +137,56 @@ async function fetchScenarioBatch(category, language = 'English') {
     const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("AI Timeout")), 15000));
     return await Promise.race([fetchPromise, timeoutPromise]);
   } catch (e) {
+    // If seeding, crash up to the seeder so it waits 60 seconds.
+    if (isSeeding) throw e; 
+    
+    // If it's a live game room, pull from the emergency vault!
     console.log("🚨 AI Error or Timeout! Pulling from Vault...", e.message);
     return getFallbackBatch();
   }
+}
+
+// --- UPDATED SEEDER LOGIC ---
+async function seedDatabase() {
+  const targets = {
+    'English': 10000, 'Hindi': 1000, 'Spanish': 1000, 'French': 1000,
+    'Mandarin': 1000, 'Japanese': 1000, 'Russian': 1000, 'Portuguese': 1000,
+    'German': 1000, 'Korean': 1000, 'Arabic': 1000, 'Indonesian': 1000
+  };
+
+  console.log("🌱 Starting Database Seeding...");
+  for (const [lang, targetCount] of Object.entries(targets)) {
+    let currentCount = await Scenario.countDocuments({ language: lang, source: 'AI' });
+    
+    while (currentCount < targetCount) {
+      try {
+        console.log(`📡 [${lang}] Progress: ${currentCount}/${targetCount}. Requesting batch...`);
+        const category = Math.random() > 0.5 ? 'All Ages' : '18+';
+        
+        // Pass "true" so the fetcher knows we are seeding
+        const batch = await fetchScenarioBatch(category, lang, true); 
+        
+        const scenarioObjects = batch.map(text => ({
+          text, language: lang, category: category, source: 'AI', status: 'Approved'
+        }));
+
+        await Scenario.insertMany(scenarioObjects, { ordered: false });
+        
+      } catch (err) {
+        // Ignore duplicate errors, but pause for 60 seconds on any API Quota errors!
+        if (err.code !== 11000 && (!err.writeErrors || err.writeErrors[0].code !== 11000)) {
+           console.error(`❌ API Limit Hit for ${lang}: ${err.message}. Pausing for 60 seconds...`);
+           await new Promise(resolve => setTimeout(resolve, 60000));
+        }
+      }
+      
+      // GUARANTEED COOLDOWN: Wait exactly 6 seconds between every single request (~10 requests per minute max)
+      await new Promise(resolve => setTimeout(resolve, 6000));
+      currentCount = await Scenario.countDocuments({ language: lang, source: 'AI' }); 
+    }
+    console.log(`✅ [${lang}] Seeding Complete!`);
+  }
+  console.log("🌳 ALL LANGUAGES SEEDED SUCCESSFULLY!");
 }
 
 const rooms = {};
@@ -250,7 +261,6 @@ function startIntermission(roomCode) {
 io.on('connection', (socket) => {
   console.log(`🟢 Player Connected: ${socket.id}`);
 
-  // Fetch Seeding Stats for Dashboard
   socket.on('getSeedingStats', async (callback) => {
     try {
       const stats = await Scenario.aggregate([{ $group: { _id: "$language", count: { $sum: 1 } } }]);
@@ -260,7 +270,6 @@ io.on('connection', (socket) => {
     } catch(e) { callback({}); }
   });
 
-  // Fetch Public Vault
   socket.on('getPublicVault', async (callback) => {
     try {
       const publicScenarios = await Scenario.find({ source: 'Public', status: 'Approved' }).lean();
@@ -268,7 +277,6 @@ io.on('connection', (socket) => {
     } catch(e) { callback([]); }
   });
 
-  // Submit Public Scenario (Attempts direct moderation, falls back to queue)
   socket.on('submitPublicScenario', async (data, callback) => {
     try {
       const exists = await Scenario.findOne({ text: data.text });
@@ -370,7 +378,7 @@ io.on('connection', (socket) => {
           if (randomScenarios.length >= 3) {
              room.scenarioBatch = randomScenarios.map(s => s.text);
           } else {
-             room.scenarioBatch = await fetchScenarioBatch(room.settings.category, room.settings.language);
+             room.scenarioBatch = await fetchScenarioBatch(room.settings.category, room.settings.language, false);
           }
         } catch(e) {
            console.error("DB Fetch Error", e);
