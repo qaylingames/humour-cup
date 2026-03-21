@@ -37,7 +37,7 @@ setInterval(async () => {
 
     console.log(`🔍 Auto-Moderator found ${pendingScenarios.length} pending scenarios...`);
     // NEW: Upgraded to Flash-Lite for maximum free tier usage
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite", safetySettings });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite", safetySettings });
 
     for (let p of pendingScenarios) {
       try {
@@ -105,7 +105,7 @@ async function fetchScenarioBatch(category, language = 'English', isSeeding = fa
     const fetchPromise = (async () => {
       // NEW: Upgraded to Flash-Lite
       const model = genAI.getGenerativeModel({ 
-        model: "gemini-2.5-flash-lite", 
+        model: "gemini-2.0-flash-lite", 
         generationConfig: { temperature: 1.6 },
         safetySettings: category === '18+' ? safetySettings : undefined 
       });
@@ -279,7 +279,7 @@ io.on('connection', (socket) => {
       if (exists) return callback({ success: false, message: "Whoops! Someone already submitted this scenario." });
 
       // NEW: Upgraded to Flash-Lite
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite", safetySettings });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite", safetySettings });
       const prompt = `You are the strict but fair moderator for a party game called Humour Cup.
       A player submitted a custom scenario: "${data.text}"
       Target Language: ${data.language} | Category: ${data.category}
