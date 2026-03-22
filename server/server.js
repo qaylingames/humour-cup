@@ -37,7 +37,7 @@ setInterval(async () => {
 
     console.log(`🔍 Auto-Moderator found ${pendingScenarios.length} pending scenarios...`);
     // NEW: Upgraded to Flash-Lite for maximum free tier usage
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite", safetySettings });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite", safetySettings });
 
     for (let p of pendingScenarios) {
       try {
@@ -105,7 +105,7 @@ async function fetchScenarioBatch(category, language = 'English', isSeeding = fa
     const fetchPromise = (async () => {
       // NEW: Upgraded to Flash-Lite
       const model = genAI.getGenerativeModel({ 
-        model: "gemini-2.0-flash-lite", 
+        model: "gemini-2.5-flash-lite", 
         generationConfig: { temperature: 1.6 },
         safetySettings: category === '18+' ? safetySettings : undefined 
       });
@@ -257,6 +257,10 @@ function startIntermission(roomCode) {
 io.on('connection', (socket) => {
   console.log(`🟢 Player Connected: ${socket.id}`);
 
+  socket.on('requestSync', (roomId) => {
+    emitSafeRoomData(roomId.toUpperCase());
+  });
+
   socket.on('getSeedingStats', async (callback) => {
     try {
       const stats = await Scenario.aggregate([{ $group: { _id: "$language", count: { $sum: 1 } } }]);
@@ -279,7 +283,7 @@ io.on('connection', (socket) => {
       if (exists) return callback({ success: false, message: "Whoops! Someone already submitted this scenario." });
 
       // NEW: Upgraded to Flash-Lite
-      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite", safetySettings });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite", safetySettings });
       const prompt = `You are the strict but fair moderator for a party game called Humour Cup.
       A player submitted a custom scenario: "${data.text}"
       Target Language: ${data.language} | Category: ${data.category}
@@ -325,8 +329,37 @@ io.on('connection', (socket) => {
 
   socket.on('joinRoom', ({ roomId, playerName }, callback) => {
     const roomCode = roomId.toUpperCase();
-    if (rooms[roomCode]) {
-      rooms[roomCode].players.push({ id: socket.id, name: playerName, score: 0 });
+    const room = rooms[roomCode];
+    
+    if (room) {
+      // THE RECONNECTION FIX: Check if the player name already exists in this room
+      const existingPlayer = room.players.find(p => p.name.toLowerCase() === playerName.toLowerCase());
+      
+      if (existingPlayer) {
+        // If they exist, swap their old ID for their new connection ID
+        const oldId = existingPlayer.id;
+        existingPlayer.id = socket.id;
+        
+        // Update all their previous answers/votes to the new ID so scoring doesn't break
+        if (room.roundData && room.roundData.answers) {
+           room.roundData.answers.forEach(ans => {
+              if (ans.playerId === oldId) ans.playerId = socket.id;
+              ans.votes = ans.votes.map(v => v === oldId ? socket.id : v);
+              ans.replies.forEach(rep => {
+                 if (rep.playerId === oldId) rep.playerId = socket.id;
+                 rep.votes = rep.votes.map(v => v === oldId ? socket.id : v);
+              });
+           });
+        }
+        if (room.roundData && room.roundData.donePlayers) {
+           room.roundData.donePlayers = room.roundData.donePlayers.map(id => id === oldId ? socket.id : id);
+        }
+        console.log(`♻️ Player Reconnected: ${playerName}`);
+      } else {
+        // Normal Join for a new player
+        room.players.push({ id: socket.id, name: playerName, score: 0 });
+      }
+      
       socket.join(roomCode);
       callback({ success: true });
       emitSafeRoomData(roomCode);

@@ -130,10 +130,33 @@ function App() {
     }
   }, [room]);
 
+  useEffect(() => {
+    const handleReconnect = () => {
+      if (room && playerName) {
+        socket.emit('joinRoom', { roomId: room.id, playerName }, (res) => {
+          if (res.success) socket.emit('requestSync', room.id);
+        });
+      }
+    };
+    socket.on('connect', handleReconnect);
+    return () => socket.off('connect', handleReconnect);
+  }, [room, playerName]);
+
   const refreshStats = () => { socket.emit('getSeedingStats', (data) => setSeedingStats(data)); };
 
-  const handleCreateRoom = () => { playSound('create'); if (!playerName) alert("Enter a name!"); else socket.emit('createRoom', { playerName, language: appLang }, () => {}); };
-  const handleJoinRoom = () => { playSound('click'); if (!playerName || !joinCode) alert("Fill all fields!"); else socket.emit('joinRoom', { roomId: joinCode, playerName }, (res) => !res.success && alert(res.message)); };
+  const handleCreateRoom = () => { 
+    playSound('create'); 
+    if (!playerName) return alert("Please enter your funny name!"); 
+    socket.emit('createRoom', { playerName, language: appLang }, () => {}); 
+  };
+
+  const handleJoinRoom = () => { 
+    playSound('click'); 
+    if (!playerName) return alert("Please enter your funny name!"); 
+    if (!joinCode) return alert("Please enter a room code!");
+    socket.emit('joinRoom', { roomId: joinCode, playerName }, (res) => !res.success && alert(res.message)); 
+  };  
+  
   const handleStartGame = () => { playSound('click'); socket.emit('startGame', room.id); };
   const handleSettingChange = (key, value) => { socket.emit('updateSettings', { roomId: room.id, settings: { [key]: value } }); };
   const handleSecretSubmit = () => { if (!secretInput.trim()) return; playSound('vote'); socket.emit('addSecretScenario', { roomId: room.id, text: secretInput }); setSecretInput(''); };
@@ -437,7 +460,15 @@ function App() {
           return (
             <>
               <h2 style={styles.phaseTitle}>{t('chatVote')}</h2>
+              
+              {/* NEW SUBTITLE ADDED HERE */}
+              <h3 style={{ color: '#1a1a1a', marginTop: '-20px', marginBottom: '20px', fontSize: '18px', fontWeight: '800' }}>
+                Reply with your humour punches and vote.
+              </h3>
+              
               <div style={styles.timerBadge}>⏳ {timeLeft} {t('secLeft')}</div>
+              {/* ... the rest of the chat phase code ... */}
+              
               <div style={{...styles.scenarioCard, padding: '20px', fontSize: '22px', marginBottom: '20px'}}>"{room.roundData.scenario}"</div>
               <div style={styles.ansList}>
                 {safeAnswers.map((ans) => {
