@@ -257,11 +257,21 @@ function startIntermission(roomCode) {
 io.on('connection', (socket) => {
   console.log(`🟢 Player Connected: ${socket.id}`);
 
+  socket.on('verifyAdmin', (passcode, callback) => {
+    const correctPasscode = process.env.ADMIN_PASSCODE || '72954';
+    if (passcode === correctPasscode) {
+      callback({ success: true });
+    } else {
+      callback({ success: false });
+    }
+  });
+
   socket.on('requestSync', (roomId) => {
     emitSafeRoomData(roomId.toUpperCase());
   });
 
-  socket.on('getSeedingStats', async (callback) => {
+  socket.on('getSeedingStats', async (passcode, callback) => {
+    if (passcode !== (process.env.ADMIN_PASSCODE || '72954')) return callback({});
     try {
       const stats = await Scenario.aggregate([{ $group: { _id: "$language", count: { $sum: 1 } } }]);
       const formatted = {};
@@ -270,10 +280,9 @@ io.on('connection', (socket) => {
     } catch(e) { callback({}); }
   });
 
-  // NEW: Admin route to fetch ALL public scenarios (Approved & Pending)
-  socket.on('getAdminPublicScenarios', async (callback) => {
+  socket.on('getAdminPublicScenarios', async (passcode, callback) => {
+    if (passcode !== (process.env.ADMIN_PASSCODE || '72954')) return callback([]);
     try {
-      // Sorts by newest first
       const publicScenarios = await Scenario.find({ source: 'Public' }).sort({ createdAt: -1 }).lean();
       callback(publicScenarios);
     } catch(e) { callback([]); }
