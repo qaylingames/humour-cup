@@ -270,6 +270,15 @@ io.on('connection', (socket) => {
     } catch(e) { callback({}); }
   });
 
+  // NEW: Admin route to fetch ALL public scenarios (Approved & Pending)
+  socket.on('getAdminPublicScenarios', async (callback) => {
+    try {
+      // Sorts by newest first
+      const publicScenarios = await Scenario.find({ source: 'Public' }).sort({ createdAt: -1 }).lean();
+      callback(publicScenarios);
+    } catch(e) { callback([]); }
+  });
+
   socket.on('getPublicVault', async (callback) => {
     try {
       const publicScenarios = await Scenario.find({ source: 'Public', status: 'Approved' }).lean();
