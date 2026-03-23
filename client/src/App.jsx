@@ -76,7 +76,7 @@ function App() {
   const t = (key) => uiTranslations[appLang]?.[key] || uiTranslations['English'][key] || key;
 
   // IMPORTANT: Replace this with your actual Ko-Fi link!
-  const KOFI_LINK = "https://ko-fi.com/YOUR_USERNAME_HERE"; 
+  const KOFI_LINK = "https://ko-fi.com/arpitsrivstva"; 
 
   useEffect(() => { setPubLang(appLang); }, [appLang]);
 
