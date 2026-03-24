@@ -468,7 +468,7 @@ function App() {
             </div>
 
             {/* --- FUN GRAPHICAL CARDS --- */}
-            <div style={{...styles.devCardDark, transform: 'rotate(-2.5deg)', marginTop: '40px'}}>
+            <div style={{...styles.devCardDark, transform: 'rotate(-2deg)', marginTop: '40px'}}>
                <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.donateBtn, marginTop: '0', padding: '12px 24px', fontSize: '16px'}}>
                   ☕ Buy the Developer a Coffee
                </a>
@@ -477,11 +477,12 @@ function App() {
                </p>
             </div>
 
-            <div style={{...styles.devCardColor, transform: 'rotate(2.5deg)', marginTop: '20px'}}>
+            {/* FIXED: Increased marginTop from 20px to 45px to prevent collision */}
+            <div style={{...styles.devCardColor, transform: 'rotate(2deg)', marginTop: '45px'}}>
                <p style={styles.feedbackText}>
                  How the heck should I make this game more fun? Tell me everything at
                </p>
-               <a href="mailto:qaylingames@gmail.com" style={styles.emailLink}>qaylingames@gmail.com 💌</a>
+               <a href="mailto:qaylingames@gmail.com" className="btn-3d" style={styles.emailLink}>qaylingames@gmail.com 💌</a>
             </div>
 
           </>
@@ -725,7 +726,7 @@ function App() {
               {isHost ? <button onClick={handlePlayAgain} className="btn-3d" style={styles.primaryBtn}>{t('playAgain')}</button> : <h3 className="animate-bounce" style={{color: '#1a1a1a', fontWeight: '900', fontSize: '20px'}}>{t('waitRes')}</h3>}
               
               {/* --- FUN GRAPHICAL CARDS --- */}
-            <div style={{...styles.devCardDark, transform: 'rotate(-2.5deg)', marginTop: '40px'}}>
+            <div style={{...styles.devCardDark, transform: 'rotate(-2deg)', marginTop: '40px'}}>
                <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.donateBtn, marginTop: '0', padding: '12px 24px', fontSize: '16px'}}>
                   ☕ Buy the Developer a Coffee
                </a>
@@ -734,11 +735,12 @@ function App() {
                </p>
             </div>
 
-            <div style={{...styles.devCardColor, transform: 'rotate(2.5deg)', marginTop: '20px'}}>
+            {/* FIXED: Increased marginTop from 20px to 45px to prevent collision */}
+            <div style={{...styles.devCardColor, transform: 'rotate(2deg)', marginTop: '45px'}}>
                <p style={styles.feedbackText}>
                  How the heck should I make this game more fun? Tell me everything at
                </p>
-               <a href="mailto:qaylingames@gmail.com" style={styles.emailLink}>qaylingames@gmail.com 💌</a>
+               <a href="mailto:qaylingames@gmail.com" className="btn-3d" style={styles.emailLink}>qaylingames@gmail.com 💌</a>
             </div>
 
             </>
@@ -808,11 +810,11 @@ const styles = {
   
   // --- GRAPHICAL COMIC-STYLE CARDS ---
   devCardDark: { 
-    background: '#27272a', // Sleek dark charcoal 
+    background: '#1a1a1a', // Pitch black
     padding: '25px', 
     borderRadius: '16px', 
-    border: '4px solid #1a1a1a', 
-    boxShadow: '6px 6px 0px #1a1a1a', 
+    border: '4px solid #ffffff', // Crisp white border
+    boxShadow: '8px 8px 0px #10b981', // Fun bright green shadow to pop off the yellow background!
     width: '100%', 
     maxWidth: '450px', 
     display: 'flex', 
@@ -823,17 +825,17 @@ const styles = {
   indieDevText: { 
     fontFamily: "'Kalam', cursive", 
     fontSize: '15px', 
-    color: '#f8fafc', // Crisp white
+    color: '#ffffff', 
     fontWeight: 'bold', 
     lineHeight: '1.5', 
-    margin: '8px 0 0 0' // FIXED: This 8px exactly compensates for the button's 3D drop shadow!
+    margin: '8px 0 0 0' // Compensates for the button shadow
   },
   devCardColor: { 
-    background: '#8b5cf6', // Vibrant punchy purple
+    background: '#ef4444', // Humour Cup Theme Red
     padding: '20px 25px', 
     borderRadius: '16px', 
-    border: '4px solid #1a1a1a', 
-    boxShadow: '6px 6px 0px #1a1a1a', 
+    border: '4px solid #ffffff', // White border to match its sibling
+    boxShadow: '8px 8px 0px #1a1a1a', // Heavy black shadow
     width: '100%', 
     maxWidth: '450px', 
     display: 'flex', 
@@ -843,20 +845,26 @@ const styles = {
   },
   feedbackText: { 
     fontFamily: "'Kalam', cursive", 
-    fontSize: '15px', // FIXED: Reduced exactly to 15px
+    fontSize: '15px', 
     color: '#ffffff', 
     fontWeight: 'bold', 
     margin: '0', 
-    lineHeight: '1.4' 
+    lineHeight: '1.4',
+    textShadow: '1px 1px 0px #1a1a1a' // Subtle comic shadow
   },
   emailLink: { 
     fontFamily: "'Kalam', cursive", 
-    color: '#FFC200', // Yellow text pops beautifully on the purple background
-    textDecoration: 'underline', 
+    color: '#FFC200', // Yellow text
+    background: '#1a1a1a', // Turns the email into a cool black badge/sticker
+    padding: '8px 16px',
+    borderRadius: '12px',
+    border: '2px solid #ffffff',
+    textDecoration: 'none', // Removed underline for a cleaner badge look
     fontWeight: '900', 
-    fontSize: '18px', 
-    margin: '0',
-    textShadow: '2px 2px 0px #1a1a1a' // Added a fun comic-book text shadow!
+    fontSize: '16px', 
+    margin: '5px 0 0 0',
+    boxShadow: '4px 4px 0px rgba(0,0,0,0.5)',
+    display: 'inline-block'
   }
 };
 
