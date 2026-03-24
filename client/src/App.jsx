@@ -469,7 +469,7 @@ function App() {
 
             {/* --- AESTHETIC GRAPHICAL CARDS --- */}
             <div style={{...styles.devCardGreen, transform: 'rotate(-2deg)', marginTop: '40px'}}>
-               <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.donateBtn, background: '#ffffff', color: '#1a1a1a', marginTop: '0', padding: '12px 24px', fontSize: '15px'}}>
+               <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.donateBtn, background: '#6F4E37', color: '#ffffff', marginTop: '0', padding: '12px 24px', fontSize: '15px'}}>
                   ☕ Buy the Developer a Coffee
                </a>
                <p style={styles.indieDevText}>
@@ -477,7 +477,8 @@ function App() {
                </p>
             </div>
 
-            <div style={{...styles.devCardGrey, transform: 'rotate(2deg)', marginTop: '45px'}}>
+            {/* --- THE ZIG-ZAG SCRATCH HOLE --- */}
+            <div style={{...styles.feedbackScratch, marginTop: '50px'}}>
                <p style={styles.feedbackText}>
                  How the heck should I make this game more fun? Tell me everything&nbsp;at
                </p>
@@ -726,7 +727,7 @@ function App() {
               
               {/* --- AESTHETIC GRAPHICAL CARDS --- */}
             <div style={{...styles.devCardGreen, transform: 'rotate(-2deg)', marginTop: '40px'}}>
-               <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.donateBtn, background: '#ffffff', color: '#1a1a1a', marginTop: '0', padding: '12px 24px', fontSize: '15px'}}>
+               <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.donateBtn, background: '#6F4E37', color: '#ffffff', marginTop: '0', padding: '12px 24px', fontSize: '15px'}}>
                   ☕ Buy the Developer a Coffee
                </a>
                <p style={styles.indieDevText}>
@@ -734,7 +735,8 @@ function App() {
                </p>
             </div>
 
-            <div style={{...styles.devCardGrey, transform: 'rotate(2deg)', marginTop: '45px'}}>
+            {/* --- THE ZIG-ZAG SCRATCH HOLE --- */}
+            <div style={{...styles.feedbackScratch, marginTop: '50px'}}>
                <p style={styles.feedbackText}>
                  How the heck should I make this game more fun? Tell me everything&nbsp;at
                </p>
@@ -808,11 +810,11 @@ const styles = {
   
   // --- GRAPHICAL COMIC-STYLE CARDS ---
   devCardGreen: { 
-    background: '#10b981', // Aesthetic Humour Cup Green
+    background: '#10b981', 
     padding: '25px', 
     borderRadius: '16px', 
-    border: '4px solid #1a1a1a', // Black border restored
-    boxShadow: '8px 8px 0px #1a1a1a', // Classic black shadow
+    border: '4px solid #1a1a1a', 
+    boxShadow: '8px 8px 0px #1a1a1a', 
     width: '100%', 
     maxWidth: '450px', 
     display: 'flex', 
@@ -822,45 +824,48 @@ const styles = {
   },
   indieDevText: { 
     fontFamily: "'Kalam', cursive", 
-    fontSize: '14px', // Reduced slightly for better flow
-    color: '#ffffff', // Crisp white on the green bg
+    fontSize: '14px', 
+    color: '#ffffff', 
     fontWeight: 'bold', 
     lineHeight: '1.5', 
     margin: '5px 0 0 0' 
   },
-  devCardGrey: { 
-    background: '#e5e7eb', // Aesthetic minimalist grey
-    padding: '20px 25px', 
-    borderRadius: '16px', 
-    border: '4px solid #1a1a1a', // Black border restored
-    boxShadow: '8px 8px 0px #ef4444', // Pop-Art RED shadow!
+  
+  // --- THE NEW ZIG-ZAG SCRATCH EFFECT ---
+  feedbackScratch: { 
+    background: '#ffffff', // Pure white, like paper underneath the yellow website
+    padding: '45px 25px', // Extra padding because the zig-zags cut into the edges
     width: '100%', 
-    maxWidth: '450px', 
+    maxWidth: '480px', 
     display: 'flex', 
     flexDirection: 'column', 
     alignItems: 'center', 
-    gap: '12px' 
+    gap: '12px',
+    // This physically cuts the div into a jagged, scribbled hole!
+    clipPath: 'polygon(3% 15%, 15% 2%, 25% 18%, 38% 0%, 50% 15%, 62% 2%, 75% 20%, 88% 5%, 98% 18%, 95% 85%, 85% 100%, 75% 85%, 62% 98%, 50% 85%, 38% 100%, 25% 82%, 12% 98%, 0% 85%)',
+    transform: 'rotate(1.5deg)' // Slight tilt
   },
+  
   feedbackText: { 
     fontFamily: "'Kalam', cursive", 
-    fontSize: '14px', // Reduced slightly for better flow
-    color: '#1a1a1a', // Dark text on the light grey box
+    fontSize: '14px', 
+    color: '#1a1a1a', // Black text so it looks handwritten on the white paper
     fontWeight: 'bold', 
     margin: '0', 
     lineHeight: '1.4' 
   },
   emailLink: { 
     fontFamily: "'Kalam', cursive", 
-    color: '#ffffff', // White text
-    background: '#ef4444', // Red button respectfully matches the red drop-shadow!
+    color: '#ffffff', 
+    background: '#ef4444', 
     padding: '8px 16px',
     borderRadius: '12px',
-    border: '3px solid #1a1a1a', // Black border for the button
+    border: '3px solid #1a1a1a', 
     textDecoration: 'none', 
     fontWeight: '900', 
     fontSize: '15px', 
     margin: '0',
-    boxShadow: '4px 4px 0px #1a1a1a', // Classic black shadow for the button
+    boxShadow: '4px 4px 0px #1a1a1a', 
     display: 'inline-block'
   }
 };
