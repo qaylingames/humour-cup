@@ -275,10 +275,9 @@ function App() {
       <style>{`
       @import url('https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap');
 
-        /* --- GLOBAL LAYOUT & FONT LOCKS --- */
-        * { box-sizing: border-box; font-family: 'Kalam', cursive; }
+        /* --- GLOBAL LAYOUT LOCKS --- */
+        * { box-sizing: border-box; } /* Global font removed! */
         html, body { overflow-x: hidden; margin: 0; padding: 0; width: 100%; }
-        input, button, textarea, select { font-family: inherit; }
 
         .btn-3d { transition: transform 0.1s ease, box-shadow 0.1s ease; }
         /* ... rest of your CSS stays the same ... */
@@ -476,12 +475,11 @@ function App() {
             {/* NEW: INDIE DEV MESSAGE */}
             <div style={styles.devMessageContainer}>
                <p style={styles.indieDevText}>
-                 This indie dev needs to handle servers, moderations, and maintenance 🥺. A lil tip can fuel my coffee addiction and help bring my other crazy game ideas to life 💙.
+                 This indie dev needs to handle server, moderations and maintenance🥺. A lil help can boost me up for the other ideas I have, as well💙.
                </p>
                <p style={styles.feedbackText}>
-                 Got a wild idea? Found a hilarious bug? Or just want to roast my code?<br/>
-                 Spill your chaotic thoughts here:<br/>
-                 <a href="mailto:qaylingames@gmail.com" style={styles.emailLink}>qaylingames@gmail.com 💌</a>
+                 How the heck should I make this game more fun? Tell me everything at <br/>
+                 <a href="mailto:qaylingames@gmail.com" style={styles.emailLink}>qaylingames@gmail.com</a>
                </p>
             </div>
           </>
@@ -727,17 +725,18 @@ function App() {
               <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.donateBtn, marginTop: '30px'}}>
                  ☕ Buy the Developer a Coffee ☕
               </a>
+
               {/* NEW: INDIE DEV MESSAGE */}
             <div style={styles.devMessageContainer}>
                <p style={styles.indieDevText}>
-                 This indie dev needs to handle servers, moderations, and maintenance 🥺. A lil tip can fuel my coffee addiction and help bring my other crazy game ideas to life 💙.
+                 This indie dev needs to handle server, moderations and maintenance🥺. A lil help can boost me up for the other ideas I have, as well💙.
                </p>
                <p style={styles.feedbackText}>
-                 Got a wild idea? Found a hilarious bug? Or just want to roast my code?<br/>
-                 Spill your chaotic thoughts here:<br/>
-                 <a href="mailto:qaylingames@gmail.com" style={styles.emailLink}>qaylingames@gmail.com 💌</a>
+                 How the heck should I make this game more fun? Tell me everything at <br/>
+                 <a href="mailto:qaylingames@gmail.com" style={styles.emailLink}>qaylingames@gmail.com</a>
                </p>
             </div>
+
             </>
           );
         })()}
@@ -754,11 +753,11 @@ const styles = {
   howToPlayText: { fontSize: '15px', color: '#1a1a1a', marginBottom: '15px', fontWeight: '800', lineHeight: '1.6', display: 'flex', alignItems: 'flex-start', gap: '8px' },
   bullet: { color: '#10b981', fontSize: '16px' }, 
   
-  // CONTAINER WITH SAFE PADDING FOR ADS AND SIDES
+  // FIXED: Keeps the safe padding for ads and sides
   container: { width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '80px 20px 120px 20px', boxSizing: 'border-box' },
   
-  // FIXED: The missing Main Card properties are restored!
-  mainCard: { background: '#ffffff', padding: '30px', borderRadius: '24px', width: '100%', border: '4px solid #1a1a1a', boxShadow: '10px 10px 0px #1a1a1a', marginBottom: '20px' },
+  // RESTORED: Your original white card background!
+  mainCard: { background: '#ffffff', padding: '40px', borderRadius: '24px', width: '100%', border: '4px solid #1a1a1a', boxShadow: '10px 10px 0px #1a1a1a' },
   
   input: { backgroundColor: '#333333', color: '#ffffff', width: '100%', padding: '20px', borderRadius: '12px', border: '3px solid #1a1a1a', fontSize: '20px', marginBottom: '25px', fontWeight: 'bold', outline: 'none' },
   smallInput: { backgroundColor: '#333333', color: '#ffffff', flex: 1, padding: '20px', borderRadius: '12px', border: '3px solid #1a1a1a', fontSize: '20px', fontWeight: 'bold', outline: 'none', textTransform: 'uppercase', minWidth: 0 },
@@ -790,18 +789,22 @@ const styles = {
   dropdown: { flex: 1, backgroundColor: '#333333', color: '#ffffff', padding: '15px', borderRadius: '8px', border: '3px solid #1a1a1a', fontSize: '16px', fontWeight: 'bold', outline: 'none', cursor: 'pointer' },
   checklistWrapper: { marginTop: '25px', padding: '20px', backgroundColor: '#e5e7eb', borderRadius: '12px', border: '3px dashed #1a1a1a', textAlign: 'left' },
   checklistItem: { fontSize: '16px', fontWeight: 'bold', color: '#1a1a1a', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '10px' },
-  receiptBox: { width: '100%', padding: '25px', backgroundColor: '#FFC200', borderRadius: '16px', border: '4px solid #1a1a1a', marginBottom: '30px', textAlign: 'left', boxShadow: '6px 6px 0px #1a1a1a' },
+  receiptBox: { width: '100%', padding: '25px', backgroundColor: '#FFC200', borderRadius: '16px', border: '4px solid #1a1a1a', marginBottom: '30px', textAlign: 'left', boxShadow: '6px 6px 0px #1a1a1a', fontFamily: '"Fredoka One", "Titan One", "Comic Sans MS", sans-serif' },
   receiptTitle: { color: '#1a1a1a', textTransform: 'uppercase', fontWeight: '900', textAlign: 'center', marginBottom: '20px', fontSize: '22px' },
   receiptSectionTitle: { color: '#1a1a1a', fontSize: '18px', fontWeight: '900', borderBottom: '3px solid #1a1a1a', paddingBottom: '5px', marginBottom: '15px', marginTop: '20px' },
   receiptScoreboard: { marginBottom: '20px' },
   receiptCard: { backgroundColor: '#ffffff', border: '3px solid #1a1a1a', borderRadius: '12px', padding: '15px', marginBottom: '15px' },
   translateWrapper: { position: 'fixed', top: '15px', left: '15px', zIndex: 10000, display: 'flex', alignItems: 'center', gap: '4px', background: '#fff', padding: '6px 10px', borderRadius: '50px', border: '3px solid #1a1a1a', boxShadow: '2px 2px 0px #1a1a1a' },
-  translateSelect: { border: 'none', outline: 'none', background: 'transparent', fontSize: '16px', fontWeight: '900', color: '#1a1a1a', cursor: 'pointer' },
-  donateBtn: { display: 'inline-block', background: '#ff5e5b', color: '#ffffff', padding: '15px 30px', borderRadius: '50px', border: '4px solid #1a1a1a', fontSize: '20px', fontWeight: '900', cursor: 'pointer', boxShadow: '6px 6px 0px #1a1a1a', textDecoration: 'none', marginTop: '40px' },
-
-  // NEW MESSAGE STYLES
+  
+  // RESTORED: Original font size
+  translateSelect: { border: 'none', outline: 'none', background: 'transparent', fontSize: '14px', fontWeight: '900', color: '#1a1a1a', cursor: 'pointer' },
+  
+  // RESTORED: Original font size
+  donateBtn: { display: 'inline-block', background: '#ff5e5b', color: '#ffffff', padding: '15px 30px', borderRadius: '50px', border: '4px solid #1a1a1a', fontSize: '18px', fontWeight: '900', cursor: 'pointer', boxShadow: '6px 6px 0px #1a1a1a', textDecoration: 'none', marginTop: '40px' },
+  
+  // NEW MESSAGE STYLES (Targeted font exactly where you wanted it)
   devMessageContainer: { marginTop: '30px', padding: '0 20px', maxWidth: '400px', textAlign: 'center' },
-  indieDevText: { fontSize: '18px', color: '#1a1a1a', fontWeight: 'bold', lineHeight: '1.5', margin: '0 0 15px 0' },
+  indieDevText: { fontFamily: "'Kalam', 'Marker Felt', 'Comic Sans MS', cursive", fontSize: '18px', color: '#1a1a1a', fontWeight: 'bold', lineHeight: '1.5', margin: '0 0 15px 0' },
   feedbackText: { fontSize: '16px', color: '#333', fontWeight: 'bold', margin: 0, lineHeight: '1.4' },
   emailLink: { color: '#10b981', textDecoration: 'underline', fontWeight: '900', fontSize: '18px' }
 };
