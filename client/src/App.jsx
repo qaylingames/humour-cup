@@ -804,8 +804,8 @@ const styles = {
   
   // NEW MESSAGE STYLES (Targeted font exactly where you wanted it)
   devMessageContainer: { marginTop: '30px', padding: '0 20px', maxWidth: '400px', textAlign: 'center' },
-  indieDevText: { fontFamily: 'Marker Felt', fontSize: '12px', color: '#2f2f2f', fontWeight: 'bold', lineHeight: '1.5', margin: '0 0 15px 0' },
-  feedbackText: { fontFamily: 'Kalam', fontSize: '10px', color: '#3b3b3b', fontWeight: 'bold', margin: 0, lineHeight: '1.4' },
+  indieDevText: { fontFamily: "'Marker Felt', cursive", fontSize: '15px', color: '#2f2f2f', fontWeight: 'bold', lineHeight: '1.5', margin: '0 0 15px 0' },
+  feedbackText: { fontFamily: 'Kalam', fontSize: '12px', color: '#3b3b3b', fontWeight: 'bold', margin: 0, lineHeight: '1.4' },
   emailLink: { color: '#14a474', textDecoration: 'underline', fontWeight: '900', fontSize: '18px' }
 };
 
