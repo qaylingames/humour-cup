@@ -273,14 +273,16 @@ function App() {
   return (
     <div onClick={unlockAudio} style={styles.appWrapper}>
       <style>{`
-        /* --- NEW: GLOBAL LAYOCK LOCKS --- */
-        * { box-sizing: border-box; }
+      @import url('https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap');
+
+        /* --- GLOBAL LAYOUT & FONT LOCKS --- */
+        * { box-sizing: border-box; font-family: 'Kalam', cursive; }
         html, body { overflow-x: hidden; margin: 0; padding: 0; width: 100%; }
+        input, button, textarea, select { font-family: inherit; }
 
         .btn-3d { transition: transform 0.1s ease, box-shadow 0.1s ease; }
         /* ... rest of your CSS stays the same ... */
 
-        .btn-3d { transition: transform 0.1s ease, box-shadow 0.1s ease; }
         .btn-3d:active:not(:disabled) { transform: translateY(6px); box-shadow: 0px 0px 0px #1a1a1a !important; }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
         .animate-bounce { animation: bounce 1.5s infinite ease-in-out; }
@@ -468,17 +470,18 @@ function App() {
 
             {/* KO-FI BUTTON */}
             <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={styles.donateBtn}>
-               ☕ Support the Developer
+               ☕ Buy the Developer a Coffee ☕
             </a>
 
             {/* NEW: INDIE DEV MESSAGE */}
             <div style={styles.devMessageContainer}>
                <p style={styles.indieDevText}>
-                 This indie dev needs to handle server, moderations and maintenance🥺. A lil help can boost me up for the other ideas I have, as well💙.
+                 This indie dev needs to handle servers, moderations, and maintenance 🥺. A lil tip can fuel my coffee addiction and help bring my other crazy game ideas to life 💙.
                </p>
                <p style={styles.feedbackText}>
-                 How the heck should I make this game more fun? Tell me everything at <br/>
-                 <a href="mailto:qaylingames@gmail.com" style={styles.emailLink}>qaylingames@gmail.com</a>
+                 Got a wild idea? Found a hilarious bug? Or just want to roast my code?<br/>
+                 Spill your chaotic thoughts here:<br/>
+                 <a href="mailto:qaylingames@gmail.com" style={styles.emailLink}>qaylingames@gmail.com 💌</a>
                </p>
             </div>
           </>
@@ -722,8 +725,19 @@ function App() {
               {isHost ? <button onClick={handlePlayAgain} className="btn-3d" style={styles.primaryBtn}>{t('playAgain')}</button> : <h3 className="animate-bounce" style={{color: '#1a1a1a', fontWeight: '900', fontSize: '20px'}}>{t('waitRes')}</h3>}
               
               <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.donateBtn, marginTop: '30px'}}>
-                 ☕ Buy the Developer a Coffee
+                 ☕ Buy the Developer a Coffee ☕
               </a>
+              {/* NEW: INDIE DEV MESSAGE */}
+            <div style={styles.devMessageContainer}>
+               <p style={styles.indieDevText}>
+                 This indie dev needs to handle servers, moderations, and maintenance 🥺. A lil tip can fuel my coffee addiction and help bring my other crazy game ideas to life 💙.
+               </p>
+               <p style={styles.feedbackText}>
+                 Got a wild idea? Found a hilarious bug? Or just want to roast my code?<br/>
+                 Spill your chaotic thoughts here:<br/>
+                 <a href="mailto:qaylingames@gmail.com" style={styles.emailLink}>qaylingames@gmail.com 💌</a>
+               </p>
+            </div>
             </>
           );
         })()}
@@ -733,12 +747,20 @@ function App() {
 }
 
 const styles = {
-  appWrapper: { minHeight: '100vh', width: '100%', display: 'flex', justifyContent: 'center', position: 'relative', backgroundColor: '#FFC200', overflowX: 'hidden', boxSizing: 'border-box' },  howToPlayBox: { marginTop: '40px', width: '100%', backgroundColor: '#ffffff', border: '4px solid #1a1a1a', borderRadius: '16px', boxShadow: '6px 6px 0px #1a1a1a', overflow: 'hidden', transform: 'rotate(-1.5deg)' },
+  appWrapper: { minHeight: '100vh', width: '100%', display: 'flex', justifyContent: 'center', position: 'relative', backgroundColor: '#FFC200', overflowX: 'hidden', boxSizing: 'border-box' }, 
+  howToPlayBox: { marginTop: '40px', width: '100%', backgroundColor: '#ffffff', border: '4px solid #1a1a1a', borderRadius: '16px', boxShadow: '6px 6px 0px #1a1a1a', overflow: 'hidden', transform: 'rotate(-1.5deg)' },
   howToPlayHeader: { backgroundColor: '#1a1a1a', color: '#FFC200', padding: '12px', fontSize: '18px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '2px', textAlign: 'center' },
   howToPlayContent: { padding: '25px', textAlign: 'left' },
   howToPlayText: { fontSize: '15px', color: '#1a1a1a', marginBottom: '15px', fontWeight: '800', lineHeight: '1.6', display: 'flex', alignItems: 'flex-start', gap: '8px' },
   bullet: { color: '#10b981', fontSize: '16px' }, 
-  container: { width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '80px 20px 120px 20px', boxSizing: 'border-box' },  input: { backgroundColor: '#333333', color: '#ffffff', width: '100%', padding: '20px', borderRadius: '12px', border: '3px solid #1a1a1a', fontSize: '20px', marginBottom: '25px', fontWeight: 'bold', outline: 'none' },
+  
+  // CONTAINER WITH SAFE PADDING FOR ADS AND SIDES
+  container: { width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '80px 20px 120px 20px', boxSizing: 'border-box' },
+  
+  // FIXED: The missing Main Card properties are restored!
+  mainCard: { background: '#ffffff', padding: '30px', borderRadius: '24px', width: '100%', border: '4px solid #1a1a1a', boxShadow: '10px 10px 0px #1a1a1a', marginBottom: '20px' },
+  
+  input: { backgroundColor: '#333333', color: '#ffffff', width: '100%', padding: '20px', borderRadius: '12px', border: '3px solid #1a1a1a', fontSize: '20px', marginBottom: '25px', fontWeight: 'bold', outline: 'none' },
   smallInput: { backgroundColor: '#333333', color: '#ffffff', flex: 1, padding: '20px', borderRadius: '12px', border: '3px solid #1a1a1a', fontSize: '20px', fontWeight: 'bold', outline: 'none', textTransform: 'uppercase', minWidth: 0 },
   textarea: { backgroundColor: '#333333', color: '#ffffff', width: '100%', height: '150px', padding: '20px', borderRadius: '16px', border: '3px solid #1a1a1a', fontSize: '20px', marginBottom: '25px', fontWeight: 'bold', outline: 'none', resize: 'none' },
   primaryBtn: { width: '100%', padding: '22px', borderRadius: '12px', border: '3px solid #1a1a1a', backgroundColor: '#ffffff', color: '#1a1a1a', fontSize: '22px', fontWeight: '900', cursor: 'pointer', boxShadow: '6px 6px 0px #1a1a1a', textTransform: 'uppercase' },
@@ -768,28 +790,20 @@ const styles = {
   dropdown: { flex: 1, backgroundColor: '#333333', color: '#ffffff', padding: '15px', borderRadius: '8px', border: '3px solid #1a1a1a', fontSize: '16px', fontWeight: 'bold', outline: 'none', cursor: 'pointer' },
   checklistWrapper: { marginTop: '25px', padding: '20px', backgroundColor: '#e5e7eb', borderRadius: '12px', border: '3px dashed #1a1a1a', textAlign: 'left' },
   checklistItem: { fontSize: '16px', fontWeight: 'bold', color: '#1a1a1a', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '10px' },
-  
-  receiptBox: { width: '100%', padding: '25px', backgroundColor: '#FFC200', borderRadius: '16px', border: '4px solid #1a1a1a', marginBottom: '30px', textAlign: 'left', boxShadow: '6px 6px 0px #1a1a1a', fontFamily: '"Fredoka One", "Titan One", "Comic Sans MS", sans-serif' },
+  receiptBox: { width: '100%', padding: '25px', backgroundColor: '#FFC200', borderRadius: '16px', border: '4px solid #1a1a1a', marginBottom: '30px', textAlign: 'left', boxShadow: '6px 6px 0px #1a1a1a' },
   receiptTitle: { color: '#1a1a1a', textTransform: 'uppercase', fontWeight: '900', textAlign: 'center', marginBottom: '20px', fontSize: '22px' },
   receiptSectionTitle: { color: '#1a1a1a', fontSize: '18px', fontWeight: '900', borderBottom: '3px solid #1a1a1a', paddingBottom: '5px', marginBottom: '15px', marginTop: '20px' },
   receiptScoreboard: { marginBottom: '20px' },
   receiptCard: { backgroundColor: '#ffffff', border: '3px solid #1a1a1a', borderRadius: '12px', padding: '15px', marginBottom: '15px' },
-
   translateWrapper: { position: 'fixed', top: '15px', left: '15px', zIndex: 10000, display: 'flex', alignItems: 'center', gap: '4px', background: '#fff', padding: '6px 10px', borderRadius: '50px', border: '3px solid #1a1a1a', boxShadow: '2px 2px 0px #1a1a1a' },
-  translateSelect: { border: 'none', outline: 'none', background: 'transparent', fontSize: '14px', fontWeight: '900', color: '#1a1a1a', cursor: 'pointer' },
-  donateBtn: { display: 'inline-block', background: '#ff5e5b', color: '#ffffff', padding: '15px 30px', borderRadius: '50px', border: '4px solid #1a1a1a', fontSize: '18px', fontWeight: '900', cursor: 'pointer', boxShadow: '6px 6px 0px #1a1a1a', textDecoration: 'none', marginTop: '40px' },
-  // NEW: Footer Message Styles
-  devMessageContainer: { marginTop: '20px', padding: '0 20px', maxWidth: '400px' },
-  indieDevText: { 
-    fontFamily: '"Comic Sans MS", "Chalkboard SE", "Marker Felt", cursive', 
-    fontSize: '15px', 
-    color: '#1a1a1a', 
-    fontWeight: 'bold', 
-    lineHeight: '1.5', 
-    margin: '0 0 15px 0' 
-  },
-  feedbackText: { fontSize: '13px', color: '#333', fontWeight: 'bold', margin: 0, lineHeight: '1.4' },
-  emailLink: { color: '#10b981', textDecoration: 'underline', fontWeight: '900', fontSize: '14px' }
+  translateSelect: { border: 'none', outline: 'none', background: 'transparent', fontSize: '16px', fontWeight: '900', color: '#1a1a1a', cursor: 'pointer' },
+  donateBtn: { display: 'inline-block', background: '#ff5e5b', color: '#ffffff', padding: '15px 30px', borderRadius: '50px', border: '4px solid #1a1a1a', fontSize: '20px', fontWeight: '900', cursor: 'pointer', boxShadow: '6px 6px 0px #1a1a1a', textDecoration: 'none', marginTop: '40px' },
+
+  // NEW MESSAGE STYLES
+  devMessageContainer: { marginTop: '30px', padding: '0 20px', maxWidth: '400px', textAlign: 'center' },
+  indieDevText: { fontSize: '18px', color: '#1a1a1a', fontWeight: 'bold', lineHeight: '1.5', margin: '0 0 15px 0' },
+  feedbackText: { fontSize: '16px', color: '#333', fontWeight: 'bold', margin: 0, lineHeight: '1.4' },
+  emailLink: { color: '#10b981', textDecoration: 'underline', fontWeight: '900', fontSize: '18px' }
 };
 
 export default App;
