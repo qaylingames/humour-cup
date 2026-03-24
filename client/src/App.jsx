@@ -475,11 +475,11 @@ function App() {
             {/* NEW: INDIE DEV MESSAGE */}
             <div style={styles.devMessageContainer}>
                <p style={styles.indieDevText}>
-                 This indie dev needs to handle server, moderations and maintenance🥺. A lil help can boost me up for my ideaz 💙.
+                This indie dev needs to handle server, moderations and maintenance 🥺. A lil help can boost me up for my ideaz 💙.
                </p>
                <p style={styles.feedbackText}>
-                 How the heck should I make this game more fun? Tell me everything at <br/>
-                 <a href="mailto:qaylingames@gmail.com" style={styles.emailLink}>qaylingames@gmail.com</a>
+                How the heck should I make this game more fun? Tell me everything at <br/>
+                <a href="mailto:qaylingames@gmail.com" style={styles.emailLink}>qaylingames@gmail.com</a>
                </p>
             </div>
           </>
@@ -729,7 +729,7 @@ function App() {
               {/* NEW: INDIE DEV MESSAGE */}
             <div style={styles.devMessageContainer}>
                <p style={styles.indieDevText}>
-                 This indie dev needs to handle server, moderations and maintenance🥺. A lil help can boost me up for my ideaz 💙.
+                 This indie dev needs to handle server, moderations and maintenance 🥺. A lil help can boost me up for my ideaz 💙.
                </p>
                <p style={styles.feedbackText}>
                  How the heck should I make this game more fun? Tell me everything at <br/>
@@ -804,9 +804,9 @@ const styles = {
   
   // NEW MESSAGE STYLES (Targeted font exactly where you wanted it)
   devMessageContainer: { marginTop: '30px', padding: '0 20px', maxWidth: '400px', textAlign: 'center' },
-  indieDevText: { fontFamily: "'Marker Felt', cursive", fontSize: '15px', color: '#2f2f2f', fontWeight: 'bold', lineHeight: '1.5', margin: '0 0 15px 0' },
+  indieDevText: { fontFamily: "'Marker Felt', cursive", fontSize: '12px', color: '#2f2f2f', fontWeight: 'bold', lineHeight: '1.5', margin: '0 0 15px 0' },
   feedbackText: { fontFamily: 'Kalam', fontSize: '12px', color: '#3b3b3b', fontWeight: 'bold', margin: 0, lineHeight: '1.4' },
-  emailLink: { color: '#14a474', textDecoration: 'underline', fontWeight: '900', fontSize: '18px' }
+  emailLink: { fontFamily: 'Kalam', color: '#14a474', textDecoration: 'underline', fontWeight: '900', fontSize: '15px' }
 };
 
 export default App;
