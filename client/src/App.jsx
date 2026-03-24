@@ -806,6 +806,7 @@ const styles = {
   donateBtn: { display: 'inline-block', background: '#ff5e5b', color: '#ffffff', padding: '15px 30px', borderRadius: '50px', border: '4px solid #1a1a1a', fontSize: '18px', fontWeight: '900', cursor: 'pointer', boxShadow: '6px 6px 0px #1a1a1a', textDecoration: 'none', marginTop: '40px' },
   
   // --- SUPPORT & FEEDBACK CARD STYLES ---
+  // --- SUPPORT & FEEDBACK CARD STYLES ---
   footerCard: { 
     background: '#ffffff', 
     padding: '25px', 
@@ -820,9 +821,30 @@ const styles = {
     alignItems: 'center', 
     gap: '15px' 
   },
-  indieDevText: { fontFamily: "'Marker Felt', cursive", fontSize: '13px', color: '#2f2f2f', fontWeight: 'bold', lineHeight: '1.5', margin: '0' },
-  feedbackText: { fontFamily: 'Kalam', fontSize: '15px', color: '#3b3b3b', fontWeight: 'bold', margin: '0', lineHeight: '1.4' },
-  emailLink: { fontFamily: 'Kalam', color: '#14a474', textDecoration: 'underline', fontWeight: '900', fontSize: '18px', margin: '0' }
+  indieDevText: { 
+    fontFamily: "'Kalam', cursive", // This is the magic line
+    fontSize: '16px', // Bumped up slightly because Kalam is a bit smaller
+    color: '#2f2f2f', 
+    fontWeight: 'bold', 
+    lineHeight: '1.5', 
+    margin: '0' 
+  },
+  feedbackText: { 
+    fontFamily: "'Kalam', cursive", 
+    fontSize: '15px', 
+    color: '#3b3b3b', 
+    fontWeight: 'bold', 
+    margin: '0', 
+    lineHeight: '1.4' 
+  },
+  emailLink: { 
+    fontFamily: "'Kalam', cursive", 
+    color: '#14a474', 
+    textDecoration: 'underline', 
+    fontWeight: '900', 
+    fontSize: '18px', 
+    margin: '0' 
+  }
 };
 
 export default App;
