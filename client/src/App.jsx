@@ -37,9 +37,9 @@ const BGM_TRACKS = [
 ];
 
 // ==========================================
-// GOOGLE ADSENSE COMPONENT
+// GOOGLE ADSENSE COMPONENT (STRICT FIXED SIZES)
 // ==========================================
-const AdBanner = ({ dataAdSlot, adFormat }) => {
+const AdBanner = ({ dataAdSlot, type }) => {
   useEffect(() => {
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -48,13 +48,16 @@ const AdBanner = ({ dataAdSlot, adFormat }) => {
     }
   }, []);
 
+  // Force EXACT dimensions so Google cannot resize it
+  const adStyle = type === 'mobile' 
+    ? { display: 'inline-block', width: '320px', height: '50px' } 
+    : { display: 'inline-block', width: '160px', height: '600px' };
+
   return (
     <ins className="adsbygoogle"
-         style={{ display: 'block', width: '100%', height: '100%' }}
+         style={adStyle}
          data-ad-client="ca-pub-8526630770141118"
-         data-ad-slot={dataAdSlot}
-         data-ad-format={adFormat} 
-         data-full-width-responsive={adFormat === "horizontal" ? "true" : "false"}></ins>
+         data-ad-slot={dataAdSlot}></ins>
   );
 };
 // ==========================================
@@ -303,13 +306,13 @@ function App() {
 
       {/* --- ADS RENDER HERE --- */}
       <div className="ad-zone-left">
-         <AdBanner dataAdSlot="7779947583" adFormat="vertical" />
+         <AdBanner dataAdSlot="7779947583" type="desktop" />
       </div>
       <div className="ad-zone-right">
-         <AdBanner dataAdSlot="7779947583" adFormat="vertical" />
+         <AdBanner dataAdSlot="7779947583" type="desktop" />
       </div>
       <div className="ad-zone-mobile">
-         <AdBanner dataAdSlot="7779947583" adFormat="horizontal" />
+         <AdBanner dataAdSlot="7779947583" type="mobile" />
       </div>
       {/* ----------------------- */}
 
