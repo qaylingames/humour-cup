@@ -467,9 +467,9 @@ function App() {
               </div>
             </div>
 
-            {/* --- SUPPORT & FEEDBACK CARDS --- */}
-            <div style={styles.footerCard}>
-               <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.donateBtn, marginTop: '0'}}>
+            {/* --- INDIE DEV "SCRAP NOTE" CARDS --- */}
+            <div style={{...styles.scrapNoteCard, transform: 'rotate(-2deg)', marginTop: '40px'}}>
+               <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.donateBtn, marginTop: '0', padding: '12px 24px', fontSize: '16px'}}>
                   ☕ Buy the Developer a Coffee
                </a>
                <p style={styles.indieDevText}>
@@ -477,7 +477,7 @@ function App() {
                </p>
             </div>
 
-            <div style={{...styles.footerCard, marginTop: '20px'}}>
+            <div style={{...styles.scrapNoteCard, transform: 'rotate(1.5deg)', marginTop: '20px', background: 'rgba(255, 255, 255, 0.4)', border: '3px dotted #1a1a1a'}}>
                <p style={styles.feedbackText}>
                  How the heck should I make this game more fun? Tell me everything at
                </p>
@@ -723,9 +723,9 @@ function App() {
 
               {isHost ? <button onClick={handlePlayAgain} className="btn-3d" style={styles.primaryBtn}>{t('playAgain')}</button> : <h3 className="animate-bounce" style={{color: '#1a1a1a', fontWeight: '900', fontSize: '20px'}}>{t('waitRes')}</h3>}
               
-              {/* --- SUPPORT & FEEDBACK CARDS --- */}
-            <div style={styles.footerCard}>
-               <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.donateBtn, marginTop: '0'}}>
+              {/* --- INDIE DEV "SCRAP NOTE" CARDS --- */}
+            <div style={{...styles.scrapNoteCard, transform: 'rotate(-2deg)', marginTop: '40px'}}>
+               <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.donateBtn, marginTop: '0', padding: '12px 24px', fontSize: '16px'}}>
                   ☕ Buy the Developer a Coffee
                </a>
                <p style={styles.indieDevText}>
@@ -733,7 +733,7 @@ function App() {
                </p>
             </div>
 
-            <div style={{...styles.footerCard, marginTop: '20px'}}>
+            <div style={{...styles.scrapNoteCard, transform: 'rotate(1.5deg)', marginTop: '20px', background: 'rgba(255, 255, 255, 0.4)', border: '3px dotted #1a1a1a'}}>
                <p style={styles.feedbackText}>
                  How the heck should I make this game more fun? Tell me everything at
                </p>
@@ -805,41 +805,39 @@ const styles = {
   // RESTORED: Original font size
   donateBtn: { display: 'inline-block', background: '#ff5e5b', color: '#ffffff', padding: '15px 30px', borderRadius: '50px', border: '4px solid #1a1a1a', fontSize: '18px', fontWeight: '900', cursor: 'pointer', boxShadow: '6px 6px 0px #1a1a1a', textDecoration: 'none', marginTop: '40px' },
   
-  // --- SUPPORT & FEEDBACK CARD STYLES ---
-  // --- SUPPORT & FEEDBACK CARD STYLES ---
-  footerCard: { 
-    background: '#ffffff', 
-    padding: '25px', 
-    borderRadius: '20px', 
-    border: '4px solid #1a1a1a', 
-    boxShadow: '6px 6px 0px #1a1a1a', 
+  // --- INDIE DEV SCRAP NOTE STYLES ---
+  scrapNoteCard: { 
+    background: '#fffbeb', 
+    padding: '20px 25px', 
+    borderRadius: '8px', 
+    border: '3px dashed #1a1a1a', 
+    boxShadow: '4px 4px 0px rgba(26, 26, 26, 0.15)', 
     width: '100%', 
     maxWidth: '450px', 
-    marginTop: '40px', 
     display: 'flex', 
     flexDirection: 'column', 
     alignItems: 'center', 
-    gap: '15px' 
+    gap: '12px' 
   },
   indieDevText: { 
-    fontFamily: "'Kalam', cursive", // This is the magic line
-    fontSize: '16px', // Bumped up slightly because Kalam is a bit smaller
-    color: '#2f2f2f', 
+    fontFamily: "'Kalam', cursive", 
+    fontSize: '15px', 
+    color: '#333333', 
     fontWeight: 'bold', 
     lineHeight: '1.5', 
-    margin: '0' 
+    margin: '10px 0 0 0' // FIXED: Pushed down to clear the button's 3D shadow
   },
   feedbackText: { 
     fontFamily: "'Kalam', cursive", 
-    fontSize: '15px', 
-    color: '#3b3b3b', 
+    fontSize: '15px', // FIXED: Reduced to 15px
+    color: '#333333', 
     fontWeight: 'bold', 
     margin: '0', 
     lineHeight: '1.4' 
   },
   emailLink: { 
     fontFamily: "'Kalam', cursive", 
-    color: '#14a474', 
+    color: '#10b981', 
     textDecoration: 'underline', 
     fontWeight: '900', 
     fontSize: '18px', 
