@@ -39,7 +39,7 @@ const BGM_TRACKS = [
 // ==========================================
 // GOOGLE ADSENSE COMPONENT
 // ==========================================
-const AdBanner = ({ dataAdSlot }) => {
+const AdBanner = ({ dataAdSlot, adFormat }) => {
   useEffect(() => {
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -53,8 +53,8 @@ const AdBanner = ({ dataAdSlot }) => {
          style={{ display: 'block', width: '100%', height: '100%' }}
          data-ad-client="ca-pub-8526630770141118"
          data-ad-slot={dataAdSlot}
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
+         data-ad-format={adFormat} 
+         data-full-width-responsive={adFormat === "horizontal" ? "true" : "false"}></ins>
   );
 };
 // ==========================================
@@ -96,6 +96,19 @@ function App() {
   const targets = { 'English': 10000, 'Hindi': 1000, 'Spanish': 1000, 'French': 1000, 'Mandarin': 1000, 'Japanese': 1000, 'Russian': 1000, 'Portuguese': 1000, 'German': 1000, 'Korean': 1000, 'Arabic': 1000, 'Indonesian': 1000 };
 
   const t = (key) => uiTranslations[appLang]?.[key] || uiTranslations['English'][key] || key;
+
+  const [pubCooldown, setPubCooldown] = useState(0);
+
+  // TICKING COOLDOWN TIMER FOR PUBLIC SUBMISSIONS
+  useEffect(() => {
+    let timer;
+    if (pubCooldown > 0) {
+      timer = setInterval(() => {
+        setPubCooldown((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [pubCooldown]);
   
   // DONATION LINK
   const KOFI_LINK = "https://ko-fi.com/arpitsrivstva"; 
@@ -211,14 +224,16 @@ function App() {
   };
 
   const handlePublicSubmit = () => {
-    if (!pubScenario.trim()) return;
+    if (!pubScenario.trim() || pubCooldown > 0) return; // Block if cooldown is active
     playSound('click');
     setPubStatus({ type: 'loading', msg: '⏳' });
+    
     socket.emit('submitPublicScenario', { text: pubScenario, language: pubLang, category: pubCategory }, (res) => {
       if (res.success) {
         playSound('vote'); 
-        setPubStatus({ type: 'success', msg: `✅ ${res.data.reason}` });
+        setPubStatus({ type: 'success', msg: `✅ ${res.data.reason || 'Submitted!'}` });
         setPubScenario(''); 
+        setPubCooldown(10); // Start the 10-second countdown!
         setTimeout(() => setPubStatus(null), 6000); 
       } else {
         playSound('alert'); 
@@ -277,22 +292,24 @@ function App() {
         .ad-zone-left { left: 20px; }
         .ad-zone-right { right: 20px; }
         .ad-zone-mobile {
-           position: fixed; bottom: 0; left: 0; width: 100%; height: 60px;
+           position: fixed; bottom: 0; left: 0; width: 100%; 
+           height: 60px; max-height: 60px; /* Locked height */
            background: #fff; border-top: 4px solid #1a1a1a; z-index: 9999;
            display: flex; align-items: center; justify-content: center;
+           overflow: hidden; /* Prevents giant ads from spilling out */
         }
         @media (min-width: 950px) { .ad-zone-left, .ad-zone-right { display: flex; } .ad-zone-mobile { display: none; } }
       `}</style>
 
       {/* --- ADS RENDER HERE --- */}
       <div className="ad-zone-left">
-         <AdBanner dataAdSlot="7779947583" />
+         <AdBanner dataAdSlot="7779947583" adFormat="vertical" />
       </div>
       <div className="ad-zone-right">
-         <AdBanner dataAdSlot="7779947583" />
+         <AdBanner dataAdSlot="7779947583" adFormat="vertical" />
       </div>
       <div className="ad-zone-mobile">
-         <AdBanner dataAdSlot="7779947583" />
+         <AdBanner dataAdSlot="7779947583" adFormat="horizontal" />
       </div>
       {/* ----------------------- */}
 
@@ -395,7 +412,25 @@ function App() {
                   </select>
                 </div>
 
-                <button onClick={handlePublicSubmit} disabled={pubStatus?.type === 'loading'} className="btn-3d" style={{...styles.primaryBtn, padding: '18px', fontSize: '16px'}}>{t('submit')}</button>
+<button 
+    onClick={handlePublicSubmit} 
+    disabled={pubStatus?.type === 'loading' || pubCooldown > 0} 
+    className="btn-3d" 
+    style={{
+      ...styles.primaryBtn, 
+      padding: '18px', 
+      fontSize: '16px',
+      backgroundColor: pubCooldown > 0 ? '#ccc' : '#ffffff',
+      cursor: pubCooldown > 0 ? 'not-allowed' : 'pointer'
+    }}>
+    {pubCooldown > 0 ? `Wait ${pubCooldown}s` : t('submit')}
+  </button>
+
+  {pubCooldown > 0 && (
+    <p style={{ marginTop: '12px', color: '#ef4444', fontWeight: '900', fontSize: '14px' }}>
+      You can submit another scenario in {pubCooldown} seconds.
+    </p>
+  )}
 
                 {pubStatus && (
                   <div style={styles.checklistWrapper}>

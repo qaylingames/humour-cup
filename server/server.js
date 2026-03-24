@@ -6,9 +6,13 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require('@google/generative-ai');
 
+// Tracks the last time a user submitted a public scenario
+const submissionCooldowns = new Map();
+
 // --- DATABASE CONNECTION ---
 // REMEMBER to put your actual alphanumeric password here before pushing!
-const uri = "mongodb+srv://qaylingames:Adollarr1vastava@cluster.aiywpvw.mongodb.net/HumourCup?retryWrites=true&w=majority&appName=Cluster";
+// Pulls securely from Render Environment Variables! No hackers can see this.
+const uri = process.env.MONGODB_URI;
 
 mongoose.connect(uri)
   .then(() => {
@@ -76,7 +80,12 @@ const app = express();
 app.use(cors());
 const server = http.createServer(app);
 
-const io = new Server(server, { cors: { origin: "*", methods: ["GET", "POST"] } });
+const io = require('socket.io')(server, {
+  cors: {
+    origin: ["https://humour-cup.vercel.app"], // ONLY allow your official website
+    methods: ["GET", "POST"]
+  }
+});
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
@@ -296,11 +305,25 @@ io.on('connection', (socket) => {
   });
 
   socket.on('submitPublicScenario', async (data, callback) => {
+    // --- 1. SPAM PROTECTION (THE BOUNCER) ---
+    const now = Date.now();
+    const lastSubmitTime = submissionCooldowns.get(socket.id) || 0;
+
+    // Check if 10 seconds (10,000 ms) haven't passed yet
+    if (now - lastSubmitTime < 10000) {
+      return callback({ success: false, message: "Please wait 10 seconds between submissions." });
+    }
+
+    // Lock the door immediately! (Prevents them from double-clicking and firing two AI calls at once)
+    submissionCooldowns.set(socket.id, now);
+    // ----------------------------------------
+
+    // --- 2. YOUR ORIGINAL AI & DATABASE LOGIC ---
     try {
       const exists = await Scenario.findOne({ text: data.text });
       if (exists) return callback({ success: false, message: "Whoops! Someone already submitted this scenario." });
 
-      // NEW: Upgraded to Flash-Lite
+      // Upgraded to Flash-Lite
       const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite", safetySettings });
       const prompt = `You are the strict but fair moderator for a party game called Humour Cup.
       A player submitted a custom scenario: "${data.text}"
@@ -505,7 +528,9 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('disconnect', () => { console.log(`🔴 Player Disconnected: ${socket.id}`); });
+  socket.on('disconnect', () => {
+  submissionCooldowns.delete(socket.id); // Clear their cooldown memory 
+  console.log(`🔴 Player Disconnected: ${socket.id}`); });
 });
 
 const PORT = process.env.PORT || 3001;
