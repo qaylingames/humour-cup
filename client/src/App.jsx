@@ -10,10 +10,10 @@ const uiTranslations = {
   'French': { name: "Votre nom drôle", create: "Créer un Salon", orJoin: "OU REJOINDRE", code: "CODE", join: "Rejoindre", rulebook: "👑 Comment Jouer 👑", rule1: "Écrivez votre réponse humoristique.", rule2: "Répondez avec vos blagues dans le chat.", rule3: "Votez pour ceux que vous trouvez drôles.", rule4: "Le joueur avec le plus d'XP gagne.", submitPub: "🌍 Soumettre un scénario 🌍", pubDesc: "Ajoutez votre propre scénario. Ceux-ci apparaissent aléatoirement aux joueurs optant pour les scénarios publics dans le lobby.", pubPlace: "Tapez votre scénario ici...", submit: "Soumettre", lobby: "Lobby", roomCode: "CODE DU SALON:", cat: "Catégorie:", scen: "Scénarios:", lang: "Langue:", secret: "🤫 Ajouter secrètement !", secPlace: "Écrivez un scénario surprise...", addPool: "Ajouter", totPool: "Total personnalisés:", waitSquad: "En attente de l'équipe...", host: "(Hôte)", launch: "Lancer le jeu 🚀", waitMore: "En attente d'un joueur...", waitHost: "En attente de l'hôte...", fetch: "Récupération...", scenTitle: "Scénario", secLeft: "Secondes", typeHumour: "Tapez votre humour...", subHumour: "Soumettre l'humour", waitSlow: "En attente des humains lents...", chatVote: "Round de Chat & Vote", humourBtn: "Drôle !", replyBtn: "Répondre", repPlace: "Répondre...", send: "Envoyer", cancel: "Annuler", done: "J'ai fini !", waiting: "En attente...", upcoming: "À venir", enterRound: "Entrée au Round-", in: "dans", seconds: "secondes", load: "Chargement...", results: "Résultats Finaux", winners: "Gagnants", winner: "Gagnant", scoreboard: "Tableau de bord", receipt: "🧾 MATCH RECEIPT", thanks: "Merci d'avoir joué ! 🏆", saveRec: "📸 Sauvegarder ce reçu", playAgain: "Rejouer", waitRes: "En attente de l'hôte...", adminVault: "Vue Admin", backHome: "⬅ Retour", noScen: "Pas de scénarios !" },
   'Mandarin': { name: "你的搞笑名字", create: "创建房间", orJoin: "或加入朋友", code: "代码", join: "加入", rulebook: "👑 怎么玩 👑", rule1: "在每个场景上写下你的幽默回应。", rule2: "在聊天回合中回复你的幽默段子。", rule3: "为你觉得好笑的投票。", rule4: "拥有最高幽默XP的玩家获胜。", submitPub: "🌍 提交公开场景 🌍", pubDesc: "添加你自己的幽默场景。这些场景会随机出现给在大厅选择公开场景的玩家。", pubPlace: "在这里输入你的场景...", submit: "提交", lobby: "大厅", roomCode: "房间代码：", cat: "类别：", scen: "场景：", lang: "语言：", secret: "🤫 秘密添加！", secPlace: "写一个惊喜场景...", addPool: "添加到池中", totPool: "自定义场景总数：", waitSquad: "等待队伍...", host: "(房主)", launch: "开始游戏 🚀", waitMore: "等待至少一名玩家...", waitHost: "等待房主开始...", fetch: "获取场景中...", scenTitle: "场景", secLeft: "剩余秒数", typeHumour: "输入你的幽默...", subHumour: "提交", waitSlow: "等待较慢的玩家...", chatVote: "聊天和投票回合", humourBtn: "好笑！", replyBtn: "回复", repPlace: "回复...", send: "发送", cancel: "取消", done: "我读完了！", waiting: "等待中...", upcoming: "即将到来", enterRound: "进入回合-", in: "还有", seconds: "秒", load: "加载中...", results: "最终结果", winners: "赢家", winner: "赢家", scoreboard: "最终记分牌", receipt: "🧾 MATCH RECEIPT", thanks: "感谢游玩！🏆", saveRec: "📸 保存收据", playAgain: "再玩一次", waitRes: "等待房主...", adminVault: "管理员", backHome: "⬅ 返回", noScen: "暂无场景！" },
   'Arabic': { name: "اسمك المضحك", create: "إنشاء غرفة", orJoin: "أو الانضمام", code: "رمز", join: "انضمام", rulebook: "👑 كيف تلعب 👑", rule1: "اكتب ردك المضحك على كل سيناريو.", rule2: "رد بنكاتك في جولة الدردشة.", rule3: "صوت لمن تجده مضحكًا.", rule4: "اللاعب صاحب أعلى نقاط يفوز.", submitPub: "🌍 إرسال سيناريو 🌍", pubDesc: "أضف السيناريو الخاص بك. تظهر هذه بشكل عشوائي للاعبين الذين يختارون السيناريوهات العامة في اللوبي.", pubPlace: "اكتب هنا...", submit: "إرسال", lobby: "اللوبي", roomCode: "رمز الغرفة:", cat: "الفئة:", scen: "السيناريوهات:", lang: "اللغة:", secret: "🤫 أضف سرا!", secPlace: "اكتب مفاجأة...", addPool: "إضافة", totPool: "المجموع:", waitSquad: "في انتظار الفريق...", host: "(مضيف)", launch: "ابدأ اللعبة 🚀", waitMore: "في انتظار لاعب آخر...", waitHost: "في انتظار المضيف...", fetch: "جاري الجلب...", scenTitle: "سيناريو", secLeft: "ثواني", typeHumour: "اكتب نكتتك...", subHumour: "إرسال", waitSlow: "في انتظار الباقين...", chatVote: "الدردشة والتصويت", humourBtn: "مضحك!", replyBtn: "رد", repPlace: "رد...", send: "إرسال", cancel: "إلغاء", done: "انتهيت!", waiting: "انتظار...", upcoming: "القادم", enterRound: "دخول الجولة-", in: "في", seconds: "ثانية", load: "تحميل...", results: "النتائج", winners: "الفائزون", winner: "الفائز", scoreboard: "النقاط", receipt: "🧾 MATCH RECEIPT", thanks: "شكرا للعب! 🏆", saveRec: "📸 حفظ الإيصال", playAgain: "العب مرة أخرى", waitRes: "في انتظار المضيف...", adminVault: "المسؤول", backHome: "⬅ رجوع", noScen: "لا توجد سيناريوهات!" },
-  'Portuguese': { name: "Seu Nome Engraçado", create: "Criar Sala", orJoin: "OU ENTRAR", code: "CÓDIGO", join: "Entrar", rulebook: "👑 Como Jogar 👑", rule1: "Escreva sua respuesta humorística.", rule2: "Responda no chat após cada cenário.", rule3: "Vote nas mais engraçadas.", rule4: "O jogador com mais XP ganha.", submitPub: "🌍 Enviar Cenário Público 🌍", pubDesc: "Adicione seu próprio cenário. Estes aparecem aleatoriamente para os jogadores que optam por cenários públicos no lobby.", pubPlace: "Digite seu cenário aquí...", submit: "Enviar", lobby: "Lobby", roomCode: "CÓDIGO DA Sala:", cat: "Categoria:", scen: "Cenários:", lang: "Idioma:", secret: "🤫 Adicionar em segredo!", secPlace: "Escreva um cenário surpresa...", addPool: "Adicionar", totPool: "Total de cenários:", waitSquad: "Esperando a equipe...", host: "(Host)", launch: "Lançar Jogo 🚀", waitMore: "Esperando mais 1 jogador...", waitHost: "Esperando o host...", fetch: "Buscando Cenários...", scenTitle: "Cenário", secLeft: "Segundos Restantes", typeHumour: "Digite seu humor...", subHumour: "Enviar Humor", waitSlow: "Esperando os lentos...", chatVote: "Rodada de Chat e Votos", humourBtn: "Engraçado!", replyBtn: "Responder", repPlace: "Responder...", send: "Enviar", cancel: "Cancelar", done: "Terminei de ler!", waiting: "Esperando...", upcoming: "Próximo", enterRound: "Entrando na Rodada-", in: "em", seconds: "segundos", load: "Carregando...", results: "Resultados Finais", winners: "Vencedores", winner: "Vencedor", scoreboard: "Placar Final", receipt: "🧾 MATCH RECEIPT", thanks: "Obrigado por jogar! 🏆", saveRec: "📸 Salvar este recibo", playAgain: "Jogar Novamente", waitRes: "Esperando o host...", adminVault: "Cofre Admin", backHome: "⬅ Voltar", noScen: "Sem cenários!" },
+  'Portuguese': { name: "Seu Nome Engraçado", create: "Criar Sala", orJoin: "OU ENTRAR", code: "CÓDIGO", join: "Entrar", rulebook: "👑 Como Jogar 👑", rule1: "Escreva sua respuesta humorística.", rule2: "Responda no chat após cada cenário.", rule3: "Vote nas mais engraçadas.", rule4: "O jogador com mais XP ganha.", submitPub: "🌍 Enviar Cenário Público 🌍", pubDesc: "Adicione seu próprio cenário. Estes aparecem aleatoriamente para os jogadores que optam por cenários públicos no lobby.", pubPlace: "Digite seu cenário aquí...", submit: "Enviar", lobby: "Lobby", roomCode: "CÓDIGO DA SALA:", cat: "Categoria:", scen: "Cenários:", lang: "Idioma:", secret: "🤫 Adicionar em segredo!", secPlace: "Escreva um cenário surpresa...", addPool: "Adicionar", totPool: "Total de cenários:", waitSquad: "Esperando a equipe...", host: "(Host)", launch: "Lançar Jogo 🚀", waitMore: "Esperando mais 1 jogador...", waitHost: "Esperando o host...", fetch: "Buscando Cenários...", scenTitle: "Cenário", secLeft: "Segundos Restantes", typeHumour: "Digite seu humor...", subHumour: "Enviar Humor", waitSlow: "Esperando os lentos...", chatVote: "Rodada de Chat e Votos", humourBtn: "Engraçado!", replyBtn: "Responder", repPlace: "Responder...", send: "Enviar", cancel: "Cancelar", done: "Terminei de ler!", waiting: "Esperando...", upcoming: "Próximo", enterRound: "Entrando na Rodada-", in: "em", seconds: "segundos", load: "Carregando...", results: "Resultados Finais", winners: "Vencedores", winner: "Vencedor", scoreboard: "Placar Final", receipt: "🧾 MATCH RECEIPT", thanks: "Obrigado por jogar! 🏆", saveRec: "📸 Salvar este recibo", playAgain: "Jogar Novamente", waitRes: "Esperando o host...", adminVault: "Cofre Admin", backHome: "⬅ Voltar", noScen: "Sem cenários!" },
   'German': { name: "Dein lustiger Name", create: "Raum erstellen", orJoin: "ODER BEITRETEN", code: "CODE", join: "Beitreten", rulebook: "👑 Wie man spielt 👑", rule1: "Schreibe deine humorvolle Antwort.", rule2: "Antworte mit Witzen in der Chat-Runde.", rule3: "Stimme für die lustigsten ab.", rule4: "Der Spieler mit den meisten XP gewinnt.", submitPub: "🌍 Szenario einreichen 🌍", pubDesc: "Füge dein eigenes Szenario hinzu. Diese erscheinen zufällig für Spieler, die sich in der Lobby für öffentliche Szenarien entscheiden.", pubPlace: "Tippe dein Szenario hier...", submit: "Einreichen", lobby: "Lobby", roomCode: "RAUMCODE:", cat: "Kategorie:", scen: "Szenarien:", lang: "Sprache:", secret: "🤫 Heimlich hinzufügen!", secPlace: "Schreibe ein Überraschungs-Szenario...", addPool: "Hinzufügen", totPool: "Gesamte eigene Szenarien:", waitSquad: "Warten auf das Team...", host: "(Host)", launch: "Spiel starten 🚀", waitMore: "Warten auf 1 weiteren Spieler...", waitHost: "Warten auf den Host...", fetch: "Lade Szenarien...", scenTitle: "Szenario", secLeft: "Sekunden übrig", typeHumour: "Tippe deinen Humor...", subHumour: "Humor einreichen", waitSlow: "Warten auf die Langsamen...", chatVote: "Chat & Abstimmung", humourBtn: "Witzig!", replyBtn: "Antworten", repPlace: "Antworten...", send: "Senden", cancel: "Abbrechen", done: "Ich bin fertig!", waiting: "Warten...", upcoming: "Kommend", enterRound: "Runde-", in: "in", seconds: "Sekunden", load: "Lädt...", results: "Endergebnisse", winners: "Gewinner", winner: "Gewinner", scoreboard: "Endstand", receipt: "🧾 MATCH RECEIPT", thanks: "Danke fürs Spielen! 🏆", saveRec: "📸 Beleg speichern", playAgain: "Nochmal spielen", waitRes: "Warten auf Host...", adminVault: "Admin-Tresor", backHome: "⬅ Zurück", noScen: "Noch keine Szenarien!" },
   'Japanese': { name: "あなたの面白い名前", create: "ルームを作成", orJoin: "または参加", code: "コード", join: "参加", rulebook: "👑 遊び方 👑", rule1: "各お題に面白い回答を書きます。", rule2: "チャットでジョークを返信します。", rule3: "面白いものに投票します。", rule4: "XPが最も多いプレイヤーの勝ちです。", submitPub: "🌍 公開お題を投稿 🌍", pubDesc: "自分のお題を追加してください。これらは、ロビーで公開お題を選択したプレイヤーにランダムに出題されます。", pubPlace: "ここにお題を入力...", submit: "送信", lobby: "ロビー", roomCode: "ルームコード:", cat: "カテゴリー:", scen: "お題:", lang: "言語:", secret: "🤫 こっそり追加！", secPlace: "サプライズお題を書く...", addPool: "追加", totPool: "カスタムお題の合計:", waitSquad: "チームを待っています...", host: "(ホスト)", launch: "ゲーム開始 🚀", waitMore: "あと1人待っています...", waitHost: "ホストを待っています...", fetch: "お題を取得中...", scenTitle: "お題", secLeft: "残り秒数", typeHumour: "ユーモアを入力...", subHumour: "送信", waitSlow: "他のプレイヤーを待っています...", chatVote: "チャット＆投票", humourBtn: "面白い！", replyBtn: "返信", repPlace: "返信...", send: "送信", cancel: "キャンセル", done: "読み終わりました！", waiting: "待機中...", upcoming: "次", enterRound: "ラウンド-", in: "開始まで", seconds: "秒", load: "ロード中...", results: "最終結果", winners: "勝者", winner: "勝者", scoreboard: "最終スコアボード", receipt: "🧾 MATCH RECEIPT", thanks: "遊んでくれてありがとう！🏆", saveRec: "📸 このレシートを保存", playAgain: "もう一度プレイ", waitRes: "ホストを待っています...", adminVault: "管理者", backHome: "⬅ 戻る", noScen: "まだお題がありません！" },
-  'Korean': { name: "재미있는 이름", create: "방 만들기", orJoin: "또는 참가", code: "코드", join: "참가", rulebook: "👑 플레이 방법 👑", rule1: "각 시나리오에 재미있는 답변을 쓰세요.", rule2: "채팅 라운드에서 농담을 주고받으세요.", rule3: "재미있는 것에 투표하세요.", rule4: "가장 많은 XP를 얻은 사람이 승리합니다.", submitPub: "🌍 공개 시나리오 제출 🌍", pubDesc: "나만의 시나리오를 추가하세요. 이 시나리오는 로비에서 공개 시나리오를 선택한 플레이어에게 무작위로 표시됩니다.", pubPlace: "여기에 시나리오를 입력하세요...", submit: "제출", lobby: "로비", roomCode: "방 코드:", cat: "카테고리:", scen: "시나리오:", lang: "언어:", secret: "🤫 몰래 추가하기!", secPlace: "깜짝 시나리오 쓰기...", addPool: "추가", totPool: "총 커스텀 시나리오:", waitSquad: "팀을 기다리는 중...", host: "(방장)", launch: "게임 시작 🚀", waitMore: "1명 더 기다리는 중...", waitHost: "방장을 기다리는 중...", fetch: "시나리오 가져오는 중...", scenTitle: "시나리오", secLeft: "초 남음", typeHumour: "유머를 입력하세요...", subHumour: "제출", waitSlow: "다른 플레이어 기다리는 중...", chatVote: "채팅 및 투표 라운드", humourBtn: "웃겨요!", replyBtn: "답글", repPlace: "답글...", send: "보내기", cancel: "취소", done: "다 읽었어요!", waiting: "대기 중...", upcoming: "다음", enterRound: "라운드-", in: "시작까지", seconds: "초", load: "로딩 중...", results: "최종 결과", winners: "우승자", winner: "우승자", scoreboard: "최종 점수판", receipt: "🧾 MATCH RECEIPT", thanks: "플레이해주셔서 감사합니다! 🏆", saveRec: "📸 이 영수증 저장", playAgain: "다시 플레이", waitRes: "방장을 기다리는 중...", adminVault: "관리자 금고", backHome: "⬅ 뒤로", noScen: "아직 시나리오가 없습니다!" },
+  'Korean': { name: "재미있는 이름", create: "방 만들기", orJoin: "또는 참가", code: "코드", join: "참가", rulebook: "👑 플레이 방법 👑", rule1: "각 시나리오에 재미있는 답변을 쓰세요.", rule2: "채팅 라운드에서 농담을 주고받으세요.", rule3: "재미있는 것에 투표하세요.", rule4: "가장 많은 XP를 얻은 사람이 승리합니다.", submitPub: "🌍 공개 시나리오 제출 🌍", pubDesc: "나만의 시나리오를 추가하세요. 이 시나리오는 로비에서 공개 시나리오를 선택한 플레이어에게 무작위로 표시됩니다.", pubPlace: "여기에 시나리오를 입력하세요...", submit: "제출", lobby: "로비", roomCode: "방 코드:", cat: "카테고리:", scen: "시나리오:", lang: "언어:", secret: "🤫 몰래 추가하기!", secPlace: "깜짝 시나리오 쓰기...", addPool: "추가", totPool: "총 커스텀 시나리오:", waitSquad: "팀을 기다리는 중...", host: "(방장)", launch: "게임 시작 🚀", waitMore: "1명 더 기다리는 중...", waitHost: "방장을 기다리는 중...", fetch: "시나리오 가져오는 중...", scenTitle: "시나리오", secLeft: "초 남음", typeHumour: "유머를 입력하세요...", subHumour: "제출", waitSlow: "다른 플레이어 기다리는 중...", chatVote: "채팅 및 투표 라운드", humourBtn: "웃겨요!", replyBtn: "답글", repPlace: "답글...", send: "보내기", cancel: "취소", done: "다 읽었어요!", waiting: "대기 중...", upcoming: "다음", enterRound: "라운드-", in: "시작까지", seconds: "초", load: "로딩 중...", results: "최종 결과", 우승자: "Winners", winner: "Winner", scoreboard: "최종 점수판", receipt: "🧾 MATCH RECEIPT", thanks: "플레이해주셔서 감사합니다! 🏆", saveRec: "📸 이 영수증 저장", playAgain: "다시 플레이", waitRes: "방장을 기다리는 중...", adminVault: "관리자 금고", backHome: "⬅ 뒤로", noScen: "아직 시나리오가 없습니다!" },
   'Indonesian': { name: "Nama Lucumu", create: "Buat Ruang", orJoin: "ATAU GABUNG", code: "KODE", join: "Gabung", rulebook: "👑 Cara Bermain 👑", rule1: "Tulis respons lucumu.", rule2: "Balas dengan candaan di ronde obrolan.", rule3: "Pilih yang menurutmu lucu.", rule4: "Pemain dengan XP terbanyak menang.", submitPub: "🌍 Kirim Skenario 🌍", pubDesc: "Tambahkan skenariomu sendiri. Ini akan muncul secara acak kepada pemain yang memilih skenario publik di lobi.", pubPlace: "Ketik skenariomu di sini...", submit: "Kirim", lobby: "Lobi", roomCode: "KODE RUANG:", cat: "Kategori:", scen: "Skenario:", lang: "Bahasa:", secret: "🤫 Tambah diam-diam!", secPlace: "Tulis skenario kejutan...", addPool: "Tambah", totPool: "Total Skenario Khusus:", waitSquad: "Menunggu skuad...", host: "(Host)", launch: "Mulai Game 🚀", waitMore: "Menunggu 1 pemain lagi...", waitHost: "Menunggu host...", fetch: "Mengambil Skenario...", scenTitle: "Skenario", secLeft: "Detik Tersisa", typeHumour: "Ketik lucumu...", subHumour: "Kirim Kelucuan", waitSlow: "Menunggu yang lambat...", chatVote: "Ronde Obrolan & Pilih", humourBtn: "Lucu!", replyBtn: "Balas", repPlace: "Balas...", send: "Kirim", cancel: "Batal", done: "Saya Selesai Membaca!", waiting: "Menunggu...", upcoming: "Mendatang", enterRound: "Masuk Ronde-", in: "dalam", seconds: "detik", load: "Memuat...", results: "Hasil Akhir", winners: "Pemenang", winner: "Pemenang", scoreboard: "Papan Skor", receipt: "🧾 MATCH RECEIPT", thanks: "Terima kasih sudah bermain! 🏆", saveRec: "📸 Simpan struk ini", playAgain: "Main Lagi", waitRes: "Menunggu Host...", adminVault: "Brankas Admin", backHome: "⬅ Kembali", noScen: "Belum ada skenario!" },
   'Russian': { name: "Твое смешное имя", create: "Создать комнату", orJoin: "ИЛИ ПРИСОЕДИНИТЬСЯ", code: "КОД", join: "Вход", rulebook: "👑 Как играть 👑", rule1: "Напиши смешной ответ на сценарий.", rule2: "Отвечай шутками в чате.", rule3: "Голосуй за самые смешные.", rule4: "Игрок с наибольшим XP побеждает.", submitPub: "🌍 Предложить сценарий 🌍", pubDesc: "Добавь свой сценарий для игры. Они случайным образом выпадают игрокам, выбравшим публичные сценарии в лобби.", pubPlace: "Введи свой сценарий здесь...", submit: "Отправить", lobby: "Лобби", roomCode: "КОД КОМНАТЫ:", cat: "Категория:", scen: "Сценарии:", lang: "Язык:", secret: "🤫 Добавить тайно!", secPlace: "Напиши сценарий-сюрприз...", addPool: "Добавить", totPool: "Всего сценариев:", waitSquad: "Ждем команду...", host: "(Хост)", launch: "Запуск 🚀", waitMore: "Ждем еще 1 игрока...", waitHost: "Ждем хоста...", fetch: "Получение...", scenTitle: "Сценарий", secLeft: "Секунд осталось", typeHumour: "Введи шутку...", subHumour: "Отправить", waitSlow: "Ждем остальных...", chatVote: "Чат и Голосование", humourBtn: "Смешно!", replyBtn: "Ответить", repPlace: "Ответить...", send: "Отправить", cancel: "Отмена", done: "Я прочитал!", waiting: "Ожидание...", upcoming: "Следующий", enterRound: "Начало раунда-", in: "через", seconds: "секунд", load: "Загрузка...", results: "Результаты", winners: "Победители", winner: "Победитель", scoreboard: "Счет", receipt: "🧾 MATCH RECEIPT", thanks: "Спасибо за игру! 🏆", saveRec: "📸 Сохранить этот чек", playAgain: "Играть снова", waitRes: "Ждем хоста...", adminVault: "Хранилище Админа", backHome: "⬅ Назад", noScen: "Нет сценариев!" }
 };
@@ -36,6 +36,29 @@ const BGM_TRACKS = [
   'https://ia800201.us.archive.org/5/items/MerryGo/Merry%20Go.mp3'
 ];
 
+// ==========================================
+// GOOGLE ADSENSE COMPONENT
+// ==========================================
+const AdBanner = ({ dataAdSlot }) => {
+  useEffect(() => {
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (e) {
+      console.error("AdSense Error:", e);
+    }
+  }, []);
+
+  return (
+    <ins className="adsbygoogle"
+         style={{ display: 'block', width: '100%', height: '100%' }}
+         data-ad-client="ca-pub-8526630770141118"
+         data-ad-slot={dataAdSlot}
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+  );
+};
+// ==========================================
+
 function App() {
   const [appLang, setAppLang] = useState('English'); 
   const [playerName, setPlayerName] = useState('');
@@ -52,7 +75,6 @@ function App() {
   const [vaultData, setVaultData] = useState([]);
   const [logoClicks, setLogoClicks] = useState(0); 
 
-  // Admin Dashboard State
   const [isAdminMode, setIsAdminMode] = useState(false);
   const [seedingStats, setSeedingStats] = useState({});
   const [adminPublicScenarios, setAdminPublicScenarios] = useState([]);
@@ -74,8 +96,8 @@ function App() {
   const targets = { 'English': 10000, 'Hindi': 1000, 'Spanish': 1000, 'French': 1000, 'Mandarin': 1000, 'Japanese': 1000, 'Russian': 1000, 'Portuguese': 1000, 'German': 1000, 'Korean': 1000, 'Arabic': 1000, 'Indonesian': 1000 };
 
   const t = (key) => uiTranslations[appLang]?.[key] || uiTranslations['English'][key] || key;
-
-  // IMPORTANT: Replace this with your actual Ko-Fi link!
+  
+  // DONATION LINK
   const KOFI_LINK = "https://ko-fi.com/arpitsrivstva"; 
 
   useEffect(() => { setPubLang(appLang); }, [appLang]);
@@ -96,7 +118,6 @@ function App() {
 
   useEffect(() => { if (audioRef.current) { audioRef.current.volume = 0.05; audioRef.current.play().catch(() => {}); } }, [bgmIndex]);
 
-  // THE RECONNECT LOGIC
   useEffect(() => {
     const handleReconnect = () => {
       if (room && playerName) {
@@ -139,7 +160,6 @@ function App() {
     if (room?.state === 'RESULTS') { window.scrollTo({ top: 0, behavior: 'smooth' }); }
   }, [room?.state]);
 
-  // TIMER LOGIC
   useEffect(() => {
     if (room?.state === 'CHAT_PHASE' || room?.state === 'ANSWER_PHASE') {
       const interval = setInterval(() => setTimeLeft(Math.max(0, Math.ceil(((room.roundData?.endTime || Date.now()) - Date.now()) / 1000))), 200);
@@ -150,37 +170,23 @@ function App() {
     }
   }, [room]);
 
-  // TICKING SOUND LOGIC
   useEffect(() => {
     if ((room?.state === 'ANSWER_PHASE' || room?.state === 'CHAT_PHASE') && timeLeft > 0 && timeLeft <= 20) {
       playSound('tick', 0.6);
     }
   }, [timeLeft, room?.state]);
 
-  // FETCH ADMIN DATA SECURELY
   const refreshStats = (keyToUse = adminKey) => { 
     socket.emit('getSeedingStats', keyToUse, (data) => setSeedingStats(data)); 
     socket.emit('getAdminPublicScenarios', keyToUse, (data) => setAdminPublicScenarios(data));
   };
 
-  const handleCreateRoom = () => { 
-    playSound('create'); 
-    if (!playerName) return alert("Please enter your funny name!"); 
-    socket.emit('createRoom', { playerName, language: appLang }, () => {}); 
-  };
-  
-  const handleJoinRoom = () => { 
-    playSound('click'); 
-    if (!playerName) return alert("Please enter your funny name!"); 
-    if (!joinCode) return alert("Please enter a room code!");
-    socket.emit('joinRoom', { roomId: joinCode, playerName }, (res) => !res.success && alert(res.message)); 
-  };
-
+  const handleCreateRoom = () => { playSound('create'); if (!playerName) return alert("Please enter your funny name!"); socket.emit('createRoom', { playerName, language: appLang }, () => {}); };
+  const handleJoinRoom = () => { playSound('click'); if (!playerName) return alert("Please enter your funny name!"); if (!joinCode) return alert("Please enter a room code!"); socket.emit('joinRoom', { roomId: joinCode, playerName }, (res) => !res.success && alert(res.message)); };
   const handleStartGame = () => { playSound('click'); socket.emit('startGame', room.id); };
   const handleSettingChange = (key, value) => { socket.emit('updateSettings', { roomId: room.id, settings: { [key]: value } }); };
   const handleSecretSubmit = () => { if (!secretInput.trim()) return; playSound('vote'); socket.emit('addSecretScenario', { roomId: room.id, text: secretInput }); setSecretInput(''); };
 
-  // SECURE ADMIN LOGO CLICK
   const handleLogoClick = () => {
     const newCount = logoClicks + 1;
     setLogoClicks(newCount);
@@ -259,47 +265,36 @@ function App() {
         .emoji-rain { position: fixed; top: -50px; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; overflow: hidden; }
         .falling-emoji { position: absolute; font-size: 40px; animation: fall linear forwards; opacity: 0.95; }
         @keyframes fall { to { transform: translateY(115vh) rotate(360deg); } }
-        @keyframes unified-wobble-breathe { 
-          0%, 100% { transform: scale(1) rotate(0deg); }
-          25% { transform: scale(1.03) rotate(-3deg); }
-          50% { transform: scale(1) rotate(2deg); }
-          75% { transform: scale(1.03) rotate(-1deg); }
-        }
-        .animated-logo-main {
-           animation: unified-wobble-breathe 5s infinite ease-in-out;
-           max-width: 100%; width: 450px; height: auto; cursor: pointer; user-select: none;
-           margin-bottom: 20px; margin-top: 30px; 
-        }
+        @keyframes unified-wobble-breathe { 0%, 100% { transform: scale(1) rotate(0deg); } 25% { transform: scale(1.03) rotate(-3deg); } 50% { transform: scale(1) rotate(2deg); } 75% { transform: scale(1.03) rotate(-1deg); } }
+        .animated-logo-main { animation: unified-wobble-breathe 5s infinite ease-in-out; max-width: 100%; width: 450px; height: auto; cursor: pointer; user-select: none; margin-bottom: 20px; margin-top: 30px; }
 
-        /* --- NEW AD ZONES CSS --- */
+        /* --- AD ZONES CSS --- */
         .ad-zone-left, .ad-zone-right {
-           position: fixed; top: 50%; transform: translateY(-50%);
-           width: 160px; height: 600px;
-           background: rgba(255,255,255,0.3); border: 2px dashed #1a1a1a;
+           position: fixed; top: 50%; transform: translateY(-50%); width: 160px; height: 600px;
+           background: transparent;
            display: none; align-items: center; justify-content: center; text-align: center;
-           color: #666; font-weight: bold; font-size: 14px;
         }
         .ad-zone-left { left: 20px; }
         .ad-zone-right { right: 20px; }
-        
         .ad-zone-mobile {
            position: fixed; bottom: 0; left: 0; width: 100%; height: 60px;
            background: #fff; border-top: 4px solid #1a1a1a; z-index: 9999;
            display: flex; align-items: center; justify-content: center;
-           color: #666; font-weight: bold; font-size: 14px;
         }
-
-        /* Only show side ads on big screens, hide mobile banner on big screens */
-        @media (min-width: 950px) {
-           .ad-zone-left, .ad-zone-right { display: flex; }
-           .ad-zone-mobile { display: none; }
-        }
+        @media (min-width: 950px) { .ad-zone-left, .ad-zone-right { display: flex; } .ad-zone-mobile { display: none; } }
       `}</style>
 
-      {/* --- NEW AD ZONES (Paste Google AdSense <script> tags inside these later) --- */}
-      <div className="ad-zone-left">ADVERTISEMENT<br/>(160x600)</div>
-      <div className="ad-zone-right">ADVERTISEMENT<br/>(160x600)</div>
-      <div className="ad-zone-mobile">ADVERTISEMENT (320x50)</div>
+      {/* --- ADS RENDER HERE --- */}
+      <div className="ad-zone-left">
+         <AdBanner dataAdSlot="7779947583" />
+      </div>
+      <div className="ad-zone-right">
+         <AdBanner dataAdSlot="7779947583" />
+      </div>
+      <div className="ad-zone-mobile">
+         <AdBanner dataAdSlot="7779947583" />
+      </div>
+      {/* ----------------------- */}
 
       {!room && !showVault && !isAdminMode && (
         <div style={styles.translateWrapper}>
@@ -312,7 +307,6 @@ function App() {
 
       <audio ref={audioRef} src={BGM_TRACKS[bgmIndex]} loop />
 
-      {/* Added bottom padding so the mobile ad doesn't cover anything */}
       <div style={{...styles.container, paddingBottom: '100px'}}>
          <img src="/finale-logo.png" alt="Humour Cup Logo" className="animated-logo-main" onClick={handleLogoClick} />
 
@@ -415,8 +409,8 @@ function App() {
                 )}
               </div>
             </div>
-            
-            {/* NEW: KO-FI DONATION BUTTON ON HOME SCREEN */}
+
+            {/* KO-FI BUTTON */}
             <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={styles.donateBtn}>
                ☕ Support the Developer
             </a>
@@ -660,7 +654,6 @@ function App() {
 
               {isHost ? <button onClick={handlePlayAgain} className="btn-3d" style={styles.primaryBtn}>{t('playAgain')}</button> : <h3 className="animate-bounce" style={{color: '#1a1a1a', fontWeight: '900', fontSize: '20px'}}>{t('waitRes')}</h3>}
               
-              {/* NEW: KO-FI DONATION BUTTON ON RESULTS SCREEN */}
               <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.donateBtn, marginTop: '30px'}}>
                  ☕ Buy the Developer a Coffee
               </a>
@@ -720,8 +713,6 @@ const styles = {
 
   translateWrapper: { position: 'absolute', top: '15px', left: '15px', zIndex: 1000, display: 'flex', alignItems: 'center', gap: '4px', background: '#fff', padding: '6px 10px', borderRadius: '50px', border: '3px solid #1a1a1a', boxShadow: '2px 2px 0px #1a1a1a' },
   translateSelect: { border: 'none', outline: 'none', background: 'transparent', fontSize: '14px', fontWeight: '900', color: '#1a1a1a', cursor: 'pointer' },
-  
-  // NEW: Donation Button Style
   donateBtn: { display: 'inline-block', background: '#ff5e5b', color: '#ffffff', padding: '15px 30px', borderRadius: '50px', border: '4px solid #1a1a1a', fontSize: '18px', fontWeight: '900', cursor: 'pointer', boxShadow: '6px 6px 0px #1a1a1a', textDecoration: 'none', marginTop: '40px' }
 };
 
