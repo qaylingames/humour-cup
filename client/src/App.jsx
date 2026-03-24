@@ -467,7 +467,7 @@ function App() {
               </div>
             </div>
 
-            {/* --- AESTHETIC GRAPHICAL CARDS --- */}
+            {/* --- THE COFFEE BUTTON BOX --- */}
             <div style={{...styles.devCardGreen, transform: 'rotate(-2deg)', marginTop: '40px'}}>
                <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.donateBtn, background: '#6F4E37', color: '#ffffff', marginTop: '0', padding: '12px 24px', fontSize: '15px'}}>
                   ☕ Buy the Developer a Coffee
@@ -477,8 +477,8 @@ function App() {
                </p>
             </div>
 
-            {/* --- THE ZIG-ZAG SCRATCH HOLE --- */}
-            <div style={{...styles.feedbackScratch, marginTop: '50px'}}>
+            {/* --- THE OVAL FEEDBACK BOX --- */}
+            <div style={{...styles.devCardOval, transform: 'rotate(2deg)', marginTop: '45px'}}>
                <p style={styles.feedbackText}>
                  How the heck should I make this game more fun? Tell me everything&nbsp;at
                </p>
@@ -725,7 +725,7 @@ function App() {
 
               {isHost ? <button onClick={handlePlayAgain} className="btn-3d" style={styles.primaryBtn}>{t('playAgain')}</button> : <h3 className="animate-bounce" style={{color: '#1a1a1a', fontWeight: '900', fontSize: '20px'}}>{t('waitRes')}</h3>}
               
-              {/* --- AESTHETIC GRAPHICAL CARDS --- */}
+              {/* --- THE COFFEE BUTTON BOX --- */}
             <div style={{...styles.devCardGreen, transform: 'rotate(-2deg)', marginTop: '40px'}}>
                <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.donateBtn, background: '#6F4E37', color: '#ffffff', marginTop: '0', padding: '12px 24px', fontSize: '15px'}}>
                   ☕ Buy the Developer a Coffee
@@ -735,8 +735,8 @@ function App() {
                </p>
             </div>
 
-            {/* --- THE ZIG-ZAG SCRATCH HOLE --- */}
-            <div style={{...styles.feedbackScratch, marginTop: '50px'}}>
+            {/* --- THE OVAL FEEDBACK BOX --- */}
+            <div style={{...styles.devCardOval, transform: 'rotate(2deg)', marginTop: '45px'}}>
                <p style={styles.feedbackText}>
                  How the heck should I make this game more fun? Tell me everything&nbsp;at
                </p>
@@ -831,25 +831,25 @@ const styles = {
     margin: '5px 0 0 0' 
   },
   
-  // --- THE NEW ZIG-ZAG SCRATCH EFFECT ---
-  feedbackScratch: { 
-    background: '#ffffff', // Pure white, like paper underneath the yellow website
-    padding: '45px 25px', // Extra padding because the zig-zags cut into the edges
+  // --- THE NEW OVAL BOX ---
+  devCardOval: { 
+    background: '#e5e7eb', // Aesthetic minimalist grey
+    padding: '30px 40px', // Extra side padding so text doesn't touch the curved edges
+    borderRadius: '100px', // This massive value creates the perfect smooth Oval/Pill shape!
+    border: '4px solid #1a1a1a', // Black border
+    boxShadow: '8px 8px 0px #ef4444', // Pop-Art RED shadow
     width: '100%', 
-    maxWidth: '480px', 
+    maxWidth: '450px', 
     display: 'flex', 
     flexDirection: 'column', 
     alignItems: 'center', 
-    gap: '12px',
-    // This physically cuts the div into a jagged, scribbled hole!
-    clipPath: 'polygon(3% 15%, 15% 2%, 25% 18%, 38% 0%, 50% 15%, 62% 2%, 75% 20%, 88% 5%, 98% 18%, 95% 85%, 85% 100%, 75% 85%, 62% 98%, 50% 85%, 38% 100%, 25% 82%, 12% 98%, 0% 85%)',
-    transform: 'rotate(1.5deg)' // Slight tilt
+    gap: '12px' 
   },
   
   feedbackText: { 
     fontFamily: "'Kalam', cursive", 
     fontSize: '14px', 
-    color: '#1a1a1a', // Black text so it looks handwritten on the white paper
+    color: '#1a1a1a', 
     fontWeight: 'bold', 
     margin: '0', 
     lineHeight: '1.4' 
@@ -857,7 +857,7 @@ const styles = {
   emailLink: { 
     fontFamily: "'Kalam', cursive", 
     color: '#ffffff', 
-    background: '#ef4444', 
+    background: '#ef4444', // Red button respectfully matches the red drop-shadow!
     padding: '8px 16px',
     borderRadius: '12px',
     border: '3px solid #1a1a1a', 
