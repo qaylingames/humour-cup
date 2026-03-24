@@ -467,7 +467,7 @@ function App() {
               </div>
             </div>
 
-            {/* --- THE COFFEE BUTTON BOX --- */}
+            {/* --- THE COFFEE BUTTON BOX (Tilted) --- */}
             <div style={{...styles.devCardGreen, transform: 'rotate(-2deg)', marginTop: '40px'}}>
                <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.donateBtn, background: '#6F4E37', color: '#ffffff', marginTop: '0', padding: '12px 24px', fontSize: '15px'}}>
                   ☕ Buy the Developer a Coffee
@@ -477,8 +477,8 @@ function App() {
                </p>
             </div>
 
-            {/* --- THE OVAL FEEDBACK BOX --- */}
-            <div style={{...styles.devCardOval, transform: 'rotate(2deg)', marginTop: '45px'}}>
+            {/* --- THE OVAL FEEDBACK BOX (Flat / No Rotation) --- */}
+            <div style={{...styles.devCardOval, marginTop: '45px'}}>
                <p style={styles.feedbackText}>
                  How the heck should I make this game more fun? Tell me everything&nbsp;at
                </p>
@@ -725,7 +725,7 @@ function App() {
 
               {isHost ? <button onClick={handlePlayAgain} className="btn-3d" style={styles.primaryBtn}>{t('playAgain')}</button> : <h3 className="animate-bounce" style={{color: '#1a1a1a', fontWeight: '900', fontSize: '20px'}}>{t('waitRes')}</h3>}
               
-              {/* --- THE COFFEE BUTTON BOX --- */}
+              {/* --- THE COFFEE BUTTON BOX (Tilted) --- */}
             <div style={{...styles.devCardGreen, transform: 'rotate(-2deg)', marginTop: '40px'}}>
                <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.donateBtn, background: '#6F4E37', color: '#ffffff', marginTop: '0', padding: '12px 24px', fontSize: '15px'}}>
                   ☕ Buy the Developer a Coffee
@@ -735,8 +735,8 @@ function App() {
                </p>
             </div>
 
-            {/* --- THE OVAL FEEDBACK BOX --- */}
-            <div style={{...styles.devCardOval, transform: 'rotate(2deg)', marginTop: '45px'}}>
+            {/* --- THE OVAL FEEDBACK BOX (Flat / No Rotation) --- */}
+            <div style={{...styles.devCardOval, marginTop: '45px'}}>
                <p style={styles.feedbackText}>
                  How the heck should I make this game more fun? Tell me everything&nbsp;at
                </p>
