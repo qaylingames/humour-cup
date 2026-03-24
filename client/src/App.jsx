@@ -467,20 +467,21 @@ function App() {
               </div>
             </div>
 
-            {/* KO-FI BUTTON */}
-            <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={styles.donateBtn}>
-               ☕ Buy the Developer a Coffee
-            </a>
-
-            {/* NEW: INDIE DEV MESSAGE */}
-            <div style={styles.devMessageContainer}>
+            {/* --- SUPPORT & FEEDBACK CARDS --- */}
+            <div style={styles.footerCard}>
+               <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.donateBtn, marginTop: '0'}}>
+                  ☕ Buy the Developer a Coffee
+               </a>
                <p style={styles.indieDevText}>
-                This indie dev needs to handle server, moderations and maintenance 🥺. A lil help can boost me up for my ideaz 💙.
+                 This indie dev needs to handle server, moderations and maintenance 🥺. A lil help can boost me up for my ideaz 💙.
                </p>
+            </div>
+
+            <div style={{...styles.footerCard, marginTop: '20px'}}>
                <p style={styles.feedbackText}>
-                How the heck should I make this game more fun? Tell me everything at <br/>
-                <a href="mailto:qaylingames@gmail.com" style={styles.emailLink}>qaylingames@gmail.com</a>
+                 How the heck should I make this game more fun? Tell me everything at
                </p>
+               <a href="mailto:qaylingames@gmail.com" style={styles.emailLink}>qaylingames@gmail.com 💌</a>
             </div>
           </>
         )}
@@ -722,19 +723,21 @@ function App() {
 
               {isHost ? <button onClick={handlePlayAgain} className="btn-3d" style={styles.primaryBtn}>{t('playAgain')}</button> : <h3 className="animate-bounce" style={{color: '#1a1a1a', fontWeight: '900', fontSize: '20px'}}>{t('waitRes')}</h3>}
               
-              <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.donateBtn, marginTop: '30px'}}>
-                 ☕ Buy the Developer a Coffee
-              </a>
-
-              {/* NEW: INDIE DEV MESSAGE */}
-            <div style={styles.devMessageContainer}>
+              {/* --- SUPPORT & FEEDBACK CARDS --- */}
+            <div style={styles.footerCard}>
+               <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.donateBtn, marginTop: '0'}}>
+                  ☕ Buy the Developer a Coffee
+               </a>
                <p style={styles.indieDevText}>
                  This indie dev needs to handle server, moderations and maintenance 🥺. A lil help can boost me up for my ideaz 💙.
                </p>
+            </div>
+
+            <div style={{...styles.footerCard, marginTop: '20px'}}>
                <p style={styles.feedbackText}>
-                 How the heck should I make this game more fun? Tell me everything at <br/>
-                 <a href="mailto:qaylingames@gmail.com" style={styles.emailLink}>qaylingames@gmail.com</a>
+                 How the heck should I make this game more fun? Tell me everything at
                </p>
+               <a href="mailto:qaylingames@gmail.com" style={styles.emailLink}>qaylingames@gmail.com 💌</a>
             </div>
 
             </>
@@ -802,11 +805,24 @@ const styles = {
   // RESTORED: Original font size
   donateBtn: { display: 'inline-block', background: '#ff5e5b', color: '#ffffff', padding: '15px 30px', borderRadius: '50px', border: '4px solid #1a1a1a', fontSize: '18px', fontWeight: '900', cursor: 'pointer', boxShadow: '6px 6px 0px #1a1a1a', textDecoration: 'none', marginTop: '40px' },
   
-  // NEW MESSAGE STYLES (Targeted font exactly where you wanted it)
-  devMessageContainer: { marginTop: '30px', padding: '0 20px', maxWidth: '400px', textAlign: 'center' },
-  indieDevText: { fontFamily: "'Marker Felt', cursive", fontSize: '12px', color: '#2f2f2f', fontWeight: 'bold', lineHeight: '1.5', margin: '0 0 15px 0' },
-  feedbackText: { fontFamily: 'Kalam', fontSize: '12px', color: '#3b3b3b', fontWeight: 'bold', margin: 0, lineHeight: '1.4' },
-  emailLink: { fontFamily: 'Kalam', color: '#14a474', textDecoration: 'underline', fontWeight: '900', fontSize: '15px' }
+  // --- SUPPORT & FEEDBACK CARD STYLES ---
+  footerCard: { 
+    background: '#ffffff', 
+    padding: '25px', 
+    borderRadius: '20px', 
+    border: '4px solid #1a1a1a', 
+    boxShadow: '6px 6px 0px #1a1a1a', 
+    width: '100%', 
+    maxWidth: '450px', 
+    marginTop: '40px', 
+    display: 'flex', 
+    flexDirection: 'column', 
+    alignItems: 'center', 
+    gap: '15px' 
+  },
+  indieDevText: { fontFamily: "'Marker Felt', cursive", fontSize: '13px', color: '#2f2f2f', fontWeight: 'bold', lineHeight: '1.5', margin: '0' },
+  feedbackText: { fontFamily: 'Kalam', fontSize: '15px', color: '#3b3b3b', fontWeight: 'bold', margin: '0', lineHeight: '1.4' },
+  emailLink: { fontFamily: 'Kalam', color: '#14a474', textDecoration: 'underline', fontWeight: '900', fontSize: '18px', margin: '0' }
 };
 
 export default App;
