@@ -273,6 +273,13 @@ function App() {
   return (
     <div onClick={unlockAudio} style={styles.appWrapper}>
       <style>{`
+        /* --- NEW: GLOBAL LAYOCK LOCKS --- */
+        * { box-sizing: border-box; }
+        html, body { overflow-x: hidden; margin: 0; padding: 0; width: 100%; }
+
+        .btn-3d { transition: transform 0.1s ease, box-shadow 0.1s ease; }
+        /* ... rest of your CSS stays the same ... */
+
         .btn-3d { transition: transform 0.1s ease, box-shadow 0.1s ease; }
         .btn-3d:active:not(:disabled) { transform: translateY(6px); box-shadow: 0px 0px 0px #1a1a1a !important; }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
@@ -320,7 +327,18 @@ function App() {
         <div style={styles.translateWrapper}>
           <span style={{fontSize: '16px'}}>🌐</span>
           <select value={appLang} onChange={(e) => setAppLang(e.target.value)} style={styles.translateSelect}>
-            <option value="English">EN</option><option value="Mandarin">ZH</option><option value="Hindi">HI</option><option value="Spanish">ES</option><option value="French">FR</option><option value="Arabic">AR</option><option value="Portuguese">PT</option><option value="Russian">RU</option><option value="German">DE</option><option value="Japanese">JA</option><option value="Korean">KO</option><option value="Indonesian">ID</option>
+            <option value="English">EN</option>
+            <option value="Hindi">हिन्दी</option>
+            <option value="Spanish">ES</option>
+            <option value="French">FR</option>
+            <option value="Mandarin">中文</option>
+            <option value="Japanese">日本語</option>
+            <option value="Korean">한국어</option>
+            <option value="Russian">РУ</option>
+            <option value="Arabic">عربي</option>
+            <option value="Portuguese">PT</option>
+            <option value="German">DE</option>
+            <option value="Indonesian">ID</option>
           </select>
         </div>
       )}
@@ -452,6 +470,17 @@ function App() {
             <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={styles.donateBtn}>
                ☕ Support the Developer
             </a>
+
+            {/* NEW: INDIE DEV MESSAGE */}
+            <div style={styles.devMessageContainer}>
+               <p style={styles.indieDevText}>
+                 This indie dev needs to handle server, moderations and maintenance🥺. A lil help can boost me up for the other ideas I have, as well💙.
+               </p>
+               <p style={styles.feedbackText}>
+                 How the heck should I make this game more fun? Tell me everything at <br/>
+                 <a href="mailto:qaylingames@gmail.com" style={styles.emailLink}>qaylingames@gmail.com</a>
+               </p>
+            </div>
           </>
         )}
 
@@ -704,14 +733,12 @@ function App() {
 }
 
 const styles = {
-  appWrapper: { minHeight: '100vh', width: '100vw', display: 'flex', justifyContent: 'center', position: 'relative', backgroundColor: '#FFC200' }, 
-  howToPlayBox: { marginTop: '40px', width: '100%', backgroundColor: '#ffffff', border: '4px solid #1a1a1a', borderRadius: '16px', boxShadow: '6px 6px 0px #1a1a1a', overflow: 'hidden', transform: 'rotate(-1.5deg)' },
+  appWrapper: { minHeight: '100vh', width: '100%', display: 'flex', justifyContent: 'center', position: 'relative', backgroundColor: '#FFC200', overflowX: 'hidden', boxSizing: 'border-box' },  howToPlayBox: { marginTop: '40px', width: '100%', backgroundColor: '#ffffff', border: '4px solid #1a1a1a', borderRadius: '16px', boxShadow: '6px 6px 0px #1a1a1a', overflow: 'hidden', transform: 'rotate(-1.5deg)' },
   howToPlayHeader: { backgroundColor: '#1a1a1a', color: '#FFC200', padding: '12px', fontSize: '18px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '2px', textAlign: 'center' },
   howToPlayContent: { padding: '25px', textAlign: 'left' },
   howToPlayText: { fontSize: '15px', color: '#1a1a1a', marginBottom: '15px', fontWeight: '800', lineHeight: '1.6', display: 'flex', alignItems: 'flex-start', gap: '8px' },
   bullet: { color: '#10b981', fontSize: '16px' }, 
-  container: { width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', paddingTop: '60px', paddingBottom: '120px' },  mainCard: { background: '#ffffff', padding: '40px', borderRadius: '24px', width: '100%', border: '4px solid #1a1a1a', boxShadow: '10px 10px 0px #1a1a1a' },
-  input: { backgroundColor: '#333333', color: '#ffffff', width: '100%', padding: '20px', borderRadius: '12px', border: '3px solid #1a1a1a', fontSize: '20px', marginBottom: '25px', fontWeight: 'bold', outline: 'none' },
+  container: { width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '80px 20px 120px 20px', boxSizing: 'border-box' },  input: { backgroundColor: '#333333', color: '#ffffff', width: '100%', padding: '20px', borderRadius: '12px', border: '3px solid #1a1a1a', fontSize: '20px', marginBottom: '25px', fontWeight: 'bold', outline: 'none' },
   smallInput: { backgroundColor: '#333333', color: '#ffffff', flex: 1, padding: '20px', borderRadius: '12px', border: '3px solid #1a1a1a', fontSize: '20px', fontWeight: 'bold', outline: 'none', textTransform: 'uppercase', minWidth: 0 },
   textarea: { backgroundColor: '#333333', color: '#ffffff', width: '100%', height: '150px', padding: '20px', borderRadius: '16px', border: '3px solid #1a1a1a', fontSize: '20px', marginBottom: '25px', fontWeight: 'bold', outline: 'none', resize: 'none' },
   primaryBtn: { width: '100%', padding: '22px', borderRadius: '12px', border: '3px solid #1a1a1a', backgroundColor: '#ffffff', color: '#1a1a1a', fontSize: '22px', fontWeight: '900', cursor: 'pointer', boxShadow: '6px 6px 0px #1a1a1a', textTransform: 'uppercase' },
@@ -748,9 +775,21 @@ const styles = {
   receiptScoreboard: { marginBottom: '20px' },
   receiptCard: { backgroundColor: '#ffffff', border: '3px solid #1a1a1a', borderRadius: '12px', padding: '15px', marginBottom: '15px' },
 
-  translateWrapper: { position: 'absolute', top: '15px', left: '15px', zIndex: 1000, display: 'flex', alignItems: 'center', gap: '4px', background: '#fff', padding: '6px 10px', borderRadius: '50px', border: '3px solid #1a1a1a', boxShadow: '2px 2px 0px #1a1a1a' },
+  translateWrapper: { position: 'fixed', top: '15px', left: '15px', zIndex: 10000, display: 'flex', alignItems: 'center', gap: '4px', background: '#fff', padding: '6px 10px', borderRadius: '50px', border: '3px solid #1a1a1a', boxShadow: '2px 2px 0px #1a1a1a' },
   translateSelect: { border: 'none', outline: 'none', background: 'transparent', fontSize: '14px', fontWeight: '900', color: '#1a1a1a', cursor: 'pointer' },
-  donateBtn: { display: 'inline-block', background: '#ff5e5b', color: '#ffffff', padding: '15px 30px', borderRadius: '50px', border: '4px solid #1a1a1a', fontSize: '18px', fontWeight: '900', cursor: 'pointer', boxShadow: '6px 6px 0px #1a1a1a', textDecoration: 'none', marginTop: '40px' }
+  donateBtn: { display: 'inline-block', background: '#ff5e5b', color: '#ffffff', padding: '15px 30px', borderRadius: '50px', border: '4px solid #1a1a1a', fontSize: '18px', fontWeight: '900', cursor: 'pointer', boxShadow: '6px 6px 0px #1a1a1a', textDecoration: 'none', marginTop: '40px' },
+  // NEW: Footer Message Styles
+  devMessageContainer: { marginTop: '20px', padding: '0 20px', maxWidth: '400px' },
+  indieDevText: { 
+    fontFamily: '"Comic Sans MS", "Chalkboard SE", "Marker Felt", cursive', 
+    fontSize: '15px', 
+    color: '#1a1a1a', 
+    fontWeight: 'bold', 
+    lineHeight: '1.5', 
+    margin: '0 0 15px 0' 
+  },
+  feedbackText: { fontSize: '13px', color: '#333', fontWeight: 'bold', margin: 0, lineHeight: '1.4' },
+  emailLink: { color: '#10b981', textDecoration: 'underline', fontWeight: '900', fontSize: '14px' }
 };
 
 export default App;
