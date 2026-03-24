@@ -469,13 +469,13 @@ function App() {
 
             {/* KO-FI BUTTON */}
             <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={styles.donateBtn}>
-               ☕ Buy the Developer a Coffee ☕
+               ☕ Buy the Developer a Coffee
             </a>
 
             {/* NEW: INDIE DEV MESSAGE */}
             <div style={styles.devMessageContainer}>
                <p style={styles.indieDevText}>
-                 This indie dev needs to handle server, moderations and maintenance🥺. A lil help can boost me up for the other ideas I have, as well💙.
+                 This indie dev needs to handle server, moderations and maintenance🥺. A lil help can boost me up for my ideaz 💙.
                </p>
                <p style={styles.feedbackText}>
                  How the heck should I make this game more fun? Tell me everything at <br/>
@@ -723,13 +723,13 @@ function App() {
               {isHost ? <button onClick={handlePlayAgain} className="btn-3d" style={styles.primaryBtn}>{t('playAgain')}</button> : <h3 className="animate-bounce" style={{color: '#1a1a1a', fontWeight: '900', fontSize: '20px'}}>{t('waitRes')}</h3>}
               
               <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.donateBtn, marginTop: '30px'}}>
-                 ☕ Buy the Developer a Coffee ☕
+                 ☕ Buy the Developer a Coffee
               </a>
 
               {/* NEW: INDIE DEV MESSAGE */}
             <div style={styles.devMessageContainer}>
                <p style={styles.indieDevText}>
-                 This indie dev needs to handle server, moderations and maintenance🥺. A lil help can boost me up for the other ideas I have, as well💙.
+                 This indie dev needs to handle server, moderations and maintenance🥺. A lil help can boost me up for my ideaz 💙.
                </p>
                <p style={styles.feedbackText}>
                  How the heck should I make this game more fun? Tell me everything at <br/>
@@ -804,9 +804,9 @@ const styles = {
   
   // NEW MESSAGE STYLES (Targeted font exactly where you wanted it)
   devMessageContainer: { marginTop: '30px', padding: '0 20px', maxWidth: '400px', textAlign: 'center' },
-  indieDevText: { fontFamily: "'Kalam', 'Marker Felt', 'Comic Sans MS', cursive", fontSize: '18px', color: '#1a1a1a', fontWeight: 'bold', lineHeight: '1.5', margin: '0 0 15px 0' },
-  feedbackText: { fontSize: '16px', color: '#333', fontWeight: 'bold', margin: 0, lineHeight: '1.4' },
-  emailLink: { color: '#10b981', textDecoration: 'underline', fontWeight: '900', fontSize: '18px' }
+  indieDevText: { fontFamily: 'Marker Felt', fontSize: '12px', color: '#2f2f2f', fontWeight: 'bold', lineHeight: '1.5', margin: '0 0 15px 0' },
+  feedbackText: { fontFamily: 'Kalam', fontSize: '10px', color: '#3b3b3b', fontWeight: 'bold', margin: 0, lineHeight: '1.4' },
+  emailLink: { color: '#14a474', textDecoration: 'underline', fontWeight: '900', fontSize: '18px' }
 };
 
 export default App;
