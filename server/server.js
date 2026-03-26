@@ -10,14 +10,13 @@ const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require('@googl
 const submissionCooldowns = new Map();
 
 // --- DATABASE CONNECTION ---
-// REMEMBER to put your actual alphanumeric password here before pushing!
 // Pulls securely from Render Environment Variables! No hackers can see this.
 const uri = process.env.MONGODB_URI;
 
 mongoose.connect(uri)
   .then(() => {
     console.log("🚀 Humour Cup Database Connected!");
-    seedDatabase(); // Starts seeding ONLY after DB connects
+    seedDatabase(); // Starts the Smart Seeder ONLY after DB connects
   })
   .catch(err => console.error("❌ Database connection error:", err));
 
@@ -40,7 +39,6 @@ setInterval(async () => {
     if (pendingScenarios.length === 0) return; 
 
     console.log(`🔍 Auto-Moderator found ${pendingScenarios.length} pending scenarios...`);
-    // NEW: Upgraded to Flash-Lite for maximum free tier usage
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite", safetySettings });
 
     for (let p of pendingScenarios) {
@@ -108,11 +106,10 @@ function getFallbackBatch() {
   return [...FALLBACK_VAULT].sort(() => 0.5 - Math.random()).slice(0, 5); 
 }
 
-// --- UPDATED AI FETCH LOGIC ---
+// --- AI FETCH LOGIC ---
 async function fetchScenarioBatch(category, language = 'English', isSeeding = false) {
   try {
     const fetchPromise = (async () => {
-      // NEW: Upgraded to Flash-Lite
       const model = genAI.getGenerativeModel({ 
         model: "gemini-2.5-flash-lite", 
         generationConfig: { temperature: 1.6 },
@@ -153,47 +150,73 @@ async function fetchScenarioBatch(category, language = 'English', isSeeding = fa
   }
 }
 
-// --- UPDATED SEEDER LOGIC ---
+// --- NEW SMART SEEDER LOGIC ---
 async function seedDatabase() {
-  const targets = {
-    'English': 10000, 'Hindi': 1000, 'Spanish': 1000, 'French': 1000,
-    'Mandarin': 1000, 'Japanese': 1000, 'Russian': 1000, 'Portuguese': 1000,
-    'German': 1000, 'Korean': 1000, 'Arabic': 1000, 'Indonesian': 1000
+  // Set your exact targets here to protect your wallet!
+  const TARGET_LIMITS = {
+    'English': 1000, 
+    'Hindi': 250, 
+    'Spanish': 100, 
+    'French': 100,
+    'Mandarin': 100, 
+    'Japanese': 100, 
+    'Russian': 100, 
+    'Portuguese': 100,
+    'German': 100, 
+    'Korean': 100, 
+    'Arabic': 100, 
+    'Indonesian': 100
   };
 
-  console.log("🌱 Starting Database Seeding...");
-  for (const [lang, targetCount] of Object.entries(targets)) {
+  console.log("🌱 Starting Smart Database Seeding...");
+  
+  for (const [lang, targetCount] of Object.entries(TARGET_LIMITS)) {
     let currentCount = await Scenario.countDocuments({ language: lang, source: 'AI' });
     
-    while (currentCount < targetCount) {
+    if (currentCount >= targetCount) {
+      console.log(`✅ [${lang}] Target of ${targetCount} already reached (Current: ${currentCount}). Skipping...`);
+      continue;
+    }
+
+    let needed = targetCount - currentCount;
+    console.log(`⏳ [${lang}] Needs ${needed} more scenarios to reach ${targetCount}. Starting generation...`);
+
+    while (needed > 0) {
       try {
-        console.log(`📡 [${lang}] Progress: ${currentCount}/${targetCount}. Requesting batch...`);
         const category = Math.random() > 0.5 ? 'All Ages' : '18+';
-        
         const batch = await fetchScenarioBatch(category, lang, true); 
         
         const scenarioObjects = batch.map(text => ({
           text, language: lang, category: category, source: 'AI', status: 'Approved'
         }));
 
-        await Scenario.insertMany(scenarioObjects, { ordered: false });
+        // Insert into MongoDB, ignoring duplicates safely
+        await Scenario.insertMany(scenarioObjects, { ordered: false }).catch(err => {
+            if (err.code !== 11000 && (!err.writeErrors || err.writeErrors[0].code !== 11000)) {
+                throw err; // Only throw if it's NOT a duplicate error
+            }
+        });
+        
+        // Recalculate exactly how many we have after the database insert
+        currentCount = await Scenario.countDocuments({ language: lang, source: 'AI' }); 
+        needed = targetCount - currentCount;
+        
+        console.log(`📡 [${lang}] Progress: ${currentCount}/${targetCount}. Requesting next batch...`);
+
+        // OPTIMIZED COOLDOWN: 4.5 seconds = ~13 requests per minute. Safely under the 15 RPM limit!
+        await new Promise(resolve => setTimeout(resolve, 4500));
         
       } catch (err) {
-        if (err.code !== 11000 && (!err.writeErrors || err.writeErrors[0].code !== 11000)) {
-           console.error(`❌ API Limit Hit for ${lang}: ${err.message}. Pausing for 60 seconds...`);
-           await new Promise(resolve => setTimeout(resolve, 60000));
-        }
+        console.error(`❌ API Limit Hit or Error for ${lang}: ${err.message}. Pausing for 60 seconds...`);
+        await new Promise(resolve => setTimeout(resolve, 60000));
       }
-      
-      // OPTIMIZED COOLDOWN: 4.5 seconds = ~13 requests per minute. Keeps us safely under the 15 RPM limit!
-      await new Promise(resolve => setTimeout(resolve, 4500));
-      currentCount = await Scenario.countDocuments({ language: lang, source: 'AI' }); 
     }
-    console.log(`✅ [${lang}] Seeding Complete!`);
+    console.log(`🎉 [${lang}] Seeding Complete!`);
   }
-  console.log("🌳 ALL LANGUAGES SEEDED SUCCESSFULLY!");
+  console.log("🛑 ALL LANGUAGES SEEDED! Generator safely shut down.");
 }
 
+// --- WEB SOCKET GAME LOGIC ---
 const rooms = {};
 const roomTimers = {}; 
 
@@ -305,25 +328,19 @@ io.on('connection', (socket) => {
   });
 
   socket.on('submitPublicScenario', async (data, callback) => {
-    // --- 1. SPAM PROTECTION (THE BOUNCER) ---
     const now = Date.now();
     const lastSubmitTime = submissionCooldowns.get(socket.id) || 0;
 
-    // Check if 10 seconds (10,000 ms) haven't passed yet
     if (now - lastSubmitTime < 10000) {
       return callback({ success: false, message: "Please wait 10 seconds between submissions." });
     }
 
-    // Lock the door immediately! (Prevents them from double-clicking and firing two AI calls at once)
     submissionCooldowns.set(socket.id, now);
-    // ----------------------------------------
-
-    // --- 2. YOUR ORIGINAL AI & DATABASE LOGIC ---
+    
     try {
       const exists = await Scenario.findOne({ text: data.text });
       if (exists) return callback({ success: false, message: "Whoops! Someone already submitted this scenario." });
 
-      // Upgraded to Flash-Lite
       const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite", safetySettings });
       const prompt = `You are the strict but fair moderator for a party game called Humour Cup.
       A player submitted a custom scenario: "${data.text}"
@@ -373,15 +390,12 @@ io.on('connection', (socket) => {
     const room = rooms[roomCode];
     
     if (room) {
-      // THE RECONNECTION FIX: Check if the player name already exists in this room
       const existingPlayer = room.players.find(p => p.name.toLowerCase() === playerName.toLowerCase());
       
       if (existingPlayer) {
-        // If they exist, swap their old ID for their new connection ID
         const oldId = existingPlayer.id;
         existingPlayer.id = socket.id;
         
-        // Update all their previous answers/votes to the new ID so scoring doesn't break
         if (room.roundData && room.roundData.answers) {
            room.roundData.answers.forEach(ans => {
               if (ans.playerId === oldId) ans.playerId = socket.id;
@@ -397,7 +411,6 @@ io.on('connection', (socket) => {
         }
         console.log(`♻️ Player Reconnected: ${playerName}`);
       } else {
-        // Normal Join for a new player
         room.players.push({ id: socket.id, name: playerName, score: 0 });
       }
       
@@ -529,8 +542,9 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-  submissionCooldowns.delete(socket.id); // Clear their cooldown memory 
-  console.log(`🔴 Player Disconnected: ${socket.id}`); });
+    submissionCooldowns.delete(socket.id); 
+    console.log(`🔴 Player Disconnected: ${socket.id}`); 
+  });
 });
 
 const PORT = process.env.PORT || 3001;
