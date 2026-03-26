@@ -467,6 +467,8 @@ function App() {
               </div>
             </div>
 
+            <div style={{ width: '100%', height: '4px', backgroundColor: '#1a1a1a', margin: '40px 0', borderRadius: '2px', opacity: '0.8' }}></div>
+
             {/* --- THE COFFEE BUTTON BOX (Tilted) --- */}
             <div style={{...styles.devCardGreen, transform: 'rotate(-2deg)', marginTop: '40px'}}>
                <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.donateBtn, background: '#6F4E37', color: '#ffffff', marginTop: '0', padding: '12px 24px', fontSize: '15px'}}>
