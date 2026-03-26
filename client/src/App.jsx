@@ -753,6 +753,31 @@ function App() {
   );
 }
 
+<div style={{ 
+    textAlign: 'center', 
+    marginTop: '50px', 
+    marginBottom: '20px', 
+    fontSize: '0.9rem', 
+    color: '#1a1a1a', 
+    opacity: '0.8',
+    fontWeight: '500'
+}}>
+    ⚡ made by <a 
+        href="https://www.linkedin.com/in/arpitsrivstva/" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        style={{ 
+            color: '#1a1a1a', 
+            fontWeight: '800', 
+            textDecoration: 'none',
+            borderBottom: '2px solid #1a1a1a',
+            paddingBottom: '1px'
+        }}
+    >
+        Arpit Srivastava
+    </a> to spark your humour ⚡
+</div>
+
 const styles = {
   appWrapper: { minHeight: '100vh', width: '100%', display: 'flex', justifyContent: 'center', position: 'relative', backgroundColor: '#FFC200', overflowX: 'hidden', boxSizing: 'border-box' }, 
   howToPlayBox: { marginTop: '40px', width: '100%', backgroundColor: '#ffffff', border: '4px solid #1a1a1a', borderRadius: '16px', boxShadow: '6px 6px 0px #1a1a1a', overflow: 'hidden', transform: 'rotate(-1.5deg)' },
