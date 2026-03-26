@@ -467,23 +467,114 @@ function App() {
               </div>
             </div>
 
-            {/* --- THE COFFEE BUTTON BOX (Tilted) --- */}
-            <div style={{...styles.devCardGreen, transform: 'rotate(-2deg)', marginTop: '40px'}}>
-               <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.donateBtn, background: '#6F4E37', color: '#ffffff', marginTop: '0', padding: '12px 24px', fontSize: '15px'}}>
-                  ☕ Buy the Developer a Coffee
-               </a>
-               <p style={styles.indieDevText}>
-                 This indie dev needs to handle server, moderations and maintenance 🥺. A lil help can boost me up for my ideaz&nbsp;💙.
-               </p>
-            </div>
 
-            {/* --- THE OVAL FEEDBACK BOX (Flat / No Rotation) --- */}
-            <div style={{...styles.devCardOval, marginTop: '45px'}}>
-               <p style={styles.feedbackText}>
-                 How the heck should I make this game more fun? Tell me everything&nbsp;at
-               </p>
-               <a href="mailto:qaylingames@gmail.com" className="btn-3d" style={styles.emailLink}>qaylingames@gmail.com 💌</a>
-            </div>
+            {/* --- THE FUNNY DIVIDER --- */}
+<div style={{ margin: '80px 0 60px 0', position: 'relative', textAlign: 'center' }}>
+  {/* The thick dashed line */}
+  <div style={{ 
+    borderTop: '6px dashed #1a1a1a', 
+    width: '100%', 
+    position: 'absolute', 
+    top: '50%', 
+    zIndex: '-1' 
+  }}></div>
+  
+  {/* The funny badge in the middle */}
+  <span style={{ 
+    background: '#FFC200', 
+    padding: '12px 24px', 
+    border: '4px solid #1a1a1a', 
+    borderRadius: '16px', 
+    fontWeight: '900', 
+    textTransform: 'uppercase', 
+    boxShadow: '4px 4px 0px #1a1a1a',
+    color: '#1a1a1a',
+    fontSize: '1.1rem'
+  }}>
+    👇 The "Pay My Rent & Fix My Bugs" Zone 👇
+  </span>
+</div>
+
+            {/* --- DONATION & FEEDBACK CONTAINER --- */}
+<div style={{ 
+  display: 'flex', 
+  flexDirection: 'column', 
+  gap: '30px', 
+  maxWidth: '800px', 
+  margin: '0 auto', 
+  padding: '0 20px' 
+}}>
+
+  {/* DONATION BOX (Green with Red Shadows) */}
+  <div style={{ 
+    background: '#10b981', /* Green */
+    padding: '30px', 
+    border: '4px solid #1a1a1a', 
+    borderRadius: '20px', 
+    boxShadow: '8px 8px 0px #ef4444', /* Red shadow */
+    color: '#1a1a1a'
+  }}>
+    <h2 style={{ fontWeight: '900', marginTop: 0, fontSize: '1.8rem' }}>☕ Buy the Dev a Coffee</h2>
+    <p style={{ fontWeight: '600' }}>Servers cost money. Instant noodles only go so far. Fuel the madness!</p>
+    <button style={{ 
+      background: '#ef4444', /* Red */
+      color: 'white', 
+      padding: '12px 24px', 
+      border: '4px solid #1a1a1a', 
+      borderRadius: '12px', 
+      fontWeight: 'bold', 
+      fontSize: '1.1rem',
+      cursor: 'pointer',
+      boxShadow: '4px 4px 0px #991b1b', /* Darker Red button shadow */
+      marginTop: '10px'
+    }}>
+      Donate Now
+    </button>
+  </div>
+
+  {/* FEEDBACK BOX (Red with Green Shadows) */}
+  <div style={{ 
+    background: '#ef4444', /* Red */
+    padding: '30px', 
+    border: '4px solid #1a1a1a', 
+    borderRadius: '20px', 
+    boxShadow: '8px 8px 0px #10b981', /* Green shadow */
+    color: 'white'
+  }}>
+    <h2 style={{ fontWeight: '900', marginTop: 0, fontSize: '1.8rem', color: '#1a1a1a' }}>🐛 Found a Bug?</h2>
+    <p style={{ fontWeight: '600', color: '#1a1a1a' }}>Or have a terrible idea for a new feature? Let us know!</p>
+    
+    <textarea 
+      placeholder="Type your brilliant feedback here..."
+      style={{
+        width: '100%',
+        padding: '12px',
+        border: '4px solid #1a1a1a',
+        borderRadius: '12px',
+        fontFamily: 'inherit',
+        fontWeight: 'bold',
+        marginBottom: '15px',
+        resize: 'vertical',
+        minHeight: '80px'
+      }}
+    ></textarea>
+
+    <button style={{ 
+      background: '#10b981', /* Green */
+      color: '#1a1a1a', 
+      padding: '12px 24px', 
+      border: '4px solid #1a1a1a', 
+      borderRadius: '12px', 
+      fontWeight: '900', 
+      fontSize: '1.1rem',
+      cursor: 'pointer',
+      boxShadow: '4px 4px 0px #065f46', /* Darker Green button shadow */
+    }}>
+      Submit Feedback
+    </button>
+  </div>
+
+</div>
 
           </>
         )}
