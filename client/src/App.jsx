@@ -467,7 +467,7 @@ function App() {
               </div>
             </div>
 
-            <div style={{ width: '100%', height: '4px', backgroundColor: '#1a1a1a', margin: '40px 0', borderRadius: '2px', opacity: '0.8' }}></div>
+            <div style={{ width: '50%', height: '4px', backgroundColor: '#1a1a1a', margin: '40px 0 40px 0', borderRadius: '2px', opacity: '0.8' }}></div>
 
             {/* --- THE COFFEE BUTTON BOX (Tilted) --- */}
             <div style={{...styles.devCardGreen, transform: 'rotate(-2deg)', marginTop: '40px'}}>
