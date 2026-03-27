@@ -506,29 +506,31 @@ function App() {
 
             {/* --- THE FOOTER SIGNATURE --- */}
             <div style={{ 
-                textAlign: 'center', 
-                marginTop: '50px', 
-                marginBottom: '20px', 
-                fontSize: '0.9rem', 
-                color: '#1a1a1a', 
-                opacity: '0.8',
-                fontWeight: '500'
-            }}>
-                ⚡ made by <a 
-                    href="https://www.linkedin.com/in/arpitsrivstva/" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    style={{ 
-                        color: '#1a1a1a', 
-                        fontWeight: '800', 
-                        textDecoration: 'none',
-                        borderBottom: '2px solid #1a1a1a',
-                        paddingBottom: '1px'
-                    }}
-                >
-                    Arpit Srivastava
-                </a> to spark your humour ⚡
-            </div>
+    position: 'absolute', 
+    bottom: '20px', 
+    left: '0',
+    width: '100%',
+    textAlign: 'center', 
+    fontSize: '0.9rem', 
+    color: '#ffffff', 
+    opacity: '0.9',
+    fontWeight: '500'
+}}>
+    ⚡ made by <a 
+        href="https://www.linkedin.com/in/arpitsrivstva/" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        style={{ 
+            color: '#ffffff', 
+            fontWeight: '900', 
+            textDecoration: 'none',
+            borderBottom: '2px solid #ffffff',
+            paddingBottom: '1px'
+        }}
+    >
+        Arpit Srivastava
+    </a> to spark your humour ⚡
+</div>
 
           </>
         )}

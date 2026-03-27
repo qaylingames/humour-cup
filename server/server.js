@@ -232,7 +232,7 @@ function startAnswerPhase(roomCode, scenario) {
   room.state = 'ANSWER_PHASE';
   
   // CHANGED: 60000 is now 120000 (120 seconds)
-  room.roundData = { roundNumber: (room.roundData?.roundNumber || 0) + 1, scenario: scenario, answers: [], endTime: Date.now() + 120000 }; 
+  room.roundData = { roundNumber: (room.roundData?.roundNumber || 0) + 1, scenario: scenario, answers: [], endTime: Date.now() + 90000 }; 
   
   emitSafeRoomData(roomCode);
 
