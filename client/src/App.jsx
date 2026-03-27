@@ -837,7 +837,7 @@ function App() {
               rel="noopener noreferrer" 
               style={{ 
                   color: '#ffffff', 
-                  fontWeight: '700', 
+                  fontWeight: '550', 
                   fontSize: '1.0rem',
                   textDecoration: 'none',
                   borderBottom: '0.5px solid #ffffff',
