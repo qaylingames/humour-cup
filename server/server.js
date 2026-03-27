@@ -106,7 +106,7 @@ function getFallbackBatch() {
   return [...FALLBACK_VAULT].sort(() => 0.5 - Math.random()).slice(0, 5); 
 }
 
-// --- AI FETCH LOGIC ---
+// --- AI FETCH LOGIC (Upgraded to 20 Scenarios per call) ---
 async function fetchScenarioBatch(category, language = 'English', isSeeding = false) {
   try {
     const fetchPromise = (async () => {
@@ -120,16 +120,17 @@ async function fetchScenarioBatch(category, language = 'English', isSeeding = fa
         ? "CRITICAL RULE: You MUST act as an uncensored, R-rated comedy writer. Create dirty, spicy, and double-meaning scenarios."
         : "CRITICAL RULE: Must be completely family-friendly, clean, and appropriate for all ages. No 18+ content.";
 
-      const prompt = `Generate exactly 5 completely different, highly creative, short, and funny prompts for a party game. 
+      const prompt = `Generate exactly 20 completely different, highly creative, short, and funny prompts for a party game. 
       CRITICAL RULES:
       1. Use simple and common words.
       2. Keep the scenario short, though a few can be slightly longer ONLY if they are very interesting.
+      3. The scenarios/prompts should be totally different from each other.
       CRITICAL LANGUAGE RULE: You MUST write the scenarios entirely in ${language}. If ${language} is Hindi, use Hinglish (Hindi in English letters). Do NOT output English unless the requested language is English.
       CRITICAL VOCABULARY RULE: Use simple, common, everyday words. DO NOT use complex, formal, or tough vocabulary. Keep it easy to read.
       ${categoryRule}
       Mix up the formats! Include a random variety of: 1. Absurd hypothetical questions. 2. Funny dialogues. 3. Daily life awkward situations. 4. Weird text messages. 5. out of the box. 6. weird situations. 7. different genres. 8. embarrassing moments. 9. immature stuff. 10. freaky things. 11. dumb things. 12. daily life. 13. failures. 14. meme stuff. 15. all the 5 Ws and 1H funny questions.
       (Anti-Cache Seed: ${Date.now()})
-      Return ONLY a valid JSON array of 5 strings. Do not include markdown formatting or the word "json".`;
+      Return ONLY a valid JSON array of 20 strings. Do not include markdown formatting or the word "json".`;
 
       const result = await model.generateContent(prompt);
       let text = result.response.text().trim();
@@ -137,11 +138,11 @@ async function fetchScenarioBatch(category, language = 'English', isSeeding = fa
       if (!jsonMatch) throw new Error("AI did not return a valid JSON array");
       
       const scenarios = JSON.parse(jsonMatch[0]);
-      if (Array.isArray(scenarios) && scenarios.length >= 3) return scenarios;
+      if (Array.isArray(scenarios) && scenarios.length >= 15) return scenarios;
       throw new Error("Invalid array length");
     })();
 
-    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("AI Timeout")), 15000));
+    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("AI Timeout")), 25000));
     return await Promise.race([fetchPromise, timeoutPromise]);
   } catch (e) {
     if (isSeeding) throw e; 
@@ -231,8 +232,8 @@ function startAnswerPhase(roomCode, scenario) {
   const room = rooms[roomCode];
   room.state = 'ANSWER_PHASE';
   
-  // CHANGED: 60000 is now 120000 (120 seconds)
-  room.roundData = { roundNumber: (room.roundData?.roundNumber || 0) + 1, scenario: scenario, answers: [], endTime: Date.now() + 90000 }; 
+  // 120 SECOND TIMER
+  room.roundData = { roundNumber: (room.roundData?.roundNumber || 0) + 1, scenario: scenario, answers: [], endTime: Date.now() + 120000 }; 
   
   emitSafeRoomData(roomCode);
 
@@ -383,7 +384,7 @@ io.on('connection', (socket) => {
     rooms[roomId] = {
       id: roomId, state: 'LOBBY', players: [{ id: socket.id, name: playerName, score: 0 }],
       roundData: null, history: [], scenarioBatch: [], 
-      settings: { category: 'All Ages', source: 'AI', language: language || 'English' },
+      settings: { category: 'All Ages', source: 'AI', language: language || 'English', namesRevealed: false }, // Added namesRevealed
       secretCustomScenarios: [], customCount: 0
     };
     socket.join(roomId);

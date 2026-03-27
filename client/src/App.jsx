@@ -310,14 +310,6 @@ function App() {
         }
         .ad-zone-left { left: 20px; }
         .ad-zone-right { right: 20px; }
-        .ad-zone-mobile {
-           position: fixed; bottom: 0; left: 0; width: 100%; 
-           height: 60px; max-height: 60px; /* Locked height */
-           background: #fff; border-top: 4px solid #1a1a1a; z-index: 9999;
-           display: flex; align-items: center; justify-content: center;
-           overflow: hidden; /* Prevents giant ads from spilling out */
-        }
-        @media (min-width: 950px) { .ad-zone-left, .ad-zone-right { display: flex; } .ad-zone-mobile { display: none; } }
       `}</style>
 
       {/* --- ADS RENDER HERE --- */}
@@ -327,9 +319,7 @@ function App() {
       <div className="ad-zone-right">
          <AdBanner dataAdSlot="7779947583" type="desktop" />
       </div>
-      <div className="ad-zone-mobile">
-         <AdBanner dataAdSlot="7779947583" type="mobile" />
-      </div>
+      
       {/* ----------------------- */}
 
       {!room && !showVault && !isAdminMode && (
@@ -553,11 +543,31 @@ function App() {
                )}
             </div>
 
-            <h3 style={{color: '#1a1a1a', fontWeight: '900', marginBottom: '20px'}}>{t('waitSquad')}</h3>
+            <h3 style={{color: '#1a1a1a', fontWeight: '900', marginBottom: '10px'}}>
+              {t('waitSquad')} ({room.players.length} Joined)
+            </h3>
             
-            {/* --- UPDATED PLAYER GRID WITH KICK BUTTON --- */}
+            {/* Host-only toggle button for anonymity */}
+            {isHost && (
+              <button 
+                onClick={() => handleSettingChange('namesRevealed', !room.settings.namesRevealed)}
+                className="btn-3d"
+                style={{
+                  ...styles.secondaryBtn, 
+                  padding: '8px 16px', 
+                  fontSize: '14px', 
+                  marginBottom: '20px',
+                  backgroundColor: room.settings.namesRevealed ? '#fbbf24' : '#10b981',
+                  color: room.settings.namesRevealed ? '#1a1a1a' : '#fff'
+                }}
+              >
+                {room.settings.namesRevealed ? "🙈 Hide Player Names" : "👁️ Reveal Player Names"}
+              </button>
+            )}
+            
             <div style={styles.playerGrid}>
-              {room.players.map((p, i) => (
+              {/* We create a COPY of the array and sort it alphabetically so the host isn't forced to the top! */}
+              {[...room.players].sort((a, b) => a.name.localeCompare(b.name)).map((p, i) => (
                 <div key={p.id} className="animate-bounce" style={{
                   ...styles.playerTag, 
                   animationDelay: `${i * 0.2}s`,
@@ -565,8 +575,11 @@ function App() {
                   alignItems: 'center',
                   gap: '10px'
                 }}>
-                  <span>🎭 {p.name} {i === 0 && <span style={{opacity: 0.5, fontSize: '14px'}}> 👑</span>}</span>
                   
+                  {/* Names are replaced with '???' unless the host clicks Reveal. No crowns, no "Host" text! */}
+                  <span>🎭 {room.settings.namesRevealed ? p.name : '???'}</span>
+                  
+                  {/* Host can still see the Kick button next to players, even if their names are hidden */}
                   {isHost && p.id !== socket.id && (
                     <button 
                       onClick={() => socket.emit('kickPlayer', { roomId: room.id, playerIdToKick: p.id })}
@@ -813,9 +826,8 @@ function App() {
           left: '0',
           width: '100%',
           textAlign: 'center', 
-          fontSize: '0.9rem', 
-          color: '#ffffff', 
-          opacity: '0.9',
+          fontSize: '1.0rem', 
+          color: '#ffffff',
           fontWeight: '500',
           fontFamily: '"Libertinus Serif", serif'
       }}>
@@ -825,7 +837,8 @@ function App() {
               rel="noopener noreferrer" 
               style={{ 
                   color: '#ffffff', 
-                  fontWeight: '500', 
+                  fontWeight: '700', 
+                  fontSize: '1.0rem',
                   textDecoration: 'none',
                   borderBottom: '0.5px solid #ffffff',
                   paddingBottom: '1px'
