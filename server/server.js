@@ -230,7 +230,10 @@ function emitSafeRoomData(roomId) {
 function startAnswerPhase(roomCode, scenario) {
   const room = rooms[roomCode];
   room.state = 'ANSWER_PHASE';
-  room.roundData = { roundNumber: (room.roundData?.roundNumber || 0) + 1, scenario: scenario, answers: [], endTime: Date.now() + 60000 }; 
+  
+  // CHANGED: 60000 is now 120000 (120 seconds)
+  room.roundData = { roundNumber: (room.roundData?.roundNumber || 0) + 1, scenario: scenario, answers: [], endTime: Date.now() + 120000 }; 
+  
   emitSafeRoomData(roomCode);
 
   if (roomTimers[roomCode]) clearInterval(roomTimers[roomCode]);
@@ -260,7 +263,10 @@ function startChatPhase(roomCode) {
       clearInterval(roomTimers[roomCode]);
       room.history.push(JSON.parse(JSON.stringify(room.roundData))); 
 
-      if (room.roundData.roundNumber < 3) {
+      // NEW: Check dynamic totalRounds instead of hardcoded 3!
+      const maxRounds = room.totalRounds || 3;
+      
+      if (room.roundData.roundNumber < maxRounds) {
         startIntermission(roomCode);
       } else {
         room.state = 'RESULTS';
@@ -448,11 +454,19 @@ io.on('connection', (socket) => {
       room.state = 'LAUNCHING';
       emitSafeRoomData(roomCode);
 
+      // --- DYNAMIC ROUND LOGIC ---
       if (room.settings.source === 'Custom') {
         const pool = [...room.secretCustomScenarios].sort(() => 0.5 - Math.random());
-        room.scenarioBatch = pool.slice(0, 3);
-        while (room.scenarioBatch.length < 3) room.scenarioBatch.push(getFallbackBatch()[0]);
+        
+        if (pool.length > 0) {
+          room.scenarioBatch = pool;
+          room.totalRounds = pool.length; // Set rounds to exact number of entered scenarios!
+        } else {
+          room.scenarioBatch = getFallbackBatch().slice(0, 3); // Fallback if they hit start with 0
+          room.totalRounds = 3;
+        }
       } else {
+        room.totalRounds = 3; // AI and Public default to 3 rounds
         try {
           const randomScenarios = await Scenario.aggregate([
             { $match: { language: room.settings.language, category: room.settings.category, status: 'Approved' } },
@@ -469,7 +483,32 @@ io.on('connection', (socket) => {
            room.scenarioBatch = getFallbackBatch().slice(0, 3);
         }
       }
+      // ---------------------------
+
       startAnswerPhase(roomCode, room.scenarioBatch.shift());
+    }
+  });
+
+  // --- KICK PLAYER LOGIC ---
+  socket.on('kickPlayer', ({ roomId, playerIdToKick }) => {
+    const roomCode = roomId.toUpperCase();
+    const room = rooms[roomCode];
+    
+    // Make sure the room exists and is in the Lobby phase
+    if (room && room.state === 'LOBBY') {
+      // Find the player in the array
+      const playerIndex = room.players.findIndex(p => p.id === playerIdToKick);
+      
+      if (playerIndex !== -1) {
+        // 1. Remove the player from the room's array
+        room.players.splice(playerIndex, 1);
+        
+        // 2. Send a private message to that specific ghost/player to boot them to the main menu
+        io.to(playerIdToKick).emit('kickedFromRoom');
+        
+        // 3. Update the lobby screen for everyone else so the name disappears
+        emitSafeRoomData(roomCode);
+      }
     }
   });
 
