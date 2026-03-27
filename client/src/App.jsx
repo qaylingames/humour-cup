@@ -1,3 +1,4 @@
+import { fontFamily } from 'html2canvas/dist/types/css/property-descriptors/font-family';
 import { useEffect, useState, useRef } from 'react';
 import { io } from 'socket.io-client';
 
@@ -514,17 +515,18 @@ function App() {
     fontSize: '0.9rem', 
     color: '#ffffff', 
     opacity: '0.9',
-    fontWeight: '500'
+    fontWeight: '500',
+    fontFamily: "Libertinus Serif",
 }}>
     ⚡ made by <a 
-        href="https://www.linkedin.com/in/arpitsrivstva/" 
+        href="https://arpitsrivstva.itch.io/" 
         target="_blank" 
         rel="noopener noreferrer" 
         style={{ 
             color: '#ffffff', 
-            fontWeight: '900', 
+            fontWeight: '500', 
             textDecoration: 'none',
-            borderBottom: '2px solid #ffffff',
+            borderBottom: '0.5px solid #ffffff',
             paddingBottom: '1px'
         }}
     >
