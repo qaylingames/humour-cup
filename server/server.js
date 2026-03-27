@@ -233,7 +233,7 @@ function startAnswerPhase(roomCode, scenario) {
   room.state = 'ANSWER_PHASE';
   
   // 120 SECOND TIMER
-  room.roundData = { roundNumber: (room.roundData?.roundNumber || 0) + 1, scenario: scenario, answers: [], endTime: Date.now() + 120000 }; 
+  room.roundData = { roundNumber: (room.roundData?.roundNumber || 0) + 1, scenario: scenario, answers: [], endTime: Date.now() + 90000 }; 
   
   emitSafeRoomData(roomCode);
 
