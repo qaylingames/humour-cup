@@ -36,32 +36,6 @@ const BGM_TRACKS = [
   'https://ia800201.us.archive.org/5/items/MerryGo/Merry%20Go.mp3'
 ];
 
-// ==========================================
-// GOOGLE ADSENSE COMPONENT (STRICT FIXED SIZES)
-// ==========================================
-const AdBanner = ({ dataAdSlot, type }) => {
-  useEffect(() => {
-    try {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch (e) {
-      console.error("AdSense Error:", e);
-    }
-  }, []);
-
-  // Force EXACT dimensions so Google cannot resize it
-  const adStyle = type === 'mobile' 
-    ? { display: 'inline-block', width: '320px', height: '50px' } 
-    : { display: 'inline-block', width: '160px', height: '600px' };
-
-  return (
-    <ins className="adsbygoogle"
-         style={adStyle}
-         data-ad-client="ca-pub-8526630770141118"
-         data-ad-slot={dataAdSlot}></ins>
-  );
-};
-// ==========================================
-
 function App() {
   const [appLang, setAppLang] = useState('English'); 
   const [playerName, setPlayerName] = useState('');
@@ -170,7 +144,6 @@ function App() {
 
     socket.on('newReplyAlert', () => playSound('alert', 0.5));
     
-    // Listen for kicks! Boot player to main menu
     socket.on('kickedFromRoom', () => {
       alert("You were kicked from the lobby by the host.");
       setRoom(null);
@@ -234,7 +207,7 @@ function App() {
   };
 
   const handlePublicSubmit = () => {
-    if (!pubScenario.trim() || pubCooldown > 0) return; // Block if cooldown is active
+    if (!pubScenario.trim() || pubCooldown > 0) return; 
     playSound('click');
     setPubStatus({ type: 'loading', msg: '⏳' });
     
@@ -243,7 +216,7 @@ function App() {
         playSound('vote'); 
         setPubStatus({ type: 'success', msg: `✅ ${res.data.reason || 'Submitted!'}` });
         setPubScenario(''); 
-        setPubCooldown(10); // Start the 10-second countdown!
+        setPubCooldown(10); 
         setTimeout(() => setPubStatus(null), 6000); 
       } else {
         playSound('alert'); 
@@ -284,11 +257,10 @@ function App() {
       @import url('https://cdn.jsdelivr.net/npm/@fontsource/libertinus-serif@5.0.8/index.css');
 
         /* --- GLOBAL LAYOUT LOCKS --- */
-        * { box-sizing: border-box; } /* Global font removed! */
+        * { box-sizing: border-box; } 
         html, body { overflow-x: hidden; margin: 0; padding: 0; width: 100%; }
 
         .btn-3d { transition: transform 0.1s ease, box-shadow 0.1s ease; }
-        /* ... rest of your CSS stays the same ... */
 
         .btn-3d:active:not(:disabled) { transform: translateY(6px); box-shadow: 0px 0px 0px #1a1a1a !important; }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
@@ -302,25 +274,7 @@ function App() {
         @keyframes unified-wobble-breathe { 0%, 100% { transform: scale(1) rotate(0deg); } 25% { transform: scale(1.03) rotate(-3deg); } 50% { transform: scale(1) rotate(2deg); } 75% { transform: scale(1.03) rotate(-1deg); } }
         .animated-logo-main { animation: unified-wobble-breathe 5s infinite ease-in-out; max-width: 100%; width: 450px; height: auto; cursor: pointer; user-select: none; margin-bottom: 20px; margin-top: 30px; }
 
-        /* --- AD ZONES CSS --- */
-        .ad-zone-left, .ad-zone-right {
-           position: fixed; top: 50%; transform: translateY(-50%); width: 160px; height: 600px;
-           background: transparent;
-           display: none; align-items: center; justify-content: center; text-align: center;
-        }
-        .ad-zone-left { left: 20px; }
-        .ad-zone-right { right: 20px; }
       `}</style>
-
-      {/* --- ADS RENDER HERE --- */}
-      <div className="ad-zone-left">
-         <AdBanner dataAdSlot="7779947583" type="desktop" />
-      </div>
-      <div className="ad-zone-right">
-         <AdBanner dataAdSlot="7779947583" type="desktop" />
-      </div>
-      
-      {/* ----------------------- */}
 
       {!room && !showVault && !isAdminMode && (
         <div style={styles.translateWrapper}>
@@ -495,6 +449,30 @@ function App() {
                <a href="mailto:qaylingames@gmail.com" className="btn-3d" style={styles.emailLink}>qaylingames@gmail.com 💌</a>
             </div>
 
+            {/* --- NEW: ABOUT THE GAME SECTION (FOR ADSENSE SEO) --- */}
+            <div style={styles.aboutCard}>
+                <h3 style={styles.aboutTitle}>What is Humour Cup?</h3>
+                <p style={styles.aboutText}>
+                  Welcome to Humour Cup, the ultimate real-time multiplayer comedy game where your wit wins the crown! Whether you are hanging out with friends at a party, taking a break with coworkers, or just looking for a fun online activity, Humour Cup provides endless entertainment.
+                </p>
+                <p style={styles.aboutText}>
+                  <strong>How It Works:</strong><br/>
+                  The game is simple but highly addictive. The host creates a secure room and shares a unique 4-digit code with friends. Once everyone joins the lobby, the server generates hilarious, completely unique scenarios—ranging from absurd hypothetical questions and daily life awkwardness to weird text messages and meme-worthy situations.
+                </p>
+                <p style={styles.aboutText}>
+                  Players have a limited time to type their funniest, most creative responses. But the fun doesn't stop there! In the Chat & Vote Phase, players can reply to each other's jokes with even more punchlines. You earn Humour XP by getting votes from your friends. The player with the most XP at the end of the rounds takes home the legendary Humour Cup!
+                </p>
+                {/* FIX IS ON THE LINE BELOW: Combined the styles into one! */}
+                <p style={{ ...styles.aboutText, marginBottom: 0 }}>
+                  <strong>Features:</strong><br/>
+                  - <strong>Dynamic AI Scenarios:</strong> Powered by advanced AI, you will never play the exact same game twice.<br/>
+                  - <strong>Custom Prompts:</strong> Have an inside joke? Secretly add your own custom scenarios to the game pool.<br/>
+                  - <strong>Global Languages:</strong> Play in English, Hindi, Spanish, French, Mandarin, and more!<br/>
+                  - <strong>Family Friendly or 18+:</strong> Choose the category that fits your squad's vibe.<br/><br/>
+                  Join thousands of players and spark your humour today. Create a room, share the code, and let the comedy battle begin!
+                </p>
+            </div>
+
           </>
         )}
 
@@ -547,7 +525,6 @@ function App() {
               {t('waitSquad')} ({room.players.length} Joined)
             </h3>
             
-            {/* Host-only toggle button for anonymity */}
             {isHost && (
               <button 
                 onClick={() => handleSettingChange('namesRevealed', !room.settings.namesRevealed)}
@@ -566,7 +543,6 @@ function App() {
             )}
             
             <div style={styles.playerGrid}>
-              {/* We create a COPY of the array and sort it alphabetically so the host isn't forced to the top! */}
               {[...room.players].sort((a, b) => a.name.localeCompare(b.name)).map((p, i) => (
                 <div key={p.id} className="animate-bounce" style={{
                   ...styles.playerTag, 
@@ -576,10 +552,8 @@ function App() {
                   gap: '10px'
                 }}>
                   
-                  {/* Names are replaced with '???' unless the host clicks Reveal. No crowns, no "Host" text! */}
                   <span>🎭 {room.settings.namesRevealed ? p.name : '???'}</span>
                   
-                  {/* Host can still see the Kick button next to players, even if their names are hidden */}
                   {isHost && p.id !== socket.id && (
                     <button 
                       onClick={() => socket.emit('kickPlayer', { roomId: room.id, playerIdToKick: p.id })}
@@ -819,7 +793,7 @@ function App() {
         })()}
       </div>
 
-      {/* --- THE FOOTER SIGNATURE IS NOW HERE! --- */}
+      {/* --- THE FOOTER SIGNATURE --- */}
       <div style={{ 
           position: 'absolute', 
           bottom: '20px', 
@@ -827,7 +801,8 @@ function App() {
           width: '100%',
           textAlign: 'center', 
           fontSize: '0.7rem', 
-          color: '#ffffff',
+          color: '#ffffff', 
+          opacity: '0.9',
           fontWeight: '500',
           fontFamily: '"Libertinus Serif", serif'
       }}>
@@ -846,6 +821,13 @@ function App() {
           >
               Arpit Srivastava
           </a> to spark your humour ⚡
+
+          {/* --- NEW LEGAL LINKS FOR ADSENSE --- */}
+          <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'center', gap: '15px', fontSize: '0.65rem' }}>
+              <a href="https://docs.google.com/document/d/1FVv1pg7i2pnXE0zk6HZv5IZWThJGsS_XV1gzckZkMeM/edit?usp=sharing" style={{ color: '#fff', textDecoration: 'underline' }}>Privacy Policy</a>
+              <a href="https://docs.google.com/document/d/1ZupAWubSYr8X57gRgJjf-88GLmbrDaGS2GIe1IJ59xQ/edit?usp=sharing" style={{ color: '#fff', textDecoration: 'underline' }}>Terms of Service</a>
+              <a href="mailto:qaylingames@gmail.com" style={{ color: '#fff', textDecoration: 'underline' }}>Contact Us</a>
+          </div>
       </div>
 
     </div>
@@ -853,17 +835,25 @@ function App() {
 }
 
 const styles = {
-  appWrapper: { minHeight: '100vh', width: '100%', display: 'flex', justifyContent: 'center', position: 'relative', backgroundColor: '#FFC200', overflowX: 'hidden', boxSizing: 'border-box', paddingBottom: '60px'}, 
+  appWrapper: { 
+    minHeight: '100vh', 
+    width: '100%', 
+    display: 'flex', 
+    justifyContent: 'center', 
+    position: 'relative', 
+    backgroundColor: '#FFC200', 
+    overflowX: 'hidden', 
+    boxSizing: 'border-box',
+    paddingBottom: '120px' // Increased padding so content doesn't hit the expanded footer
+  }, 
   howToPlayBox: { marginTop: '40px', width: '100%', backgroundColor: '#ffffff', border: '4px solid #1a1a1a', borderRadius: '16px', boxShadow: '6px 6px 0px #1a1a1a', overflow: 'hidden', transform: 'rotate(-1.5deg)' },
   howToPlayHeader: { backgroundColor: '#1a1a1a', color: '#FFC200', padding: '12px', fontSize: '18px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '2px', textAlign: 'center' },
   howToPlayContent: { padding: '25px', textAlign: 'left' },
   howToPlayText: { fontSize: '15px', color: '#1a1a1a', marginBottom: '15px', fontWeight: '800', lineHeight: '1.6', display: 'flex', alignItems: 'flex-start', gap: '8px' },
   bullet: { color: '#10b981', fontSize: '16px' }, 
   
-  // FIXED: Keeps the safe padding for ads and sides
-  container: { width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '80px 20px 120px 20px', boxSizing: 'border-box' },
+  container: { width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '80px 20px 20px 20px', boxSizing: 'border-box' },
   
-  // RESTORED: Your original white card background!
   mainCard: { background: '#ffffff', padding: '40px', borderRadius: '24px', width: '100%', border: '4px solid #1a1a1a', boxShadow: '10px 10px 0px #1a1a1a' },
   
   input: { backgroundColor: '#333333', color: '#ffffff', width: '100%', padding: '20px', borderRadius: '12px', border: '3px solid #1a1a1a', fontSize: '20px', marginBottom: '25px', fontWeight: 'bold', outline: 'none' },
@@ -902,73 +892,18 @@ const styles = {
   receiptScoreboard: { marginBottom: '20px' },
   receiptCard: { backgroundColor: '#ffffff', border: '3px solid #1a1a1a', borderRadius: '12px', padding: '15px', marginBottom: '15px' },
   translateWrapper: { position: 'fixed', top: '15px', left: '15px', zIndex: 10000, display: 'flex', alignItems: 'center', gap: '4px', background: '#fff', padding: '6px 10px', borderRadius: '50px', border: '3px solid #1a1a1a', boxShadow: '2px 2px 0px #1a1a1a' },
-  
-  // RESTORED: Original font size
   translateSelect: { border: 'none', outline: 'none', background: 'transparent', fontSize: '14px', fontWeight: '900', color: '#1a1a1a', cursor: 'pointer' },
-  
-  // RESTORED: Original font size
   donateBtn: { display: 'inline-block', background: '#ff5e5b', color: '#ffffff', padding: '15px 30px', borderRadius: '50px', border: '4px solid #1a1a1a', fontSize: '18px', fontWeight: '900', cursor: 'pointer', boxShadow: '6px 6px 0px #1a1a1a', textDecoration: 'none', marginTop: '40px' },
   
-  // --- GRAPHICAL COMIC-STYLE CARDS ---
-  devCardGreen: { 
-    background: '#10b981', 
-    padding: '25px', 
-    borderRadius: '16px', 
-    border: '4px solid #1a1a1a', 
-    boxShadow: '8px 8px 0px #1a1a1a', 
-    width: '100%', 
-    maxWidth: '450px', 
-    display: 'flex', 
-    flexDirection: 'column', 
-    alignItems: 'center', 
-    gap: '12px' 
-  },
-  indieDevText: { 
-    fontFamily: "'Kalam', cursive", 
-    fontSize: '14px', 
-    color: '#ffffff', 
-    fontWeight: 'bold', 
-    lineHeight: '1.5', 
-    margin: '5px 0 0 0' 
-  },
-  
-  // --- THE NEW OVAL BOX ---
-  devCardOval: { 
-    background: '#e5e7eb', // Aesthetic minimalist grey
-    padding: '30px 40px', // Extra side padding so text doesn't touch the curved edges
-    borderRadius: '100px', // This massive value creates the perfect smooth Oval/Pill shape!
-    border: '4px solid #1a1a1a', // Black border
-    boxShadow: '8px 8px 0px #ef4444', // Pop-Art RED shadow
-    width: '100%', 
-    maxWidth: '450px', 
-    display: 'flex', 
-    flexDirection: 'column', 
-    alignItems: 'center', 
-    gap: '12px' 
-  },
-  
-  feedbackText: { 
-    fontFamily: "'Kalam', cursive", 
-    fontSize: '14px', 
-    color: '#1a1a1a', 
-    fontWeight: 'bold', 
-    margin: '0', 
-    lineHeight: '1.4' 
-  },
-  emailLink: { 
-    fontFamily: "'Kalam', cursive", 
-    color: '#ffffff', 
-    background: '#ef4444', // Red button respectfully matches the red drop-shadow!
-    padding: '8px 16px',
-    borderRadius: '12px',
-    border: '3px solid #1a1a1a', 
-    textDecoration: 'none', 
-    fontWeight: '900', 
-    fontSize: '15px', 
-    margin: '0',
-    boxShadow: '4px 4px 0px #1a1a1a', 
-    display: 'inline-block'
-  }
+  devCardGreen: { background: '#10b981', padding: '25px', borderRadius: '16px', border: '4px solid #1a1a1a', boxShadow: '8px 8px 0px #1a1a1a', width: '100%', maxWidth: '450px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' },
+  indieDevText: { fontFamily: "'Kalam', cursive", fontSize: '14px', color: '#ffffff', fontWeight: 'bold', lineHeight: '1.5', margin: '5px 0 0 0' },
+  devCardOval: { background: '#e5e7eb', padding: '30px 40px', borderRadius: '100px', border: '4px solid #1a1a1a', boxShadow: '8px 8px 0px #ef4444', width: '100%', maxWidth: '450px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' },
+  feedbackText: { fontFamily: "'Kalam', cursive", fontSize: '14px', color: '#1a1a1a', fontWeight: 'bold', margin: '0', lineHeight: '1.4' },
+  emailLink: { fontFamily: "'Kalam', cursive", color: '#ffffff', background: '#ef4444', padding: '8px 16px', borderRadius: '12px', border: '3px solid #1a1a1a', textDecoration: 'none', fontWeight: '900', fontSize: '15px', margin: '0', boxShadow: '4px 4px 0px #1a1a1a', display: 'inline-block' },
+
+  aboutCard: { background: '#ffffff', padding: '30px', borderRadius: '16px', border: '4px solid #1a1a1a', boxShadow: '8px 8px 0px #1a1a1a', width: '100%', marginTop: '40px', textAlign: 'left', color: '#1a1a1a' },
+  aboutTitle: { fontFamily: "'Kalam', cursive", fontSize: '24px', fontWeight: '900', textTransform: 'uppercase', borderBottom: '3px solid #1a1a1a', paddingBottom: '10px', marginBottom: '15px', marginTop: 0 },
+  aboutText: { fontSize: '15px', fontWeight: '500', lineHeight: '1.6', marginBottom: '15px' }
 };
 
 export default App;
