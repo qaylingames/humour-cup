@@ -826,7 +826,7 @@ function App() {
           left: '0',
           width: '100%',
           textAlign: 'center', 
-          fontSize: '0.5rem', 
+          fontSize: '0.7rem', 
           color: '#ffffff',
           fontWeight: '500',
           fontFamily: '"Libertinus Serif", serif'
@@ -838,7 +838,7 @@ function App() {
               style={{ 
                   color: '#ffffff', 
                   fontWeight: '500', 
-                  fontSize: '0.5rem',
+                  fontSize: '0.7rem',
                   textDecoration: 'none',
                   borderBottom: '0.5px solid #ffffff',
                   paddingBottom: '1px'
