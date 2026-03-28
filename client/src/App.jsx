@@ -41,6 +41,8 @@ function App() {
   const [playerName, setPlayerName] = useState('');
   const [joinCode, setJoinCode] = useState('');
   const [room, setRoom] = useState(null);
+
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
   
   const [pubScenario, setPubScenario] = useState('');
   const [pubLang, setPubLang] = useState('English');
@@ -274,6 +276,11 @@ function App() {
         @keyframes unified-wobble-breathe { 0%, 100% { transform: scale(1) rotate(0deg); } 25% { transform: scale(1.03) rotate(-3deg); } 50% { transform: scale(1) rotate(2deg); } 75% { transform: scale(1.03) rotate(-1deg); } }
         .animated-logo-main { animation: unified-wobble-breathe 5s infinite ease-in-out; max-width: 100%; width: 450px; height: auto; cursor: pointer; user-select: none; margin-bottom: 20px; margin-top: 30px; }
 
+        @keyframes slideDown { 
+          from { opacity: 0; transform: translateY(-10px); } 
+          to { opacity: 1; transform: translateY(0); } 
+        }
+
       `}</style>
 
       {!room && !showVault && !isAdminMode && (
@@ -450,27 +457,72 @@ function App() {
             </div>
 
             {/* --- NEW: ABOUT THE GAME SECTION (FOR ADSENSE SEO) --- */}
-            <div style={styles.aboutCard}>
-                <h3 style={styles.aboutTitle}>What is Humour Cup?</h3>
-                <p style={styles.aboutText}>
-                  Welcome to Humour Cup, the ultimate real-time multiplayer comedy game where your wit wins the crown! Whether you are hanging out with friends at a party, taking a break with coworkers, or just looking for a fun online activity, Humour Cup provides endless entertainment.
-                </p>
-                <p style={styles.aboutText}>
-                  <strong>How It Works:</strong><br/>
-                  The game is simple but highly addictive. The host creates a secure room and shares a unique 4-digit code with friends. Once everyone joins the lobby, the server generates hilarious, completely unique scenarios—ranging from absurd hypothetical questions and daily life awkwardness to weird text messages and meme-worthy situations.
-                </p>
-                <p style={styles.aboutText}>
-                  Players have a limited time to type their funniest, most creative responses. But the fun doesn't stop there! In the Chat & Vote Phase, players can reply to each other's jokes with even more punchlines. You earn Humour XP by getting votes from your friends. The player with the most XP at the end of the rounds takes home the legendary Humour Cup!
-                </p>
-                {/* FIX IS ON THE LINE BELOW: Combined the styles into one! */}
-                <p style={{ ...styles.aboutText, marginBottom: 0 }}>
-                  <strong>Features:</strong><br/>
-                  - <strong>Dynamic AI Scenarios:</strong> Powered by advanced AI, you will never play the exact same game twice.<br/>
-                  - <strong>Custom Prompts:</strong> Have an inside joke? Secretly add your own custom scenarios to the game pool.<br/>
-                  - <strong>Global Languages:</strong> Play in English, Hindi, Spanish, French, Mandarin, and more!<br/>
-                  - <strong>Family Friendly or 18+:</strong> Choose the category that fits your squad's vibe.<br/><br/>
-                  Join thousands of players and spark your humour today. Create a room, share the code, and let the comedy battle begin!
-                </p>
+            {/* --- INTERACTIVE "ABOUT THE GAME" DROPDOWN --- */}
+            <div style={{ width: '100%', marginTop: '40px' }}>
+              <button 
+                onClick={() => { playSound('click'); setIsAboutOpen(!isAboutOpen); }} 
+                className="btn-3d" 
+                style={{
+                  width: '100%', 
+                  padding: '20px', 
+                  backgroundColor: isAboutOpen ? '#1a1a1a' : '#ffffff', 
+                  color: isAboutOpen ? '#FFC200' : '#1a1a1a', 
+                  fontSize: '22px', 
+                  fontWeight: '900', 
+                  border: '4px solid #1a1a1a', 
+                  borderRadius: isAboutOpen ? '16px 16px 0 0' : '16px', 
+                  cursor: 'pointer', 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  alignItems: 'center', 
+                  boxShadow: isAboutOpen ? 'none' : '6px 6px 0px #1a1a1a',
+                  fontFamily: "'Kalam', cursive",
+                  textTransform: 'uppercase',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <span>🤔 What is Humour Cup?</span>
+                <span style={{ 
+                  transform: isAboutOpen ? 'rotate(180deg)' : 'rotate(0deg)', 
+                  transition: 'transform 0.3s ease' 
+                }}>
+                  ▼
+                </span>
+              </button>
+
+              {isAboutOpen && (
+                <div style={{
+                  width: '100%', 
+                  backgroundColor: '#ffffff', 
+                  border: '4px solid #1a1a1a', 
+                  borderTop: 'none', 
+                  borderRadius: '0 0 16px 16px', 
+                  padding: '30px', 
+                  textAlign: 'left', 
+                  color: '#1a1a1a', 
+                  boxShadow: '6px 6px 0px #1a1a1a',
+                  animation: 'slideDown 0.3s ease-out'
+                }}>
+                  <p style={styles.aboutText}>
+                    Welcome to Humour Cup, the ultimate real-time multiplayer comedy game where your wit wins the crown! Whether you are hanging out with friends at a party, taking a break with coworkers, or just looking for a fun online activity, Humour Cup provides endless entertainment.
+                  </p>
+                  <p style={styles.aboutText}>
+                    <strong>How It Works:</strong><br/>
+                    The game is simple but highly addictive. The host creates a secure room and shares a unique 4-digit code with friends. Once everyone joins the lobby, the server generates hilarious, completely unique scenarios—ranging from absurd hypothetical questions and daily life awkwardness to weird text messages and meme-worthy situations.
+                  </p>
+                  <p style={styles.aboutText}>
+                    Players have a limited time to type their funniest, most creative responses. But the fun doesn't stop there! In the Chat & Vote Phase, players can reply to each other's jokes with even more punchlines. You earn Humour XP by getting votes from your friends. The player with the most XP at the end of the rounds takes home the legendary Humour Cup!
+                  </p>
+                  <p style={{ ...styles.aboutText, marginBottom: 0 }}>
+                    <strong>Features:</strong><br/>
+                    - <strong>Dynamic AI Scenarios:</strong> Powered by advanced AI, you will never play the exact same game twice.<br/>
+                    - <strong>Custom Prompts:</strong> Have an inside joke? Secretly add your own custom scenarios to the game pool.<br/>
+                    - <strong>Global Languages:</strong> Play in English, Hindi, Spanish, French, Mandarin, and more!<br/>
+                    - <strong>Family Friendly or 18+:</strong> Choose the category that fits your squad's vibe.<br/><br/>
+                    Join thousands of players and spark your humour today. Create a room, share the code, and let the comedy battle begin!
+                  </p>
+                </div>
+              )}
             </div>
 
           </>
@@ -844,7 +896,7 @@ const styles = {
     backgroundColor: '#FFC200', 
     overflowX: 'hidden', 
     boxSizing: 'border-box',
-    paddingBottom: '120px' // Increased padding so content doesn't hit the expanded footer
+    paddingBottom: '80px' // Increased padding so content doesn't hit the expanded footer
   }, 
   howToPlayBox: { marginTop: '40px', width: '100%', backgroundColor: '#ffffff', border: '4px solid #1a1a1a', borderRadius: '16px', boxShadow: '6px 6px 0px #1a1a1a', overflow: 'hidden', transform: 'rotate(-1.5deg)' },
   howToPlayHeader: { backgroundColor: '#1a1a1a', color: '#FFC200', padding: '12px', fontSize: '18px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '2px', textAlign: 'center' },
