@@ -134,10 +134,15 @@ async function fetchScenarioBatch(category, language = 'English', isSeeding = fa
 
       const result = await model.generateContent(prompt);
       let text = result.response.text().trim();
-      const jsonMatch = text.match(/\[[\s\S]*\]/);
-      if (!jsonMatch) throw new Error("AI did not return a valid JSON array");
       
-      const scenarios = JSON.parse(jsonMatch[0]);
+      // NEW BULLETPROOF JSON PARSER
+      const startIndex = text.indexOf('[');
+      const endIndex = text.lastIndexOf(']');
+      if (startIndex === -1 || endIndex === -1) throw new Error("AI did not return a valid JSON array");
+      
+      const jsonString = text.substring(startIndex, endIndex + 1);
+      const scenarios = JSON.parse(jsonString);
+      
       if (Array.isArray(scenarios) && scenarios.length >= 15) return scenarios;
       throw new Error("Invalid array length");
     })();
@@ -151,12 +156,12 @@ async function fetchScenarioBatch(category, language = 'English', isSeeding = fa
   }
 }
 
-// --- NEW SMART SEEDER LOGIC ---
+// --- NEW INFINITE SMART SEEDER LOGIC ---
 async function seedDatabase() {
-  // Set your exact targets here to protect your wallet!
-  const TARGET_LIMITS = {
+  // 1. The starting targets
+  let dynamicTargets = {
     'English': 1000, 
-    'Hindi': 250, 
+    'Hindi': 500, 
     'Spanish': 100, 
     'French': 100,
     'Mandarin': 100, 
@@ -169,52 +174,93 @@ async function seedDatabase() {
     'Indonesian': 100
   };
 
-  console.log("🌱 Starting Smart Database Seeding...");
+  // 2. The exact custom amounts to add when a cycle finishes
+  const INCREMENTS = {
+    'English': 200, 
+    'Hindi': 250, 
+    'Spanish': 50, 
+    'French': 50,
+    'Mandarin': 50, 
+    'Japanese': 50, 
+    'Russian': 50, 
+    'Portuguese': 50,
+    'German': 50, 
+    'Korean': 50, 
+    'Arabic': 50, 
+    'Indonesian': 50
+  };
+
+  console.log("🌱 Starting INFINITE Smart Database Seeding...");
   
-  for (const [lang, targetCount] of Object.entries(TARGET_LIMITS)) {
-    let currentCount = await Scenario.countDocuments({ language: lang, source: 'AI' });
-    
-    if (currentCount >= targetCount) {
-      console.log(`✅ [${lang}] Target of ${targetCount} already reached (Current: ${currentCount}). Skipping...`);
-      continue;
-    }
+  // The infinite loop
+  while (true) {
+    let allTargetsMet = true;
 
-    let needed = targetCount - currentCount;
-    console.log(`⏳ [${lang}] Needs ${needed} more scenarios to reach ${targetCount}. Starting generation...`);
+    // It will ALWAYS run in this exact order: English -> Hindi -> Spanish...
+    for (const lang of Object.keys(dynamicTargets)) {
+      let targetCount = dynamicTargets[lang];
+      let currentCount = await Scenario.countDocuments({ language: lang, source: 'AI' });
+      
+      if (currentCount >= targetCount) {
+        console.log(`✅ [${lang}] Target of ${targetCount} is full (Current: ${currentCount}).`);
+        continue; // Moves to the next language in the list
+      }
 
-    while (needed > 0) {
-      try {
-        const category = Math.random() > 0.5 ? 'All Ages' : '18+';
-        const batch = await fetchScenarioBatch(category, lang, true); 
-        
-        const scenarioObjects = batch.map(text => ({
-          text, language: lang, category: category, source: 'AI', status: 'Approved'
-        }));
+      allTargetsMet = false; // We found a language that needs work!
+      let needed = targetCount - currentCount;
+      console.log(`⏳ [${lang}] Needs ${needed} more scenarios to reach ${targetCount}. Starting generation...`);
 
-        // Insert into MongoDB, ignoring duplicates safely
-        await Scenario.insertMany(scenarioObjects, { ordered: false }).catch(err => {
-            if (err.code !== 11000 && (!err.writeErrors || err.writeErrors[0].code !== 11000)) {
-                throw err; // Only throw if it's NOT a duplicate error
-            }
-        });
-        
-        // Recalculate exactly how many we have after the database insert
-        currentCount = await Scenario.countDocuments({ language: lang, source: 'AI' }); 
-        needed = targetCount - currentCount;
-        
-        console.log(`📡 [${lang}] Progress: ${currentCount}/${targetCount}. Requesting next batch...`);
+      while (needed > 0) {
+        try {
+          const category = Math.random() > 0.5 ? 'All Ages' : '18+';
+          const batch = await fetchScenarioBatch(category, lang, true); 
+          
+          const scenarioObjects = batch.map(text => ({
+            text, language: lang, category: category, source: 'AI', status: 'Approved'
+          }));
 
-        // OPTIMIZED COOLDOWN: 4.5 seconds = ~13 requests per minute. Safely under the 15 RPM limit!
-        await new Promise(resolve => setTimeout(resolve, 4500));
-        
-      } catch (err) {
-        console.error(`❌ API Limit Hit or Error for ${lang}: ${err.message}. Pausing for 60 seconds...`);
-        await new Promise(resolve => setTimeout(resolve, 60000));
+          await Scenario.insertMany(scenarioObjects, { ordered: false }).catch(err => {
+              if (err.code !== 11000 && (!err.writeErrors || err.writeErrors[0].code !== 11000)) throw err; 
+          });
+          
+          currentCount = await Scenario.countDocuments({ language: lang, source: 'AI' }); 
+          needed = targetCount - currentCount;
+          
+          console.log(`📡 [${lang}] Progress: ${currentCount}/${targetCount}. Requesting next batch...`);
+
+          // Safe 4.5 second pause between normal requests
+          await new Promise(resolve => setTimeout(resolve, 4500));
+          
+        } catch (err) {
+          const errMsg = err.message.toLowerCase();
+          
+          // --- THE "DEEP SLEEP" SERVER PROTECTION ---
+          // If Google cuts us off, we go into hibernation to save Render resources.
+          if (errMsg.includes('429') || errMsg.includes('quota') || errMsg.includes('exhausted') || errMsg.includes('limit')) {
+            console.error(`🛑 Google API Quota Reached! To save server RAM, entering DEEP SLEEP for 1 hour before checking for midnight reset...`);
+            await new Promise(resolve => setTimeout(resolve, 3600000)); // Sleeps for exactly 1 hour (3,600,000 ms)
+          } else {
+            // Normal glitches (like a network drop) only get a 1-minute pause
+            console.error(`❌ Normal API Error for ${lang}: ${err.message}. Pausing for 1 minute...`);
+            await new Promise(resolve => setTimeout(resolve, 60000));
+          }
+        }
       }
     }
-    console.log(`🎉 [${lang}] Seeding Complete!`);
+
+    // --- THE CUSTOM LEVEL UP ---
+    // This ONLY triggers when the loop finishes and every single language has hit its target.
+    if (allTargetsMet) {
+      console.log("🚀 ALL LANGUAGES MAXED OUT! Applying custom target upgrades...");
+      
+      for (const lang in dynamicTargets) {
+        dynamicTargets[lang] += INCREMENTS[lang]; // Adds +200 to EN, +250 to HI, +50 to rest
+      }
+      
+      // Wait 10 seconds before starting the brand new cycle back at English
+      await new Promise(resolve => setTimeout(resolve, 10000)); 
+    }
   }
-  console.log("🛑 ALL LANGUAGES SEEDED! Generator safely shut down.");
 }
 
 // --- WEB SOCKET GAME LOGIC ---
@@ -232,7 +278,7 @@ function startAnswerPhase(roomCode, scenario) {
   const room = rooms[roomCode];
   room.state = 'ANSWER_PHASE';
   
-  // 120 SECOND TIMER
+  // 90 SECOND TIMER
   room.roundData = { roundNumber: (room.roundData?.roundNumber || 0) + 1, scenario: scenario, answers: [], endTime: Date.now() + 90000 }; 
   
   emitSafeRoomData(roomCode);
@@ -504,6 +550,12 @@ io.on('connection', (socket) => {
         // 1. Remove the player from the room's array
         room.players.splice(playerIndex, 1);
         
+        // --- NEW: KICK THEM OUT OF THE ACTUAL SOCKET CONNECTION CHANNEL ---
+        const kickedSocket = io.sockets.sockets.get(playerIdToKick);
+        if (kickedSocket) {
+            kickedSocket.leave(roomCode);
+        }
+        
         // 2. Send a private message to that specific ghost/player to boot them to the main menu
         io.to(playerIdToKick).emit('kickedFromRoom');
         
@@ -530,7 +582,6 @@ io.on('connection', (socket) => {
       if (answer) {
         answer.replies.push({ id: 'rep_' + Math.random().toString(36).substring(2,9), playerId: socket.id, text: text, votes: [] });
         room.roundData.endTime = Math.min(room.roundData.endTime + 15000, Date.now() + 45000);
-        room.roundData.donePlayers = []; 
         io.to(roomCode).emit('newReplyAlert');
         emitSafeRoomData(roomCode);
       }
