@@ -826,7 +826,7 @@ function App() {
           left: '0',
           width: '100%',
           textAlign: 'center', 
-          fontSize: '1.0rem', 
+          fontSize: '0.5rem', 
           color: '#ffffff',
           fontWeight: '500',
           fontFamily: '"Libertinus Serif", serif'
@@ -837,8 +837,8 @@ function App() {
               rel="noopener noreferrer" 
               style={{ 
                   color: '#ffffff', 
-                  fontWeight: '550', 
-                  fontSize: '1.0rem',
+                  fontWeight: '500', 
+                  fontSize: '0.5rem',
                   textDecoration: 'none',
                   borderBottom: '0.5px solid #ffffff',
                   paddingBottom: '1px'
