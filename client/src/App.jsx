@@ -896,7 +896,7 @@ const styles = {
     backgroundColor: '#FFC200', 
     overflowX: 'hidden', 
     boxSizing: 'border-box',
-    paddingBottom: '80px' // Increased padding so content doesn't hit the expanded footer
+    paddingBottom: '40px' // Increased padding so content doesn't hit the expanded footer
   }, 
   howToPlayBox: { marginTop: '40px', width: '100%', backgroundColor: '#ffffff', border: '4px solid #1a1a1a', borderRadius: '16px', boxShadow: '6px 6px 0px #1a1a1a', overflow: 'hidden', transform: 'rotate(-1.5deg)' },
   howToPlayHeader: { backgroundColor: '#1a1a1a', color: '#FFC200', padding: '12px', fontSize: '18px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '2px', textAlign: 'center' },
