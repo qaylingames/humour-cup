@@ -425,17 +425,18 @@ function App() {
               </div>
             </div>
 
-            {/* --- THE NEW DIVIDER LINE --- */}
-            <div style={{ 
-                width: '50%', 
-                height: '4px', 
-                backgroundColor: '#1a1a1a', 
-                marginTop: '60px', 
-                marginBottom: '10px',
-                marginInline: 'auto',
-                borderRadius: '10px', 
-                opacity: '0.6' 
-            }}></div>
+            {/* --- BOTTOM DIVIDER LINE --- */}
+      <div style={{ 
+          width: '50%', 
+          maxWidth: '250px', // <--- FIX: Forces it to match the top divider's exact size!
+          height: '4px', 
+          backgroundColor: '#1a1a1a', 
+          marginTop: 'auto', 
+          marginBottom: '25px', 
+          marginInline: 'auto',
+          borderRadius: '10px', 
+          opacity: '0.6' 
+      }}></div>
 
             {/* --- THE COFFEE BUTTON BOX (Tilted) --- */}
             <div style={{...styles.devCardGreen, transform: 'rotate(-2deg)', marginTop: '40px'}}>
@@ -843,17 +844,18 @@ function App() {
         })()}
       </div>
 
-      {/* --- THE NEW DIVIDER LINE --- */}
-            <div style={{ 
-                width: '50%', 
-                height: '4px', 
-                backgroundColor: '#1a1a1a', 
-                marginTop: '60px', 
-                marginBottom: '10px',
-                marginInline: 'auto',
-                borderRadius: '10px', 
-                opacity: '0.6' 
-            }}></div>
+      {/* --- BOTTOM DIVIDER LINE --- */}
+      <div style={{ 
+          width: '50%', 
+          maxWidth: '250px', // <--- FIX: Forces it to match the top divider's exact size!
+          height: '4px', 
+          backgroundColor: '#1a1a1a', 
+          marginTop: 'auto', 
+          marginBottom: '25px', 
+          marginInline: 'auto',
+          borderRadius: '10px', 
+          opacity: '0.6' 
+      }}></div>
 
       {/* --- NEW LEAN, WHITE-TEXT ORANGE BADGE FOOTER --- */}
       <div style={{
@@ -888,7 +890,7 @@ function App() {
               textDecoration: 'underline', // Turns on the underline
               textDecorationStyle: 'wavy', // Makes it wavy!
               textDecorationColor: '#ffffff', // Keeps it white
-              textUnderlineOffset: '2px', // Pushes the wave down so it doesn't cut through the letters
+              textUnderlineOffset: '2.5px', // Pushes the wave down so it doesn't cut through the letters
             }}
           >
             Arpit Srivastava
@@ -897,8 +899,8 @@ function App() {
 
         {/* Legal links container */}
         <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'center', gap: '15px', flexWrap: 'wrap' }}>
-          <a href="/privacy-policy" style={styles.footerLegalLink}>Privacy Policy</a>
-          <a href="/terms-of-service" style={styles.footerLegalLink}>Terms of Service</a>
+          <a href="/privacy.html" style={styles.footerLegalLink}>Privacy Policy</a>
+          <a href="/terms.html" style={styles.footerLegalLink}>Terms of Service</a>
           <a href="mailto:qaylingames@gmail.com" style={styles.footerLegalLink}>Contact Us</a>
         </div>
       </div>
