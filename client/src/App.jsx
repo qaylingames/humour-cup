@@ -864,25 +864,25 @@ function App() {
         textAlign: 'center'
       }}>
         <div style={{ 
-          fontSize: '0.6rem', // Smaller text
+          fontSize: '0.5rem', // Smaller text
           color: '#ffffff', // Turned text white
-          fontWeight: '500',
+          fontWeight: '400',
           fontFamily: '"Libertinus Serif", serif',
         }}>
-          ⚡ made by <a 
+          ⚡made by <a 
             href="https://arpitsrivstva.itch.io/" 
             target="_blank" 
             rel="noopener noreferrer" 
             style={{ 
               color: '#ffffff', 
-              fontWeight: '500', 
+              fontWeight: '400', 
               textDecoration: 'none',
-              borderBottom: '0.5px solid #ffffff', // Thinner underline
+              borderBottom: '0.25px solid #ffffff', // Thinner underline
               paddingBottom: '1px'
             }}
           >
             Arpit Srivastava
-          </a> to spark your humour ⚡
+          </a> to spark your humour⚡
         </div>
 
         {/* Legal links container */}
