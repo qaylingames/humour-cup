@@ -905,13 +905,6 @@ function App() {
         </div>
       </div>
 
-        {/* Legal links container */}
-        <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'center', gap: '15px', flexWrap: 'wrap' }}>
-          <a href="/privacy-policy" style={styles.footerLegalLink}>Privacy Policy</a>
-          <a href="/terms-of-service" style={styles.footerLegalLink}>Terms of Service</a>
-          <a href="mailto:qaylingames@gmail.com" style={styles.footerLegalLink}>Contact Us</a>
-        </div>
-
     </div>
 
   );
