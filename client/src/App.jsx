@@ -858,8 +858,8 @@ function App() {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        maxWidth: '400px', // Made the whole blob narrower
-        width: '75%',
+        width: 'fit-content', // <--- FIX 1: Makes the blob exactly as long as the text
+        maxWidth: '95%', // A tiny safety net just in case of extremely narrow screens
         textAlign: 'center'
       }}>
         <div style={{ 
@@ -867,6 +867,7 @@ function App() {
           color: '#ffffff', // Turned text white
           fontWeight: '400',
           fontFamily: '"Kalam", cursive',
+          whiteSpace: 'nowrap', // <--- FIX 2: Forces text to stay on one single line!
         }}>
           ⚡made by <a 
             href="https://arpitsrivstva.itch.io/" 
@@ -883,6 +884,14 @@ function App() {
             Arpit Srivastava
           </a> to spark your humour⚡
         </div>
+
+        {/* Legal links container */}
+        <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'center', gap: '15px', flexWrap: 'wrap' }}>
+          <a href="/privacy-policy" style={styles.footerLegalLink}>Privacy Policy</a>
+          <a href="/terms-of-service" style={styles.footerLegalLink}>Terms of Service</a>
+          <a href="mailto:qaylingames@gmail.com" style={styles.footerLegalLink}>Contact Us</a>
+        </div>
+      </div>
 
         {/* Legal links container */}
         <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'center', gap: '15px', flexWrap: 'wrap' }}>
