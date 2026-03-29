@@ -844,26 +844,28 @@ function App() {
         })()}
       </div>
 
-      {/* --- NEW CURVY ORANGE BADGE FOOTER --- */}
+      {/* --- INVISIBLE SPACER FOR TOP GAP --- */}
+      <div style={{ height: '60px', width: '100%', flexShrink: 0 }}></div>
+
+      {/* --- NEW LEAN, WHITE-TEXT ORANGE BADGE FOOTER --- */}
       <div style={{
-        marginTop: 'auto', // Pushes it to the bottom
-        marginBottom: '40px', // Floats it off the bottom edge
-        backgroundColor: '#ff8c00', // Vibrant, fun orange
-        padding: '20px 30px',
-        // This specific border-radius creates a wavy, curvy, organic "blob" shape!
+        marginTop: 'auto', 
+        marginBottom: '120px', // Massive bottom gap so ad banners won't overlap it!
+        backgroundColor: '#ff8c00', 
+        padding: '12px 20px', // Shrunk the blob size
         borderRadius: '50px 20px 60px 25px / 20px 60px 25px 50px', 
-        border: '4px solid #1a1a1a',
-        boxShadow: '6px 6px 0px #1a1a1a',
+        border: '1px solid #1a1a1a', // Reduced border to almost none
+        boxShadow: '3px 3px 0px #1a1a1a', // Smaller shadow to match the thin border
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        maxWidth: '450px',
-        width: '90%',
+        maxWidth: '360px', // Made the whole blob narrower
+        width: '85%',
         textAlign: 'center'
       }}>
         <div style={{ 
-          fontSize: '0.8rem', 
-          color: '#1a1a1a', 
+          fontSize: '0.7rem', // Smaller text
+          color: '#ffffff', // Turned text white
           fontWeight: '900',
           fontFamily: '"Libertinus Serif", serif',
         }}>
@@ -875,7 +877,7 @@ function App() {
               color: '#ffffff', 
               fontWeight: '900', 
               textDecoration: 'none',
-              borderBottom: '2px solid #ffffff',
+              borderBottom: '1px solid #ffffff', // Thinner underline
               paddingBottom: '1px'
             }}
           >
@@ -884,7 +886,7 @@ function App() {
         </div>
 
         {/* Legal links container */}
-        <div style={{ marginTop: '15px', display: 'flex', justifyContent: 'center', gap: '20px', fontSize: '0.8rem', flexWrap: 'wrap' }}>
+        <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'center', gap: '15px', flexWrap: 'wrap' }}>
           <a href="/privacy-policy" style={styles.footerLegalLink}>Privacy Policy</a>
           <a href="/terms-of-service" style={styles.footerLegalLink}>Terms of Service</a>
           <a href="mailto:qaylingames@gmail.com" style={styles.footerLegalLink}>Contact Us</a>
@@ -964,14 +966,14 @@ const styles = {
   emailLink: { color: '#ffffff', background: '#ef4444', padding: '8px 16px', borderRadius: '12px', border: '3px solid #1a1a1a', textDecoration: 'none', fontWeight: '900', fontSize: '15px', margin: '0', boxShadow: '4px 4px 0px #1a1a1a', display: 'inline-block' },
 
   aboutText: { fontSize: '15px', fontWeight: '500', lineHeight: '1.6', marginBottom: '15px' },
-  
+
   // UPGRADED STYLE FOR LEGAL LINKS ON DARK BACKGROUND
   footerLegalLink: { 
-    color: '#1a1a1a', 
+    color: '#ffffff', // White text to match the signature
     textDecoration: 'underline', 
     fontWeight: '900', 
     fontFamily: "'Kalam', cursive", 
-    fontSize: '15px' 
+    fontSize: '13px' // Scaled down the font size
   },
 };
 
