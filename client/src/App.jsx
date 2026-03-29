@@ -850,8 +850,8 @@ function App() {
       {/* --- NEW LEAN, WHITE-TEXT ORANGE BADGE FOOTER --- */}
       <div style={{
         marginTop: 'auto', 
-        marginBottom: '120px', // Massive bottom gap so ad banners won't overlap it!
-        backgroundColor: '#ff8c00', 
+        marginBottom: '60px', // Massive bottom gap so ad banners won't overlap it!
+        backgroundColor: '#f0982d', 
         padding: '12px 20px', // Shrunk the blob size
         borderRadius: '50px 20px 60px 25px / 20px 60px 25px 50px', 
         border: '1px solid #1a1a1a', // Reduced border to almost none
@@ -864,7 +864,7 @@ function App() {
         textAlign: 'center'
       }}>
         <div style={{ 
-          fontSize: '0.7rem', // Smaller text
+          fontSize: '0.5rem', // Smaller text
           color: '#ffffff', // Turned text white
           fontWeight: '900',
           fontFamily: '"Libertinus Serif", serif',
@@ -875,7 +875,7 @@ function App() {
             rel="noopener noreferrer" 
             style={{ 
               color: '#ffffff', 
-              fontWeight: '900', 
+              fontWeight: '500', 
               textDecoration: 'none',
               borderBottom: '1px solid #ffffff', // Thinner underline
               paddingBottom: '1px'
@@ -971,7 +971,7 @@ const styles = {
   footerLegalLink: { 
     color: '#ffffff', // White text to match the signature
     textDecoration: 'underline', 
-    fontWeight: '900', 
+    fontWeight: '500', 
     fontFamily: "'Kalam', cursive", 
     fontSize: '13px' // Scaled down the font size
   },
