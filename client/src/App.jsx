@@ -843,17 +843,17 @@ function App() {
         })()}
       </div>
 
-      {/* --- BOTTOM DIVIDER LINE --- */}
-      <div style={{ 
-          width: '50%', 
-          height: '4px', 
-          backgroundColor: '#1a1a1a', 
-          marginTop: 'auto', 
-          marginBottom: '25px', 
-          marginInline: 'auto',
-          borderRadius: '10px', 
-          opacity: '0.6' 
-      }}></div>
+      {/* --- THE NEW DIVIDER LINE --- */}
+            <div style={{ 
+                width: '50%', 
+                height: '4px', 
+                backgroundColor: '#1a1a1a', 
+                marginTop: '60px', 
+                marginBottom: '10px',
+                marginInline: 'auto',
+                borderRadius: '10px', 
+                opacity: '0.6' 
+            }}></div>
 
       {/* --- NEW LEAN, WHITE-TEXT ORANGE BADGE FOOTER --- */}
       <div style={{
@@ -883,10 +883,12 @@ function App() {
             rel="noopener noreferrer" 
             style={{ 
               color: '#ffffff', 
+              fontFamily: '"Kalam", cursive',
               fontWeight: '400', 
-              textDecoration: 'none',
-              borderBottom: '0.25px solid #ffffff', 
-              paddingBottom: '0.5px'
+              textDecoration: 'underline', // Turns on the underline
+              textDecorationStyle: 'wavy', // Makes it wavy!
+              textDecorationColor: '#ffffff', // Keeps it white
+              textUnderlineOffset: '2px', // Pushes the wave down so it doesn't cut through the letters
             }}
           >
             Arpit Srivastava
