@@ -859,12 +859,12 @@ function App() {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        maxWidth: '300px', // Made the whole blob narrower
-        width: '65%',
+        maxWidth: '400px', // Made the whole blob narrower
+        width: '75%',
         textAlign: 'center'
       }}>
         <div style={{ 
-          fontSize: '0.5rem', // Smaller text
+          fontSize: '0.7rem', // Smaller text
           color: '#ffffff', // Turned text white
           fontWeight: '400',
           fontFamily: '"Libertinus Serif", serif',
