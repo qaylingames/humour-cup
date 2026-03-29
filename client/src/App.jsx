@@ -4,18 +4,18 @@ import { io } from 'socket.io-client';
 const socket = io('https://humour-cup-server.onrender.com');
 
 const uiTranslations = {
-  'English': { name: "Your Funny Name", create: "Create Room", orJoin: "OR JOIN A FRIEND", code: "CODE", join: "Join", rulebook: "👑 How to Play 👑", rule1: "Write your humorous response on each scenario.", rule2: "Reply with your humour punches in the chat round after each scenario.", rule3: "Vote the ones you find humorous.", rule4: "The player with the maximum Humour XP gets the Humour Cup.", submitPub: "🌍 Submit a Public Scenario 🌍", pubDesc: "Add your own scenario for humour cup. These come randomly to players opting for Public scenarios in the lobby.", pubPlace: "Type your custom scenario here...", submit: "Submit", lobby: "Lobby", roomCode: "ROOM CODE:", cat: "Category:", scen: "Scenarios:", lang: "Language:", secret: "🤫 Secretly Add to the Game Mix!", secPlace: "Write a surprise scenario...", addPool: "Add to Pool", totPool: "Total Custom Scenarios in Pool:", waitSquad: "Waiting for the squad...", host: "(Host)", launch: "Launch Game 🚀", waitMore: "Waiting for at least 1 more player...", waitHost: "Waiting for the host to start...", fetch: "Fetching Scenarios...", scenTitle: "Scenario", secLeft: "Seconds Left", typeHumour: "Type your humour...", subHumour: "Submit Humour", waitSlow: "Waiting for slower humans...", chatVote: "Chat & Vote Round", humourBtn: "Humorous!", replyBtn: "Reply", repPlace: "Reply...", send: "Send", cancel: "Cancel", done: "I'm Done Reading!", waiting: "Waiting...", upcoming: "Upcoming", enterRound: "Entering Round-", in: "in", seconds: "seconds", load: "Loading...", results: "Final Results", winners: "Winners", winner: "Winner", scoreboard: "Final Scoreboard", receipt: "🧾 MATCH RECEIPT", thanks: "Thanks for playing Humour Cup! 🏆", saveRec: "📸 Save this Match Receipt", playAgain: "Play Again (Host)", waitRes: "Waiting for Host to Restart...", adminVault: "Admin Vault View", backHome: "⬅ Back to Home", noScen: "No scenarios yet!" },
-  'Hindi': { name: "आपका मज़ेदार नाम", create: "रूम बनाएं", orJoin: "या दोस्त से जुड़ें", code: "कोड", join: "जुड़ें", rulebook: "👑 कैसे खेलें 👑", rule1: "प्रत्येक परिदृश्य पर अपनी मज़ेدار प्रतिक्रिया लिखें।", rule2: "परिदृश्य के बाद चैट राउंड में अपने हास्य का जवाब दें।", rule3: "जो आपको मज़ेदार लगें, उन्हें वोट दें।", rule4: "सबसे अधिक ह्यूमर XP वाले खिलाड़ी को ह्यूमर कप मिलता है।", submitPub: "🌍 सार्वजनिक परिदृश्य जमा करें 🌍", pubDesc: "ह्यूमर कप के लिए अपना परिदृश्य जोड़ें। ये उन खिलाड़ियों को बेतरतीब ढंग से आते हैं जो लॉबी में सार्वजनिक परिदृश्य चुनते हैं।", pubPlace: "अपना कस्टम परिदृश्य यहां टाइप करें...", submit: "जमा करें", lobby: "लॉबी", roomCode: "रूम कोड:", cat: "श्रेणी:", scen: "परिदृश्य:", lang: "भाषा:", secret: "🤫 चुपके से गेम में जोड़ें!", secPlace: "एक परिदृश्य लिखें...", addPool: "पूल में जोड़ें", totPool: "पूल में कुल कस्टम परिदृश्य:", waitSquad: "स्क्वाड की प्रतीक्षा में...", host: "(होस्ट)", launch: "गेम शुरू करें 🚀", waitMore: "1 और खिलाड़ी की प्रतीक्षा में...", waitHost: "होस्ट के शुरू करने की प्रतीक्षा में...", fetch: "परिदृश्य प्राप्त कर रहा है...", scenTitle: "परिदृश्य", secLeft: "सेकंड शेष", typeHumour: "अपना हास्य टाइप करें...", subHumour: "हास्य जमा करें", waitSlow: "धीमे इंसानों की प्रतीक्षा में...", chatVote: "चैट और वोट राउंड", humourBtn: "मज़ेदार!", replyBtn: "उत्तर दें", repPlace: "उत्तर...", send: "भेजें", cancel: "रद्द करें", done: "पढ़ना समाप्त कर लिया!", waiting: "प्रतीक्षा में...", upcoming: "आगामी", enterRound: "राउंड-", in: "में प्रवेश", seconds: "सेकंड में", load: "लोड हो रहा है...", results: "अंतिम परिणाम", winners: "विजेता", winner: "विजेता", scoreboard: "अंतिम स्कोरबोर्ड", receipt: "🧾 MATCH RECEIPT", thanks: "खेलने के लिए धन्यवाद! 🏆", saveRec: "📸 यह रसीद सहेजें", playAgain: "फिर से खेलें (होस्ट)", waitRes: "होस्ट की प्रतीक्षा में...", adminVault: "एडमिन वॉल्ट", backHome: "⬅ वापस", noScen: "कोई परिदृश्य नहीं!" },
-  'Spanish': { name: "Tu Nombre Divertido", create: "Crear Sala", orJoin: "O UNIRSE A UN AMIGO", code: "CÓDIGO", join: "Unirse", rulebook: "👑 Cómo Jugar 👑", rule1: "Escribe tu respuesta humorística en cada escenario.", rule2: "Responde con tus chistes en la ronda de chat.", rule3: "Vota los que te parezcan graciosos.", rule4: "El jugador con más XP gana la Copa.", submitPub: "🌍 Enviar Escenario Público 🌍", pubDesc: "Añade tu propio escenario para la copa de humor. Estos aparecen aleatoriamente a los jugadores que optan por escenarios públicos en el vestíbulo.", pubPlace: "Escribe tu escenario aquí...", submit: "Enviar", lobby: "Vestíbulo", roomCode: "CÓDIGO DE SALA:", cat: "Categoría:", scen: "Escenarios:", lang: "Idioma:", secret: "🤫 ¡Añadir en secreto!", secPlace: "Escribe un escenario sorpresa...", addPool: "Añadir", totPool: "Total de Escenarios Personalizados:", waitSquad: "Esperando al equipo...", host: "(Anfitrión)", launch: "Lanzar Juego 🚀", waitMore: "Esperando a 1 jugador más...", waitHost: "Esperando al anfitrión...", fetch: "Obteniendo Escenarios...", scenTitle: "Escenario", secLeft: "Segundos Restantes", typeHumour: "Escribe tu humor...", subHumour: "Enviar Humor", waitSlow: "Esperando a los lentos...", chatVote: "Ronda de Chat y Votos", humourBtn: "¡Gracioso!", replyBtn: "Responder", repPlace: "Responder...", send: "Enviar", cancel: "Cancelar", done: "¡Terminé de leer!", waiting: "Esperando...", upcoming: "Próximo", enterRound: "Entrando a la Ronda-", in: "en", seconds: "segundos", load: "Cargando...", results: "Resultados Finales", winners: "Ganadores", winner: "Ganador", scoreboard: "Marcador Final", receipt: "🧾 MATCH RECEIPT", thanks: "¡Gracias por jugar! 🏆", saveRec: "📸 Guardar este recibo", playAgain: "Jugar de nuevo", waitRes: "Esperando al anfitrión...", adminVault: "Bóveda Admin", backHome: "⬅ Volver", noScen: "¡Sin escenarios!" },
-  'French': { name: "Votre nom drôle", create: "Créer un Salon", orJoin: "OU REJOINDRE", code: "CODE", join: "Rejoindre", rulebook: "👑 Comment Jouer 👑", rule1: "Écrivez votre réponse humoristique.", rule2: "Répondez avec vos blagues dans le chat.", rule3: "Votez pour ceux que vous trouvez drôles.", rule4: "Le joueur avec le plus d'XP gagne.", submitPub: "🌍 Soumettre un scénario 🌍", pubDesc: "Ajoutez votre propre scénario. Ceux-ci apparaissent aléatoirement aux joueurs optant pour les scénarios publics dans le lobby.", pubPlace: "Tapez votre scénario ici...", submit: "Soumettre", lobby: "Lobby", roomCode: "CODE DU SALON:", cat: "Catégorie:", scen: "Scénarios:", lang: "Langue:", secret: "🤫 Ajouter secrètement !", secPlace: "Écrivez un scénario surprise...", addPool: "Ajouter", totPool: "Total personnalisés:", waitSquad: "En attente de l'équipe...", host: "(Hôte)", launch: "Lancer le jeu 🚀", waitMore: "En attente d'un joueur...", waitHost: "En attente de l'hôte...", fetch: "Récupération...", scenTitle: "Scénario", secLeft: "Secondes", typeHumour: "Tapez votre humour...", subHumour: "Soumettre l'humour", waitSlow: "En attente des humains lents...", chatVote: "Round de Chat & Vote", humourBtn: "Drôle !", replyBtn: "Répondre", repPlace: "Répondre...", send: "Envoyer", cancel: "Annuler", done: "J'ai fini !", waiting: "En attente...", upcoming: "À venir", enterRound: "Entrée au Round-", in: "dans", seconds: "secondes", load: "Chargement...", results: "Résultats Finaux", winners: "Gagnants", winner: "Gagnant", scoreboard: "Tableau de bord", receipt: "🧾 MATCH RECEIPT", thanks: "Merci d'avoir joué ! 🏆", saveRec: "📸 Sauvegarder ce reçu", playAgain: "Rejouer", waitRes: "En attente de l'hôte...", adminVault: "Vue Admin", backHome: "⬅ Retour", noScen: "Pas de scénarios !" },
-  'Mandarin': { name: "你的搞笑名字", create: "创建房间", orJoin: "或加入朋友", code: "代码", join: "加入", rulebook: "👑 怎么玩 👑", rule1: "在每个场景上写下你的幽默回应。", rule2: "在聊天回合中回复你的幽默段子。", rule3: "为你觉得好笑的投票。", rule4: "拥有最高幽默XP的玩家获胜。", submitPub: "🌍 提交公开场景 🌍", pubDesc: "添加你自己的幽默场景。这些场景会随机出现给在大厅选择公开场景的玩家。", pubPlace: "在这里输入你的场景...", submit: "提交", lobby: "大厅", roomCode: "房间代码：", cat: "类别：", scen: "场景：", lang: "语言：", secret: "🤫 秘密添加！", secPlace: "写一个惊喜场景...", addPool: "添加到池中", totPool: "自定义场景总数：", waitSquad: "等待队伍...", host: "(房主)", launch: "开始游戏 🚀", waitMore: "等待至少一名玩家...", waitHost: "等待房主开始...", fetch: "获取场景中...", scenTitle: "场景", secLeft: "剩余秒数", typeHumour: "输入你的幽默...", subHumour: "提交", waitSlow: "等待较慢的玩家...", chatVote: "聊天和投票回合", humourBtn: "好笑！", replyBtn: "回复", repPlace: "回复...", send: "发送", cancel: "取消", done: "我读完了！", waiting: "等待中...", upcoming: "即将到来", enterRound: "进入回合-", in: "还有", seconds: "秒", load: "加载中...", results: "最终结果", winners: "赢家", winner: "赢家", scoreboard: "最终记分牌", receipt: "🧾 MATCH RECEIPT", thanks: "感谢游玩！🏆", saveRec: "📸 保存收据", playAgain: "再玩一次", waitRes: "等待房主...", adminVault: "管理员", backHome: "⬅ 返回", noScen: "暂无场景！" },
-  'Arabic': { name: "اسمك المضحك", create: "إنشاء غرفة", orJoin: "أو الانضمام", code: "رمز", join: "انضمام", rulebook: "👑 كيف تلعب 👑", rule1: "اكتب ردك المضحك على كل سيناريو.", rule2: "رد بنكاتك في جولة الدردشة.", rule3: "صوت لمن تجده مضحكًا.", rule4: "اللاعب صاحب أعلى نقاط يفوز.", submitPub: "🌍 إرسال سيناريو 🌍", pubDesc: "أضف السيناريو الخاص بك. تظهر هذه بشكل عشوائي للاعبين الذين يختارون السيناريوهات العامة في اللوبي.", pubPlace: "اكتب هنا...", submit: "إرسال", lobby: "اللوبي", roomCode: "رمز الغرفة:", cat: "الفئة:", scen: "السيناريوهات:", lang: "اللغة:", secret: "🤫 أضف سرا!", secPlace: "اكتب مفاجأة...", addPool: "إضافة", totPool: "المجموع:", waitSquad: "في انتظار الفريق...", host: "(مضيف)", launch: "ابدأ اللعبة 🚀", waitMore: "في انتظار لاعب آخر...", waitHost: "في انتظار المضيف...", fetch: "جاري الجلب...", scenTitle: "سيناريو", secLeft: "ثواني", typeHumour: "اكتب نكتتك...", subHumour: "إرسال", waitSlow: "في انتظار الباقين...", chatVote: "الدردشة والتصويت", humourBtn: "مضحك!", replyBtn: "رد", repPlace: "رد...", send: "إرسال", cancel: "إلغاء", done: "انتهيت!", waiting: "انتظار...", upcoming: "القادم", enterRound: "دخول الجولة-", in: "في", seconds: "ثانية", load: "تحميل...", results: "النتائج", winners: "الفائزون", winner: "الفائز", scoreboard: "النقاط", receipt: "🧾 MATCH RECEIPT", thanks: "شكرا للعب! 🏆", saveRec: "📸 حفظ الإيصال", playAgain: "العب مرة أخرى", waitRes: "في انتظار المضيف...", adminVault: "المسؤول", backHome: "⬅ رجوع", noScen: "لا توجد سيناريوهات!" },
-  'Portuguese': { name: "Seu Nome Engraçado", create: "Criar Sala", orJoin: "OU ENTRAR", code: "CÓDIGO", join: "Entrar", rulebook: "👑 Como Jogar 👑", rule1: "Escreva sua resposta humorística.", rule2: "Responda no chat após cada cenário.", rule3: "Vote nas mais engraçadas.", rule4: "O jogador com mais XP ganha.", submitPub: "🌍 Enviar Cenário Público 🌍", pubDesc: "Adicione seu próprio cenário. Estes aparecem aleatoriamente para os jogadores que optam por cenários públicos no lobi.", pubPlace: "Digite seu cenário aqui...", submit: "Enviar", lobby: "Lobby", roomCode: "CÓDIGO DA SALA:", cat: "Categoria:", scen: "Cenários:", lang: "Idioma:", secret: "🤫 Adicionar em segredo!", secPlace: "Escreva um cenário surpresa...", addPool: "Adicionar", totPool: "Total de cenários:", waitSquad: "Esperando a equipe...", host: "(Host)", launch: "Lançar Jogo 🚀", waitMore: "Esperando mais 1 jogador...", waitHost: "Esperando o host...", fetch: "Buscando Cenários...", scenTitle: "Cenário", secLeft: "Segundos Restantes", typeHumour: "Digite seu humor...", subHumour: "Enviar Humor", waitSlow: "Esperando os lentos...", chatVote: "Rodada de Chat e Votos", humourBtn: "Engraçado!", replyBtn: "Responder", repPlace: "Responder...", send: "Enviar", cancel: "Cancelar", done: "Terminei de ler!", waiting: "Esperando...", upcoming: "Próximo", enterRound: "Entrando na Rodada-", in: "em", seconds: "segundos", load: "Carregando...", results: "Resultados Finais", winners: "Vencedores", winner: "Vencedor", scoreboard: "Placar Final", receipt: "🧾 MATCH RECEIPT", thanks: "Obrigado por jogar! 🏆", saveRec: "📸 Salvar este recibo", playAgain: "Jogar Novamente", waitRes: "Esperando o host...", adminVault: "Cofre Admin", backHome: "⬅ Voltar", noScen: "Sem cenários!" },
-  'German': { name: "Dein lustiger Name", create: "Raum erstellen", orJoin: "ODER BEITRETEN", code: "CODE", join: "Beitreten", rulebook: "👑 Wie man spielt 👑", rule1: "Schreibe deine humorvolle Antwort.", rule2: "Antworte mit Witzen in der Chat-Runde.", rule3: "Stimme für die lustigsten ab.", rule4: "Der Spieler mit den meisten XP gewinnt.", submitPub: "🌍 Szenario einreichen 🌍", pubDesc: "Füge dein eigenes Szenario hinzu. Diese erscheinen zufällig für Spieler, die sich in der Lobby für öffentliche Szenarien entscheiden.", pubPlace: "Tippe dein Szenario hier...", submit: "Einreichen", lobby: "Lobby", roomCode: "RAUMCODE:", cat: "Kategorie:", scen: "Szenarien:", lang: "Sprache:", secret: "🤫 Heimlich hinzufügen!", secPlace: "Schreibe ein Überraschungs-Szenario...", addPool: "Hinzufügen", totPool: "Gesamte eigene Szenarien:", waitSquad: "Warten auf das Team...", host: "(Host)", launch: "Spiel starten 🚀", waitMore: "Warten auf 1 weiteren Spieler...", waitHost: "Warten auf den Host...", fetch: "Lade Szenarien...", scenTitle: "Szenario", secLeft: "Sekunden übrig", typeHumour: "Tippe deinen Humor...", subHumour: "Humor einreichen", waitSlow: "Warten auf die Langsamen...", chatVote: "Chat & Abstimmung", humourBtn: "Witzig!", replyBtn: "Antworten", repPlace: "Antworten...", send: "Senden", cancel: "Abbrechen", done: "Ich bin fertig!", waiting: "Warten...", upcoming: "Kommend", enterRound: "Runde-", in: "in", seconds: "Sekunden", load: "Lädt...", results: "Endergebnisse", winners: "Gewinner", winner: "Gewinner", scoreboard: "Endstand", receipt: "🧾 MATCH RECEIPT", thanks: "Danke fürs Spielen! 🏆", saveRec: "📸 Beleg speichern", playAgain: "Nochmal spielen", waitRes: "Warten auf Host...", adminVault: "Admin-Tresor", backHome: "⬅ Zurück", noScen: "Noch keine Szenarien!" },
-  'Japanese': { name: "あなたの面白い名前", create: "ルームを作成", orJoin: "または参加", code: "コード", join: "参加", rulebook: "👑 遊び方 👑", rule1: "各お題に面白い回答を書きます。", rule2: "チャットでジョークを返信します。", rule3: "面白いものに投票します。", rule4: "XPが最も多いプレイヤーの勝ちです。", submitPub: "🌍 公開お題を投稿 🌍", pubDesc: "自分のお題を追加してください。これらは、ロビーで公開お題を選択したプレイヤーにランダムに出題されます。", pubPlace: "ここにお題を入力...", submit: "送信", lobby: "ロビー", roomCode: "ルームコード:", cat: "カテゴリー:", scen: "お題:", lang: "言語:", secret: "🤫 こっそり追加！", secPlace: "サプライズお題を書く...", addPool: "追加", totPool: "カスタムお題の合計:", waitSquad: "チームを待っています...", host: "(ホスト)", launch: "ゲーム開始 🚀", waitMore: "あと1人待っています...", waitHost: "ホストを待っています...", fetch: "お題を取得中...", scenTitle: "お題", secLeft: "残り秒数", typeHumour: "ユーモアを入力...", subHumour: "送信", waitSlow: "他のプレイヤーを待っています...", chatVote: "チャット＆投票", humourBtn: "面白い！", replyBtn: "返信", repPlace: "返信...", send: "送信", cancel: "キャンセル", done: "読み終わりました！", waiting: "待機中...", upcoming: "次", enterRound: "ラウンド-", in: "開始まで", seconds: "秒", load: "ロード中...", results: "最終結果", winners: "勝者", winner: "勝者", scoreboard: "最終スコアボード", receipt: "🧾 MATCH RECEIPT", thanks: "遊んでくれてありがとう！🏆", saveRec: "📸 このレシートを保存", playAgain: "もう一度プレイ", waitRes: "ホストを待っています...", adminVault: "管理者", backHome: "⬅ 戻る", noScen: "まだお題がありません！" },
-  'Korean': { name: "재미있는 이름", create: "방 만들기", orJoin: "또는 참가", code: "코드", join: "참가", rulebook: "👑 플레이 방법 👑", rule1: "각 시나리오에 재미있는 답변을 쓰세요.", rule2: "채팅 라운드에서 농담을 주고받으세요.", rule3: "재미있는 것에 투표하세요.", rule4: "가장 많은 XP를 얻은 사람이 승리합니다.", submitPub: "🌍 공개 시나리오 제출 🌍", pubDesc: "나만의 시나리오를 추가하세요. 이 시나리오는 로비에서 공개 시나리오를 선택한 플레이어에게 무작위로 표시됩니다。", pubPlace: "여기에 시나리오를 입력하세요...", submit: "제출", lobby: "로비", roomCode: "방 코드:", cat: "카테고리:", scen: "시나리오:", lang: "언어:", secret: "🤫 몰래 추가하기!", secPlace: "깜짝 시나리오 쓰기...", addPool: "추가", totPool: "총 커스텀 시나리오:", waitSquad: "팀을 기다리는 중...", host: "(방장)", launch: "게임 시작 🚀", waitMore: "1명 더 기다리는 중...", waitHost: "방장을 기다리는 중...", fetch: "시나리오 가져오는 중...", scenTitle: "시나리오", secLeft: "초 남음", typeHumour: "유머를 입력하세요...", subHumour: "제출", waitSlow: "다른 플레이어 기다리는 중...", chatVote: "채팅 및 투표 라운드", humourBtn: "웃겨요!", replyBtn: "답글", repPlace: "답글...", send: "보내기", cancel: "취소", done: "다 읽었어요!", waiting: "대기 중...", upcoming: "다음", enterRound: "라운드-", in: "시작까지", 초: "seconds", load: "로딩 중...", results: "최종 결과", winners: "우승자들", winner: "우승자", scoreboard: "최종 점수판", receipt: "🧾 MATCH RECEIPT", thanks: "플레이해주셔서 감사합니다! 🏆", saveRec: "📸 이 영수증 저장", playAgain: "다시 플레이", waitRes: "방장을 기다리는 중...", adminVault: "관리자 금고", backHome: "⬅ 뒤로", noScen: "아직 시나리오가 없습니다!" },
-  'Indonesian': { name: "Nama Lucumu", create: "Buat Ruang", orJoin: "ATAU GABUNG", code: "KODE", join: "Gabung", rulebook: "👑 Cara Bermain 👑", rule1: "Tulis respons lucumu.", rule2: "Balas dengan candaan di ronde obrolan.", rule3: "Pilih yang menurutmu lucu.", rule4: "Pemain dengan XP terbanyak menang.", submitPub: "🌍 Kirim Skenario 🌍", pubDesc: "Tambahkan skenariomu sendiri. Ini akan muncul secara acak kepada pemain yang memilih skenario publik di lobi.", pubPlace: "Ketik skenariomu di sini...", submit: "Kirim", lobby: "Lobi", roomCode: "KODE RUANG:", cat: "Kategori:", scen: "Skenario:", lang: "Bahasa:", secret: "🤫 Tambah diam-diam!", secPlace: "Tulis skenario kejutan...", addPool: "Tambah", totPool: "Total Skenario Khusus:", waitSquad: "Menunggu skuad...", host: "(Host)", launch: "Mulai Game 🚀", waitMore: "Menunggu 1 pemain lagi...", waitHost: "Menunggu host...", fetch: "Mengambil Skenario...", scenTitle: "Skenario", secLeft: "Detik Tersisa", typeHumour: "Ketik lucumu...", subHumour: "Kirim Kelucuan", waitSlow: "Menunggu yang lambat...", chatVote: "Ronde Obrolan & Pilih", humourBtn: "Lucu!", replyBtn: "Balas", repPlace: "Balas...", send: "Kirim", cancel: "Batal", done: "Saya Selesai Membaca!", waiting: "Menunggu...", upcoming: "Mendatang", enterRound: "Masuk Ronde-", in: "dalam", seconds: "detik", load: "Memuat...", results: "Hasil Akhir", winners: "Pemenang", winner: "Pemenang", scoreboard: "Papan Skor", receipt: "🧾 MATCH RECEIPT", thanks: "Terima kasih sudah bermain! 🏆", saveRec: "📸 Simpan struk ini", playAgain: "Main Lagi", waitRes: "Menunggu Host...", adminVault: "Brankas Admin", backHome: "⬅ Kembali", noScen: "Belum ada skenario!" },
-  'Russian': { name: "Твое смешное имя", create: "Создать комнату", orJoin: "ИЛИ ПРИСОЕДИНИТЬСЯ", code: "КОД", join: "Вход", rulebook: "👑 Как играть 👑", rule1: "Напиши смешной ответ на сценарий.", rule2: "Отвечай шутками в чате.", rule3: "Голосуй за самые смешные.", rule4: "Игрок с наибольшим XP побеждает.", submitPub: "🌍 Предложить сценарий 🌍", pubDesc: "Добавь свой сценарий для игры. Они случайным образом выпадают игрокам, выбравшим публичные сценарии в лобби.", pubPlace: "Введи свой сценарий здесь...", submit: "Отправить", lobby: "Лобби", roomCode: "КОД КОМНАТЫ:", cat: "Категория:", scen: "Сценарии:", lang: "Язык:", secret: "🤫 Добавить тайно!", secPlace: "Напиши сценарий-сюрприз...", addPool: "Добавить", totPool: "Всего сценариев:", waitSquad: "Ждем команду...", host: "(Хост)", launch: "Запуск 🚀", waitMore: "Ждем еще 1 игрока...", waitHost: "Ждем хоста...", fetch: "Получение...", scenTitle: "Сценарий", secLeft: "Секунд осталось", typeHumour: "Введи шутку...", subHumour: "Отправить", waitSlow: "Ждем остальных...", chatVote: "Чат и Голосование", humourBtn: "Смешно!", replyBtn: "Ответить", repPlace: "Ответить...", send: "Отправить", cancel: "Отмена", done: "Я прочитал!", waiting: "Ожидание...", upcoming: "Следующий", enterRound: "Начало раунда-", in: "через", seconds: "секунд", load: "Загрузка...", results: "Результаты", winners: "Победители", winner: "Победитель", scoreboard: "Счет", receipt: "🧾 MATCH RECEIPT", thanks: "Спасибо за игру! 🏆", saveRec: "📸 Сохранить этот чек", playAgain: "Играть снова", waitRes: "Ждем хоста...", adminVault: "Хранилище Админа", backHome: "⬅ Назад", noScen: "Нет сценариев!" }
+  'English': { name: "Your Funny Name", create: "Create Room", orJoin: "OR JOIN A FRIEND", code: "CODE", join: "Join", rulebook: "👑 How to Play 👑", rule1: "Write your humorous response on each scenario.", rule2: "Reply with your humour punches in the chat round after each scenario.", rule3: "Vote the ones you find humorous.", rule4: "The player with the maximum Humour XP gets the Humour Cup.", submitPub: "🌍 Submit your humorous Scenarios for Humour Cup players 🌍", pubDesc: "These come randomly to Humour Cup players opting for Public scenarios in the Lobby.", pubPlace: "Type your custom scenario here...", submit: "Submit", lobby: "Lobby", roomCode: "ROOM CODE:", cat: "Category:", scen: "Scenarios:", lang: "Language:", secret: "🤫 Secretly Add to the Game Mix!", secPlace: "Write a surprise scenario...", addPool: "Add to Pool", totPool: "Total Custom Scenarios in Pool:", addCustomAlso: "Add your custom humorous scenarios to the Public scenario box below as well, if suitable.", waitSquad: "Waiting for the squad...", host: "(Host)", launch: "Launch Game 🚀", waitMore: "Waiting for at least 1 more player...", waitHost: "Waiting for the host to start...", fetch: "Fetching Scenarios...", scenTitle: "Scenario", secLeft: "Seconds Left", typeHumour: "Type your humour...", subHumour: "Submit Humour", waitSlow: "Waiting for slower humans...", chatVote: "Chat & Vote Round", humourBtn: "Humorous!", replyBtn: "Reply", repPlace: "Reply...", send: "Send", cancel: "Cancel", done: "I'm Done Reading!", waiting: "Waiting...", upcoming: "Upcoming", enterRound: "Entering Round-", in: "in", seconds: "seconds", load: "Loading...", results: "Final Results", winners: "Winners", winner: "Winner", scoreboard: "Final Scoreboard", receipt: "🧾 MATCH RECEIPT", thanks: "Thanks for playing Humour Cup! 🏆", saveRec: "📸 Save this Match Receipt", playAgain: "Play Again (Host)", waitRes: "Waiting for Host to Restart...", adminVault: "Admin Vault View", backHome: "⬅ Back to Home", noScen: "No scenarios yet!", madeBy: "⚡made by ", toSpark: " to spark your humour⚡", privacy: "Privacy Policy", terms: "Terms of Service", contact: "Contact Us" },
+  'Hindi': { name: "आपका मज़ेदार नाम", create: "रूम बनाएं", orJoin: "या दोस्त से जुड़ें", code: "कोड", join: "जुड़ें", rulebook: "👑 कैसे खेलें 👑", rule1: "प्रत्येक परिदृश्य पर अपनी मज़ेदार प्रतिक्रिया लिखें।", rule2: "परिदृश्य के बाद चैट राउंड में अपने हास्य का जवाब दें।", rule3: "जो आपको मज़ेदार लगें, उन्हें वोट दें।", rule4: "सबसे अधिक ह्यूमर XP वाले खिलाड़ी को ह्यूमर कप मिलता है।", submitPub: "🌍 ह्यूमर कप खिलाड़ियों के लिए अपने मज़ेदार परिदृश्य जमा करें 🌍", pubDesc: "ये लॉबी में सार्वजनिक परिदृश्य चुनने वाले ह्यूमर कप खिलाड़ियों को बेतरतीब ढंग से आते हैं।", pubPlace: "अपना कस्टम परिदृश्य यहां टाइप करें...", submit: "जमा करें", lobby: "लॉबी", roomCode: "रूम कोड:", cat: "श्रेणी:", scen: "परिदृश्य:", lang: "भाषा:", secret: "🤫 चुपके से गेम में जोड़ें!", secPlace: "एक परिदृश्य लिखें...", addPool: "पूल में जोड़ें", totPool: "पूल में कुल कस्टम परिदृश्य:", addCustomAlso: "यदि उपयुक्त हो, तो कृपया अपने कस्टम मज़ेदार परिदृश्यों को नीचे दिए गए सार्वजनिक परिदृश्य बॉक्स में भी जोड़ें।", waitSquad: "स्क्वाड की प्रतीक्षा में...", host: "(होस्ट)", launch: "गेम शुरू करें 🚀", waitMore: "1 और खिलाड़ी की प्रतीक्षा में...", waitHost: "होस्ट के शुरू करने की प्रतीक्षा में...", fetch: "परिदृश्य प्राप्त कर रहा है...", scenTitle: "परिदृश्य", secLeft: "सेकंड शेष", typeHumour: "अपना हास्य टाइप करें...", subHumour: "हास्य जमा करें", waitSlow: "धीमे इंसानों की प्रतीक्षा में...", chatVote: "चैट और वोट राउंड", humourBtn: "मज़ेदार!", replyBtn: "उत्तर दें", repPlace: "उत्तर...", send: "भेजें", cancel: "रद्द करें", done: "पढ़ना समाप्त कर लिया!", waiting: "प्रतीक्षा में...", upcoming: "आगामी", enterRound: "राउंड-", in: "में प्रवेश", seconds: "सेकंड में", load: "लोड हो रहा है...", results: "अंतिम परिणाम", winners: "विजेता", winner: "विजेता", scoreboard: "अंतिम स्कोरबोर्ड", receipt: "🧾 MATCH RECEIPT", thanks: "खेलने के लिए धन्यवाद! 🏆", saveRec: "📸 यह रसीद सहेजें", playAgain: "फिर से खेलें (होस्ट)", waitRes: "होस्ट की प्रतीक्षा में...", adminVault: "एडमिन वॉल्ट", backHome: "⬅ वापस", noScen: "कोई परिदृश्य नहीं!", madeBy: "⚡निर्माता ", toSpark: " आपके हास्य को जगाने के लिए⚡", privacy: "गोपनीयता नीति", terms: "सेवा की शर्तें", contact: "संपर्क करें" },
+  'Spanish': { name: "Tu Nombre Divertido", create: "Crear Sala", orJoin: "O UNIRSE A UN AMIGO", code: "CÓDIGO", join: "Unirse", rulebook: "👑 Cómo Jugar 👑", rule1: "Escribe tu respuesta humorística en cada escenario.", rule2: "Responde con tus chistes en la ronda de chat.", rule3: "Vota los que te parezcan graciosos.", rule4: "El jugador con más XP gana la Copa.", submitPub: "🌍 Envía tus Escenarios para Humour Cup 🌍", pubDesc: "Estos aparecen aleatoriamente a los jugadores de Humour Cup que optan por escenarios Públicos en el Vestíbulo.", pubPlace: "Escribe tu escenario aquí...", submit: "Enviar", lobby: "Vestíbulo", roomCode: "CÓDIGO DE SALA:", cat: "Categoría:", scen: "Escenarios:", lang: "Idioma:", secret: "🤫 ¡Añadir en secreto!", secPlace: "Escribe un escenario sorpresa...", addPool: "Añadir", totPool: "Total de Escenarios Personalizados:", addCustomAlso: "Añade también tus escenarios a la caja de escenarios Públicos de abajo, si son adecuados.", waitSquad: "Esperando al equipo...", host: "(Anfitrión)", launch: "Lanzar Juego 🚀", waitMore: "Esperando a 1 jugador más...", waitHost: "Esperando al anfitrión...", fetch: "Obteniendo Escenarios...", scenTitle: "Escenario", secLeft: "Segundos Restantes", typeHumour: "Escribe tu humor...", subHumour: "Enviar Humor", waitSlow: "Esperando a los lentos...", chatVote: "Ronda de Chat y Votos", humourBtn: "¡Gracioso!", replyBtn: "Responder", repPlace: "Responder...", send: "Enviar", cancel: "Cancelar", done: "¡Terminé de leer!", waiting: "Esperando...", upcoming: "Próximo", enterRound: "Entrando a la Ronda-", in: "en", seconds: "segundos", load: "Cargando...", results: "Resultados Finales", winners: "Ganadores", winner: "Ganador", scoreboard: "Marcador Final", receipt: "🧾 MATCH RECEIPT", thanks: "¡Gracias por jugar! 🏆", saveRec: "📸 Guardar este recibo", playAgain: "Jugar de nuevo", waitRes: "Esperando al anfitrión...", adminVault: "Bóveda Admin", backHome: "⬅ Volver", noScen: "¡Sin escenarios!", madeBy: "⚡creado por ", toSpark: " para despertar tu humor⚡", privacy: "Política de Privacidad", terms: "Términos de Servicio", contact: "Contáctanos" },
+  'French': { name: "Votre nom drôle", create: "Créer un Salon", orJoin: "OU REJOINDRE", code: "CODE", join: "Rejoindre", rulebook: "👑 Comment Jouer 👑", rule1: "Écrivez votre réponse humoristique.", rule2: "Répondez avec vos blagues dans le chat.", rule3: "Votez pour ceux que vous trouvez drôles.", rule4: "Le joueur avec le plus d'XP gagne.", submitPub: "🌍 Soumettez vos Scénarios pour Humour Cup 🌍", pubDesc: "Ceux-ci apparaissent aléatoirement aux joueurs optant pour les scénarios Publics dans le Lobby.", pubPlace: "Tapez votre scénario ici...", submit: "Soumettre", lobby: "Lobby", roomCode: "CODE DU SALON:", cat: "Catégorie:", scen: "Scénarios:", lang: "Langue:", secret: "🤫 Ajouter secrètement !", secPlace: "Écrivez un scénario surprise...", addPool: "Ajouter", totPool: "Total personnalisés:", addCustomAlso: "Ajoutez également vos scénarios dans la boîte de scénario Public ci-dessous, si approprié.", waitSquad: "En attente de l'équipe...", host: "(Hôte)", launch: "Lancer le jeu 🚀", waitMore: "En attente d'un joueur...", waitHost: "En attente de l'hôte...", fetch: "Récupération...", scenTitle: "Scénario", secLeft: "Secondes", typeHumour: "Tapez votre humour...", subHumour: "Soumettre l'humour", waitSlow: "En attente des humains lents...", chatVote: "Round de Chat & Vote", humourBtn: "Drôle !", replyBtn: "Répondre", repPlace: "Répondre...", send: "Envoyer", cancel: "Annuler", done: "J'ai fini !", waiting: "En attente...", upcoming: "À venir", enterRound: "Entrée au Round-", in: "dans", seconds: "secondes", load: "Chargement...", results: "Résultats Finaux", winners: "Gagnants", winner: "Gagnant", scoreboard: "Tableau de bord", receipt: "🧾 MATCH RECEIPT", thanks: "Merci d'avoir joué ! 🏆", saveRec: "📸 Sauvegarder ce reçu", playAgain: "Rejouer", waitRes: "En attente de l'hôte...", adminVault: "Vue Admin", backHome: "⬅ Retour", noScen: "Pas de scénarios !", madeBy: "⚡créé par ", toSpark: " pour éveiller votre humour⚡", privacy: "Politique de confidentialité", terms: "Conditions d'utilisation", contact: "Nous contacter" },
+  'Mandarin': { name: "你的搞笑名字", create: "创建房间", orJoin: "或加入朋友", code: "代码", join: "加入", rulebook: "👑 怎么玩 👑", rule1: "在每个场景上写下你的幽默回应。", rule2: "在聊天回合中回复你的幽默段子。", rule3: "为你觉得好笑的投票。", rule4: "拥有最高幽默XP的玩家获胜。", submitPub: "🌍 为Humour Cup玩家提交你的幽默场景 🌍", pubDesc: "这些场景会随机出现给在大厅选择公开场景的Humour Cup玩家。", pubPlace: "在这里输入你的场景...", submit: "提交", lobby: "大厅", roomCode: "房间代码：", cat: "类别：", scen: "场景：", lang: "语言：", secret: "🤫 秘密添加！", secPlace: "写一个惊喜场景...", addPool: "添加到池中", totPool: "自定义场景总数：", addCustomAlso: "如果合适的话，也将您的自定义幽默场景添加到下方的公开场景框中。", waitSquad: "等待队伍...", host: "(房主)", launch: "开始游戏 🚀", waitMore: "等待至少一名玩家...", waitHost: "等待房主开始...", fetch: "获取场景中...", scenTitle: "场景", secLeft: "剩余秒数", typeHumour: "输入你的幽默...", subHumour: "提交", waitSlow: "等待较慢的玩家...", chatVote: "聊天和投票回合", humourBtn: "好笑！", replyBtn: "回复", repPlace: "回复...", send: "发送", cancel: "取消", done: "我读完了！", waiting: "等待中...", upcoming: "即将到来", enterRound: "进入回合-", in: "还有", seconds: "秒", load: "加载中...", results: "最终结果", winners: "赢家", winner: "赢家", scoreboard: "最终记分牌", receipt: "🧾 MATCH RECEIPT", thanks: "感谢游玩！🏆", saveRec: "📸 保存收据", playAgain: "再玩一次", waitRes: "等待房主...", adminVault: "管理员", backHome: "⬅ 返回", noScen: "暂无场景！", madeBy: "⚡由 ", toSpark: " 制作，点燃你的幽默⚡", privacy: "隐私政策", terms: "服务条款", contact: "联系我们" },
+  'Arabic': { name: "اسمك المضحك", create: "إنشاء غرفة", orJoin: "أو الانضمام", code: "رمز", join: "انضمام", rulebook: "👑 كيف تلعب 👑", rule1: "اكتب ردك المضحك على كل سيناريو.", rule2: "رد بنكاتك في جولة الدردشة.", rule3: "صوت لمن تجده مضحكًا.", rule4: "اللاعب صاحب أعلى نقاط يفوز.", submitPub: "🌍 أرسل سيناريوهاتك المضحكة للاعبي Humour Cup 🌍", pubDesc: "تظهر هذه السيناريوهات عشوائيًا للاعبي Humour Cup الذين يختارون السيناريوهات العامة في اللوبي.", pubPlace: "اكتب هنا...", submit: "إرسال", lobby: "اللوبي", roomCode: "رمز الغرفة:", cat: "الفئة:", scen: "السيناريوهات:", lang: "اللغة:", secret: "🤫 أضف سرا!", secPlace: "اكتب مفاجأة...", addPool: "إضافة", totPool: "المجموع:", addCustomAlso: "أضف سيناريوهاتك المضحكة المخصصة إلى مربع السيناريو العام أدناه أيضًا ، إذا كانت مناسبة.", waitSquad: "في انتظار الفريق...", host: "(مضيف)", launch: "ابدأ اللعبة 🚀", waitMore: "في انتظار لاعب آخر...", waitHost: "في انتظار المضيف...", fetch: "جاري الجلب...", scenTitle: "سيناريو", secLeft: "ثواني", typeHumour: "اكتب نكتتك...", subHumour: "إرسال", waitSlow: "في انتظار الباقين...", chatVote: "الدردشة والتصويت", humourBtn: "مضحك!", replyBtn: "رد", repPlace: "رد...", send: "إرسال", cancel: "إلغاء", done: "انتهيت!", waiting: "انتظار...", upcoming: "القادم", enterRound: "دخول الجولة-", in: "في", seconds: "ثانية", load: "تحميل...", results: "النتائج", winners: "الفائزون", winner: "الفائز", scoreboard: "النقاط", receipt: "🧾 MATCH RECEIPT", thanks: "شكرا للعب! 🏆", saveRec: "📸 حفظ الإيصال", playAgain: "العب مرة أخرى", waitRes: "في انتظار المضيف...", adminVault: "المسؤول", backHome: "⬅ رجوع", noScen: "لا توجد سيناريوهات!", madeBy: "⚡صنع بواسطة ", toSpark: " لإشعال حس الفكاهة لديك⚡", privacy: "سياسة الخصوصية", terms: "شروط الخدمة", contact: "اتصل بنا" },
+  'Portuguese': { name: "Seu Nome Engraçado", create: "Criar Sala", orJoin: "OU ENTRAR", code: "CÓDIGO", join: "Entrar", rulebook: "👑 Como Jogar 👑", rule1: "Escreva sua resposta humorística.", rule2: "Responda no chat após cada cenário.", rule3: "Vote nas mais engraçadas.", rule4: "O jogador com mais XP ganha.", submitPub: "🌍 Envie seus Cenários para o Humour Cup 🌍", pubDesc: "Estes aparecem aleatoriamente para os jogadores do Humour Cup que optam por cenários Públicos no Lobby.", pubPlace: "Digite seu cenário aqui...", submit: "Enviar", lobby: "Lobby", roomCode: "CÓDIGO DA SALA:", cat: "Categoria:", scen: "Cenários:", lang: "Idioma:", secret: "🤫 Adicionar em segredo!", secPlace: "Escreva um cenário surpresa...", addPool: "Adicionar", totPool: "Total de cenários:", addCustomAlso: "Adicione também seus cenários à caixa de cenário Público abaixo, se adequado.", waitSquad: "Esperando a equipe...", host: "(Host)", launch: "Lançar Jogo 🚀", waitMore: "Esperando mais 1 jogador...", waitHost: "Esperando o host...", fetch: "Buscando Cenários...", scenTitle: "Cenário", secLeft: "Segundos Restantes", typeHumour: "Digite seu humor...", subHumour: "Enviar Humor", waitSlow: "Esperando os lentos...", chatVote: "Rodada de Chat e Votos", humourBtn: "Engraçado!", replyBtn: "Responder", repPlace: "Responder...", send: "Enviar", cancel: "Cancelar", done: "Terminei de ler!", waiting: "Esperando...", upcoming: "Próximo", enterRound: "Entrando na Rodada-", in: "em", seconds: "segundos", load: "Carregando...", results: "Resultados Finais", winners: "Vencedores", winner: "Vencedor", scoreboard: "Placar Final", receipt: "🧾 MATCH RECEIPT", thanks: "Obrigado por jogar! 🏆", saveRec: "📸 Salvar este recibo", playAgain: "Jogar Novamente", waitRes: "Esperando o host...", adminVault: "Cofre Admin", backHome: "⬅ Voltar", noScen: "Sem cenários!", madeBy: "⚡criado por ", toSpark: " para despertar seu humor⚡", privacy: "Política de Privacidade", terms: "Termos de Serviço", contact: "Contate-Nos" },
+  'German': { name: "Dein lustiger Name", create: "Raum erstellen", orJoin: "ODER BEITRETEN", code: "CODE", join: "Beitreten", rulebook: "👑 Wie man spielt 👑", rule1: "Schreibe deine humorvolle Antwort.", rule2: "Antworte mit Witzen in der Chat-Runde.", rule3: "Stimme für die lustigsten ab.", rule4: "Der Spieler mit den meisten XP gewinnt.", submitPub: "🌍 Reiche deine Szenarien für Humour Cup ein 🌍", pubDesc: "Diese erscheinen zufällig für Humour Cup-Spieler, die sich in der Lobby für öffentliche Szenarien entscheiden.", pubPlace: "Tippe dein Szenario hier...", submit: "Einreichen", lobby: "Lobby", roomCode: "RAUMCODE:", cat: "Kategorie:", scen: "Szenarien:", lang: "Sprache:", secret: "🤫 Heimlich hinzufügen!", secPlace: "Schreibe ein Überraschungs-Szenario...", addPool: "Hinzufügen", totPool: "Gesamte eigene Szenarien:", addCustomAlso: "Fügen Sie Ihre Szenarien nach Möglichkeit auch der Box für öffentliche Szenarien unten hinzu.", waitSquad: "Warten auf das Team...", host: "(Host)", launch: "Spiel starten 🚀", waitMore: "Warten auf 1 weiteren Spieler...", waitHost: "Warten auf den Host...", fetch: "Lade Szenarien...", scenTitle: "Szenario", secLeft: "Sekunden übrig", typeHumour: "Tippe deinen Humor...", subHumour: "Humor einreichen", waitSlow: "Warten auf die Langsamen...", chatVote: "Chat & Abstimmung", humourBtn: "Witzig!", replyBtn: "Antworten", repPlace: "Antworten...", send: "Senden", cancel: "Abbrechen", done: "Ich bin fertig!", waiting: "Warten...", upcoming: "Kommend", enterRound: "Runde-", in: "in", seconds: "Sekunden", load: "Lädt...", results: "Endergebnisse", winners: "Gewinner", winner: "Gewinner", scoreboard: "Endstand", receipt: "🧾 MATCH RECEIPT", thanks: "Danke fürs Spielen! 🏆", saveRec: "📸 Beleg speichern", playAgain: "Nochmal spielen", waitRes: "Warten auf Host...", adminVault: "Admin-Tresor", backHome: "⬅ Zurück", noScen: "Noch keine Szenarien!", madeBy: "⚡erstellt von ", toSpark: " um deinen Humor zu wecken⚡", privacy: "Datenschutzrichtlinie", terms: "Nutzungsbedingungen", contact: "Kontaktiere uns" },
+  'Japanese': { name: "あなたの面白い名前", create: "ルームを作成", orJoin: "または参加", code: "コード", join: "参加", rulebook: "👑 遊び方 👑", rule1: "各お題に面白い回答を書きます。", rule2: "チャットでジョークを返信します。", rule3: "面白いものに投票します。", rule4: "XPが最も多いプレイヤーの勝ちです。", submitPub: "🌍 Humour Cupプレイヤーのためにお題を送信 🌍", pubDesc: "これらはロビーで公開お題を選択したHumour Cupプレイヤーにランダムに出題されます。", pubPlace: "ここにお題を入力...", submit: "送信", lobby: "ロビー", roomCode: "ルームコード:", cat: "カテゴリー:", scen: "お題:", lang: "言語:", secret: "🤫 こっそり追加！", secPlace: "サプライズお題を書く...", addPool: "追加", totPool: "カスタムお題の合計:", addCustomAlso: "適切であれば、下の公開お題ボックスにもカスタムのお題を追加してください。", waitSquad: "チームを待っています...", host: "(ホスト)", launch: "ゲーム開始 🚀", waitMore: "あと1人待っています...", waitHost: "ホストを待っています...", fetch: "お題を取得中...", scenTitle: "お題", secLeft: "残り秒数", typeHumour: "ユーモアを入力...", subHumour: "送信", waitSlow: "他のプレイヤーを待っています...", chatVote: "チャット＆投票", humourBtn: "面白い！", replyBtn: "返信", repPlace: "返信...", send: "送信", cancel: "キャンセル", done: "読み終わりました！", waiting: "待機中...", upcoming: "次", enterRound: "ラウンド-", in: "開始まで", seconds: "秒", load: "ロード中...", results: "最終結果", winners: "勝者", winner: "勝者", scoreboard: "最終スコアボード", receipt: "🧾 MATCH RECEIPT", thanks: "遊んでくれてありがとう！🏆", saveRec: "📸 このレシートを保存", playAgain: "もう一度プレイ", waitRes: "ホストを待っています...", adminVault: "管理者", backHome: "⬅ 戻る", noScen: "まだお題がありません！", madeBy: "⚡作成者 ", toSpark: " あなたのユーモアを刺激するために⚡", privacy: "プライバシーポリシー", terms: "利用規約", contact: "お問い合わせ" },
+  'Korean': { name: "재미있는 이름", create: "방 만들기", orJoin: "또는 참가", code: "코드", join: "참가", rulebook: "👑 플레이 방법 👑", rule1: "각 시나리오에 재미있는 답변을 쓰세요.", rule2: "채팅 라운드에서 농담을 주고받으세요.", rule3: "재미있는 것에 투표하세요.", rule4: "가장 많은 XP를 얻은 사람이 승리합니다.", submitPub: "🌍 Humour Cup 플레이어를 위한 시나리오 제출 🌍", pubDesc: "이 시나리오들은 로비에서 공개 시나리오를 선택한 Humour Cup 플레이어에게 무작위로 나타납니다.", pubPlace: "여기에 시나리오를 입력하세요...", submit: "제출", lobby: "로비", roomCode: "방 코드:", cat: "카테고리:", scen: "시나리오:", lang: "언어:", secret: "🤫 몰래 추가하기!", secPlace: "깜짝 시나리오 쓰기...", addPool: "추가", totPool: "총 커스텀 시나리오:", addCustomAlso: "적절한 경우 아래의 공개 시나리오 상자에도 맞춤형 시나리오를 추가하세요.", waitSquad: "팀을 기다리는 중...", host: "(방장)", launch: "게임 시작 🚀", waitMore: "1명 더 기다리는 중...", waitHost: "방장을 기다리는 중...", fetch: "시나리오 가져오는 중...", scenTitle: "시나리오", secLeft: "초 남음", typeHumour: "유머를 입력하세요...", subHumour: "제출", waitSlow: "다른 플레이어 기다리는 중...", chatVote: "채팅 및 투표 라운드", humourBtn: "웃겨요!", replyBtn: "답글", repPlace: "답글...", send: "보내기", cancel: "취소", done: "다 읽었어요!", waiting: "대기 중...", upcoming: "다음", enterRound: "라운드-", in: "시작까지", 초: "seconds", load: "로딩 중...", results: "최종 결과", winners: "우승자들", winner: "우승자", scoreboard: "최종 점수판", receipt: "🧾 MATCH RECEIPT", thanks: "플레이해주셔서 감사합니다! 🏆", saveRec: "📸 이 영수증 저장", playAgain: "다시 플레이", waitRes: "방장을 기다리는 중...", adminVault: "관리자 금고", backHome: "⬅ 뒤로", noScen: "아직 시나리오가 없습니다!", madeBy: "⚡제작: ", toSpark: " 당신의 유머를 자극하기 위해⚡", privacy: "개인정보 처리방침", terms: "서비스 약관", contact: "문의하기" },
+  'Indonesian': { name: "Nama Lucumu", create: "Buat Ruang", orJoin: "ATAU GABUNG", code: "KODE", join: "Gabung", rulebook: "👑 Cara Bermain 👑", rule1: "Tulis respons lucumu.", rule2: "Balas dengan candaan di ronde obrolan.", rule3: "Pilih yang menurutmu lucu.", rule4: "Pemain dengan XP terbanyak menang.", submitPub: "🌍 Kirimkan Skenario untuk pemain Humour Cup 🌍", pubDesc: "Ini muncul secara acak kepada pemain Humour Cup yang memilih skenario Publik di Lobi.", pubPlace: "Ketik skenariomu di sini...", submit: "Kirim", lobby: "Lobi", roomCode: "KODE RUANG:", cat: "Kategori:", scen: "Skenario:", lang: "Bahasa:", secret: "🤫 Tambah diam-diam!", secPlace: "Tulis skenario kejutan...", addPool: "Tambah", totPool: "Total Skenario Khusus:", addCustomAlso: "Tambahkan skenario khususmu ke kotak skenario Publik di bawah ini juga, jika cocok.", waitSquad: "Menunggu skuad...", host: "(Host)", launch: "Mulai Game 🚀", waitMore: "Menunggu 1 pemain lagi...", waitHost: "Menunggu host...", fetch: "Mengambil Skenario...", scenTitle: "Skenario", secLeft: "Detik Tersisa", typeHumour: "Ketik lucumu...", subHumour: "Kirim Kelucuan", waitSlow: "Menunggu yang lambat...", chatVote: "Ronde Obrolan & Pilih", humourBtn: "Lucu!", replyBtn: "Balas", repPlace: "Balas...", send: "Kirim", cancel: "Batal", done: "Saya Selesai Membaca!", waiting: "Menunggu...", upcoming: "Mendatang", enterRound: "Masuk Ronde-", in: "dalam", seconds: "detik", load: "Memuat...", results: "Hasil Akhir", winners: "Pemenang", winner: "Pemenang", scoreboard: "Papan Skor", receipt: "🧾 MATCH RECEIPT", thanks: "Terima kasih sudah bermain! 🏆", saveRec: "📸 Simpan struk ini", playAgain: "Main Lagi", waitRes: "Menunggu Host...", adminVault: "Brankas Admin", backHome: "⬅ Kembali", noScen: "Belum ada skenario!", madeBy: "⚡dibuat oleh ", toSpark: " untuk memancing humormu⚡", privacy: "Kebijakan Privasi", terms: "Ketentuan Layanan", contact: "Hubungi Kami" },
+  'Russian': { name: "Твое смешное имя", create: "Создать комнату", orJoin: "ИЛИ ПРИСОЕДИНИТЬСЯ", code: "КОД", join: "Вход", rulebook: "👑 Как играть 👑", rule1: "Напиши смешной ответ на сценарий.", rule2: "Отвечай шутками в чате.", rule3: "Голосуй за самые смешные.", rule4: "Игрок с наибольшим XP побеждает.", submitPub: "🌍 Предложите свои Сценарии для игроков Humour Cup 🌍", pubDesc: "Они случайным образом выпадают игрокам Humour Cup, выбравшим публичные сценарии в Лобби.", pubPlace: "Введи свой сценарий здесь...", submit: "Отправить", lobby: "Лобби", roomCode: "КОД КОМНАТЫ:", cat: "Категория:", scen: "Сценарии:", lang: "Язык:", secret: "🤫 Добавить тайно!", secPlace: "Напиши сценарий-сюрприз...", addPool: "Добавить", totPool: "Всего сценариев:", addCustomAlso: "Добавьте свои забавные сценарии также в окно публичных сценариев ниже, если они подходят.", waitSquad: "Ждем команду...", host: "(Хост)", launch: "Запуск 🚀", waitMore: "Ждем еще 1 игрока...", waitHost: "Ждем хоста...", fetch: "Получение...", scenTitle: "Сценарий", secLeft: "Секунд осталось", typeHumour: "Введи шутку...", subHumour: "Отправить", waitSlow: "Ждем остальных...", chatVote: "Чат и Голосование", humourBtn: "Смешно!", replyBtn: "Ответить", repPlace: "Ответить...", send: "Отправить", cancel: "Отмена", done: "Я прочитал!", waiting: "Ожидание...", upcoming: "Следующий", enterRound: "Начало раунда-", in: "через", seconds: "секунд", load: "Загрузка...", results: "Результаты", winners: "Победители", winner: "Победитель", scoreboard: "Счет", receipt: "🧾 MATCH RECEIPT", thanks: "Спасибо за игру! 🏆", saveRec: "📸 Сохранить этот чек", playAgain: "Играть снова", waitRes: "Ждем хоста...", adminVault: "Хранилище Админа", backHome: "⬅ Назад", noScen: "Нет сценариев!", madeBy: "⚡создано ", toSpark: " чтобы разжечь твой юмор⚡", privacy: "Политика конфиденциальности", terms: "Условия использования", contact: "Связаться с нами" }
 };
 
 const sfxCache = {
@@ -64,7 +64,7 @@ function App() {
   const [seenReplies, setSeenReplies] = useState(new Set());
   const [timeLeft, setTimeLeft] = useState(0);
 
-  const [isAboutOpen, setIsAboutOpen] = useState(false); // State for Dropdown
+  const [isAboutOpen, setIsAboutOpen] = useState(false); 
 
   const [bgmIndex, setBgmIndex] = useState(() => Math.floor(Math.random() * BGM_TRACKS.length));
   const audioRef = useRef(null);
@@ -79,7 +79,6 @@ function App() {
 
   const [pubCooldown, setPubCooldown] = useState(0);
 
-  // TICKING COOLDOWN TIMER FOR PUBLIC SUBMISSIONS
   useEffect(() => {
     let timer;
     if (pubCooldown > 0) {
@@ -90,7 +89,6 @@ function App() {
     return () => clearInterval(timer);
   }, [pubCooldown]);
   
-  // DONATION LINK
   const KOFI_LINK = "https://ko-fi.com/arpitsrivstva"; 
 
   useEffect(() => { setPubLang(appLang); }, [appLang]);
@@ -250,6 +248,58 @@ function App() {
     }
   };
 
+  // --- REUSABLE SUBMIT PUBLIC SCENARIO BOX ---
+  // We can inject this safely on Home, Lobby, and Results screens!
+  const renderSubmitScenarioBox = () => (
+    <div style={{...styles.howToPlayBox, marginTop: '40px', transform: 'rotate(0deg)'}}>
+      <div style={{...styles.howToPlayHeader, backgroundColor: '#10b981', color: '#fff', fontSize: '15px'}}>{t('submitPub')}</div>
+      <div style={{...styles.howToPlayContent, textAlign: 'center'}}>
+        <p style={{fontSize: '14px', fontWeight: 'bold', marginBottom: '15px'}}>{t('pubDesc')}</p>
+        <textarea value={pubScenario} onChange={(e) => setPubScenario(e.target.value)} placeholder={t('pubPlace')} style={{...styles.textarea, height: '120px', marginBottom: '10px'}} />
+        
+        <div style={{display: 'flex', gap: '10px', marginBottom: '15px'}}>
+          <select value={pubLang} onChange={(e) => setPubLang(e.target.value)} style={styles.dropdown}>
+            <option value="English">English</option><option value="Mandarin">Mandarin</option><option value="Hindi">Hindi</option><option value="Spanish">Spanish</option><option value="French">French</option><option value="Arabic">Arabic</option><option value="Portuguese">Portuguese</option><option value="Russian">Russian</option><option value="German">German</option><option value="Japanese">Japanese</option><option value="Korean">Korean</option><option value="Indonesian">Indonesian</option>
+          </select>
+          <select value={pubCategory} onChange={(e) => setPubCategory(e.target.value)} style={styles.dropdown}>
+            <option value="All Ages">All Ages</option><option value="18+">18+</option>
+          </select>
+        </div>
+
+        <button 
+          onClick={handlePublicSubmit} 
+          disabled={pubStatus?.type === 'loading' || pubCooldown > 0} 
+          className="btn-3d" 
+          style={{
+            ...styles.primaryBtn, 
+            padding: '18px', 
+            fontSize: '16px',
+            backgroundColor: pubCooldown > 0 ? '#ccc' : '#ffffff',
+            cursor: pubCooldown > 0 ? 'not-allowed' : 'pointer'
+          }}>
+          {pubCooldown > 0 ? `Wait ${pubCooldown}s` : t('submit')}
+        </button>
+
+        {pubCooldown > 0 && (
+          <p style={{ marginTop: '12px', color: '#ef4444', fontWeight: '900', fontSize: '14px' }}>
+            You can submit another scenario in {pubCooldown} seconds.
+          </p>
+        )}
+
+        {pubStatus && (
+          <div style={styles.checklistWrapper}>
+            <div style={styles.checklistItem}>{pubStatus.type === 'loading' ? '⏳' : '✅'} Language & Category</div>
+            <div style={styles.checklistItem}>{pubStatus.type === 'loading' ? '⏳' : pubStatus.type === 'success' ? '✅' : '❌'} Simple Words & Grammar</div>
+            <div style={styles.checklistItem}>{pubStatus.type === 'loading' ? '⏳' : pubStatus.type === 'success' ? '✅' : '❌'} Humour Potential</div>
+            <div style={{ marginTop: '12px', fontWeight: '900', fontSize: '14px', color: pubStatus.type === 'success' ? '#10b981' : pubStatus.type === 'error' ? '#ef4444' : '#fbbf24' }}>
+              {pubStatus.msg}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
   const isHost = room?.players[0]?.id === socket.id;
   const rainEmojis = ['😂', '🤣', '💀', '🏆', '🔥', '🌶️', '👽', '🦄', '🍻', '😆', '😁', '🫠', '😭', '🤟'];
 
@@ -397,53 +447,8 @@ function App() {
               </div>
             </div>
 
-            <div style={{...styles.howToPlayBox, marginTop: '40px', transform: 'rotate(0deg)'}}>
-              <div style={{...styles.howToPlayHeader, backgroundColor: '#10b981', color: '#fff'}}>{t('submitPub')}</div>
-              <div style={{...styles.howToPlayContent, textAlign: 'center'}}>
-                <p style={{fontSize: '14px', fontWeight: 'bold', marginBottom: '15px'}}>{t('pubDesc')}</p>
-                <textarea value={pubScenario} onChange={(e) => setPubScenario(e.target.value)} placeholder={t('pubPlace')} style={{...styles.textarea, height: '120px', marginBottom: '10px'}} />
-                
-                <div style={{display: 'flex', gap: '10px', marginBottom: '15px'}}>
-                  <select value={pubLang} onChange={(e) => setPubLang(e.target.value)} style={styles.dropdown}>
-                    <option value="English">English</option><option value="Mandarin">Mandarin</option><option value="Hindi">Hindi</option><option value="Spanish">Spanish</option><option value="French">French</option><option value="Arabic">Arabic</option><option value="Portuguese">Portuguese</option><option value="Russian">Russian</option><option value="German">German</option><option value="Japanese">Japanese</option><option value="Korean">Korean</option><option value="Indonesian">Indonesian</option>
-                  </select>
-                  <select value={pubCategory} onChange={(e) => setPubCategory(e.target.value)} style={styles.dropdown}>
-                    <option value="All Ages">All Ages</option><option value="18+">18+</option>
-                  </select>
-                </div>
-
-                <button 
-                  onClick={handlePublicSubmit} 
-                  disabled={pubStatus?.type === 'loading' || pubCooldown > 0} 
-                  className="btn-3d" 
-                  style={{
-                    ...styles.primaryBtn, 
-                    padding: '18px', 
-                    fontSize: '16px',
-                    backgroundColor: pubCooldown > 0 ? '#ccc' : '#ffffff',
-                    cursor: pubCooldown > 0 ? 'not-allowed' : 'pointer'
-                  }}>
-                  {pubCooldown > 0 ? `Wait ${pubCooldown}s` : t('submit')}
-                </button>
-
-                {pubCooldown > 0 && (
-                  <p style={{ marginTop: '12px', color: '#ef4444', fontWeight: '900', fontSize: '14px' }}>
-                    You can submit another scenario in {pubCooldown} seconds.
-                  </p>
-                )}
-
-                {pubStatus && (
-                  <div style={styles.checklistWrapper}>
-                    <div style={styles.checklistItem}>{pubStatus.type === 'loading' ? '⏳' : '✅'} Language & Category</div>
-                    <div style={styles.checklistItem}>{pubStatus.type === 'loading' ? '⏳' : pubStatus.type === 'success' ? '✅' : '❌'} Simple Words & Grammar</div>
-                    <div style={styles.checklistItem}>{pubStatus.type === 'loading' ? '⏳' : pubStatus.type === 'success' ? '✅' : '❌'} Humour Potential</div>
-                    <div style={{ marginTop: '12px', fontWeight: '900', fontSize: '14px', color: pubStatus.type === 'success' ? '#10b981' : pubStatus.type === 'error' ? '#ef4444' : '#fbbf24' }}>
-                      {pubStatus.msg}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
+            {/* Render the reusable submit box right here on the home page! */}
+            {renderSubmitScenarioBox()}
 
             {/* --- MIDDLE DIVIDER LINE (Fixed!) --- */}
             <div style={{ 
@@ -451,7 +456,7 @@ function App() {
                 maxWidth: '250px', 
                 height: '4px', 
                 backgroundColor: '#1a1a1a', 
-                marginTop: '60px', // <-- Changed back to 60px! 
+                marginTop: '60px', 
                 marginBottom: '10px',
                 marginInline: 'auto',
                 borderRadius: '10px', 
@@ -467,10 +472,10 @@ function App() {
                    marginTop: '0', 
                    padding: '12px 24px', 
                    fontSize: '15px',
-                   display: 'flex',           // Changes the button to a flex container
-                   flexDirection: 'column',   // Stacks the children vertically
-                   alignItems: 'center',      // Centers both lines of text
-                   gap: '4px'                 // Adds a tiny bit of breathing room between the lines
+                   display: 'flex',           
+                   flexDirection: 'column',   
+                   alignItems: 'center',      
+                   gap: '4px'                 
                }}>
                  <span style={{ whiteSpace: 'nowrap', fontFamily: "'Kalam', cursive" }}>☕ Buy the Developer a Coffee ☕</span>
                  <span style={{ fontSize: '13px', opacity: 0.9, fontFamily: "'Kalam', cursive" }}>(Donate)</span>
@@ -535,33 +540,22 @@ function App() {
                   animation: 'slideDown 0.3s ease-out'
                 }}>
                   <p style={styles.aboutText}>
-                    Welcome to Humour Cup, the ultimate real-time multiplayer humour competition game where your wit wins the crown! Whether you are hanging out with your boring friends at a party, taking a break with your mean co-workers, or just looking for a fun online activity like OnlyFans but text version lol - Humour Cup provides endless entertainment. 😼
+                    Welcome to Humour Cup, the ultimate real-time multiplayer comedy game where your wit wins the crown! Whether you are hanging out with friends at a party, taking a break with coworkers, or just looking for a fun online activity, Humour Cup provides endless entertainment.
                   </p>
                   <p style={styles.aboutText}>
-                    <strong>How to really play this shi*?:</strong><br/>
-                    You input your sharp wits and the others vote if they find it humorous. The most humorous one wins the so called digital Cup.🏆 You can print print out your physical copy if you want though. We have a save-the-conversations option as well.
-                    Beware, the game is simple but highly addictive. Don't complain later that I didn't warn you when you would have Text Neck Syndrome. You searched that, right?😏 
-                    The host creates a secure room and shares a unique 4-digit code which you can give your friends to join with crazy names so that no one knows who's who - total anonymity.😈 
-                    Once everyone joins the lobby, they can select how they want to play through different options given that will spoil you. 
-                    The server works as the options selected by the Host (the one who created the Room). 
-                    
-                    🔶If you select A.I., then the humorous scenarios will be randomly generated by the A.I. ranging from absurd hypothetical questions and daily life awkwardness to weird text messages and meme-worthy situations.🤖
-                    🔶If you select Public, then the humorous scenarios will be randomly generated from the scenarios entered by the players globally in the "Submit your humorous Scenarios for Humour Cup players" box. You go enter some of your funny scenarios there. Now!😠
-                    🔶The Custom option is the most hilarious one. They give you all present in the lobby - the freedom of entering your own scenarios for your game (anonymously🤫).
-
-                    You respond to the scenarios in each round with your wit IQ, if you have enough.🧠 
-                    And after every Scenario, you vote for the most humorous responses and battle in a Chat, Reply and Vote Phase for earning Humour XPs through others' votes.⚔️
-                    The one at the top of the scoreboard wins the Humour Cup at the end.🏆🥇
+                    <strong>How It Works:</strong><br/>
+                    The game is simple but highly addictive. The host creates a secure room and shares a unique 4-digit code with friends. Once everyone joins the lobby, the server generates hilarious, completely unique scenarios—ranging from absurd hypothetical questions and daily life awkwardness to weird text messages and meme-worthy situations.
+                  </p>
+                  <p style={styles.aboutText}>
+                    Players have a limited time to type their funniest, most creative responses. But the fun doesn't stop there! In the Chat & Vote Phase, players can reply to each other's jokes with even more punchlines. You earn Humour XP by getting votes from your friends. The player with the most XP at the end of the rounds takes home the legendary Humour Cup!
                   </p>
                   <p style={{ ...styles.aboutText, marginBottom: 0 }}>
-                    <strong>Why is Humour Cup lit?❤️‍🔥 :</strong><br/>
-                    🔶 <strong>Dynamic AI Scenarios:</strong> Powered by advanced AI, you will never feel playing the exact same game twice.<br/>
-                    🔶 <strong>Submit your Scenarios for Humour Cup players:</strong> Have a good-humour curse? Can make a funny scenario for players to play Humour Cup? Have an inside joke? - Then add your own scenarios to the "Submit your humorous Scenarios for Humour Cup players" box.<br/>
-                    🔶 <strong>Create your own Scenarios in Humour Cup:</strong> In the Custom option of Lobby, you all can write any scenarios anonymously for others to respond on it while playing Humour Cup.<br/>
-                    🔶 <strong>Global Languages:</strong> Play in some of the hottest languages around the world like English, Hindi, Spanish, French, Mandarin, and more!<br/>
-                    🔶 <strong>Family Friendly or 18+:</strong> Choose the category that fits your squad's vibe. You are free to play however you want and free to write whatever you want.<br/><br/>
-                    
-                    Spark your humour today. Create a room, share the code with your friends, and let the humour battle begin!
+                    <strong>Features:</strong><br/>
+                    - <strong>Dynamic AI Scenarios:</strong> Powered by advanced AI, you will never play the exact same game twice.<br/>
+                    - <strong>Custom Prompts:</strong> Have an inside joke? Secretly add your own custom scenarios to the game pool.<br/>
+                    - <strong>Global Languages:</strong> Play in English, Hindi, Spanish, French, Mandarin, and more!<br/>
+                    - <strong>Family Friendly or 18+:</strong> Choose the category that fits your squad's vibe.<br/><br/>
+                    Join thousands of players and spark your humour today. Create a room, share the code, and let the comedy battle begin!
                   </p>
                 </div>
               )}
@@ -610,7 +604,9 @@ function App() {
                    <h4 style={{marginBottom: '10px', fontWeight: '900'}}>{t('secret')}</h4>
                    <input placeholder={t('secPlace')} value={secretInput} onChange={(e) => setSecretInput(e.target.value)} style={{...styles.input, marginBottom: '10px', padding: '10px', fontSize: '14px'}} />
                    <button onClick={handleSecretSubmit} className="btn-3d" style={{...styles.primaryBtn, fontSize: '14px', padding: '10px'}}>{t('addPool')}</button>
-                   <p style={{marginTop: '10px', fontWeight: 'bold', color: '#10b981'}}>{t('totPool')} {room.customCount || 0}</p>
+                   <p style={{marginTop: '10px', fontWeight: 'bold', color: '#10b981', marginBottom: 0}}>{t('totPool')} {room.customCount || 0}</p>
+                   {/* NEW ADDITION: The prompt asking users to also submit their custom ideas to the public pool */}
+                   <p style={{marginTop: '15px', fontWeight: 'bold', color: '#1a1a1a', fontSize: '13px', lineHeight: '1.4'}}>{t('addCustomAlso')}</p>
                  </div>
                )}
             </div>
@@ -672,6 +668,12 @@ function App() {
             </div>
 
             {isHost ? (room.players.length >= 2 ? <button onClick={handleStartGame} className="btn-3d" style={styles.startBtn}>{t('launch')}</button> : <h3 className="animate-bounce" style={{color: '#ef4444', marginTop: '30px', fontWeight: '900', fontSize: '20px'}}>{t('waitMore')}</h3>) : <h3 className="animate-bounce" style={styles.loadingText}>{t('waitHost')}</h3>}
+            
+            {/* Render the reusable submit box right here in the Lobby! */}
+            <div style={{ marginTop: '20px', width: '100%' }}>
+              {renderSubmitScenarioBox()}
+            </div>
+            
           </>
         )}
 
@@ -855,6 +857,11 @@ function App() {
 
               {isHost ? <button onClick={handlePlayAgain} className="btn-3d" style={styles.primaryBtn}>{t('playAgain')}</button> : <h3 className="animate-bounce" style={{color: '#1a1a1a', fontWeight: '900', fontSize: '20px'}}>{t('waitRes')}</h3>}
               
+              {/* Render the reusable submit box right here on the Results page! */}
+              <div style={{ marginTop: '20px', width: '100%' }}>
+                {renderSubmitScenarioBox()}
+              </div>
+
               <div style={{ 
                   width: '50%', 
                   height: '4px', 
@@ -875,10 +882,10 @@ function App() {
                      marginTop: '0', 
                      padding: '12px 24px', 
                      fontSize: '15px',
-                     display: 'flex',           // Changes the button to a flex container
-                     flexDirection: 'column',   // Stacks the children vertically
-                     alignItems: 'center',      // Centers both lines of text
-                     gap: '4px'                 // Adds a tiny bit of breathing room between the lines
+                     display: 'flex',           
+                     flexDirection: 'column',   
+                     alignItems: 'center',      
+                     gap: '4px'                 
                  }}>
                    <span style={{ whiteSpace: 'nowrap', fontFamily: "'Kalam', cursive" }}>☕ Buy the Developer a Coffee ☕</span>
                    <span style={{ fontSize: '13px', opacity: 0.9, fontFamily: "'Kalam', cursive" }}>(Donate)</span>
@@ -903,7 +910,7 @@ function App() {
       {/* --- BOTTOM DIVIDER LINE --- */}
       <div style={{ 
           width: '50%', 
-          maxWidth: '250px', // <--- FIX: Forces it to match the top divider's exact size!
+          maxWidth: '250px', 
           height: '4px', 
           backgroundColor: '#1a1a1a', 
           marginTop: 'auto', 
@@ -935,7 +942,7 @@ function App() {
           fontFamily: '"Kalam", cursive',
           whiteSpace: 'nowrap', 
         }}>
-          ⚡made by <a 
+          {t('madeBy')} <a 
             href="https://arpitsrivstva.itch.io/" 
             target="_blank" 
             rel="noopener noreferrer" 
@@ -943,21 +950,21 @@ function App() {
               color: '#ffffff', 
               fontFamily: '"Kalam", cursive',
               fontWeight: '400', 
-              textDecoration: 'underline', // Turns on the underline
-              textDecorationStyle: 'wavy', // Makes it wavy!
-              textDecorationColor: '#ffffff', // Keeps it white
-              textUnderlineOffset: '2.5px', // Pushes the wave down so it doesn't cut through the letters
+              textDecoration: 'underline', 
+              textDecorationStyle: 'wavy', 
+              textDecorationColor: '#ffffff', 
+              textUnderlineOffset: '2.5px', 
             }}
           >
             Arpit Srivastava
-          </a> to spark your humour⚡
+          </a> {t('toSpark')}
         </div>
 
         {/* Legal links container */}
         <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'center', gap: '15px', flexWrap: 'wrap' }}>
-          <a href="/privacy.html" style={styles.footerLegalLink}>Privacy Policy</a>
-          <a href="/terms.html" style={styles.footerLegalLink}>Terms of Service</a>
-          <a href="mailto:qaylingames@gmail.com" style={styles.footerLegalLink}>Contact Us</a>
+          <a href="/privacy.html" style={styles.footerLegalLink}>{t('privacy')}</a>
+          <a href="/terms.html" style={styles.footerLegalLink}>{t('terms')}</a>
+          <a href="mailto:qaylingames@gmail.com" style={styles.footerLegalLink}>{t('contact')}</a>
         </div>
       </div>
 
@@ -971,13 +978,13 @@ const styles = {
     minHeight: '100vh', 
     width: '100%', 
     display: 'flex', 
-    flexDirection: 'column', // Essential!
-    alignItems: 'center', // Essential for centered content
+    flexDirection: 'column', 
+    alignItems: 'center', 
     position: 'relative', 
     backgroundColor: '#FFC200', 
     overflowX: 'hidden', 
     boxSizing: 'border-box',
-    paddingBottom: '0' // No need for gap padding anymore
+    paddingBottom: '0' 
   }, 
   howToPlayBox: { marginTop: '40px', width: '100%', backgroundColor: '#ffffff', border: '4px solid #1a1a1a', borderRadius: '16px', boxShadow: '6px 6px 0px #1a1a1a', overflow: 'hidden', transform: 'rotate(-1.5deg)' },
   howToPlayHeader: { backgroundColor: '#1a1a1a', color: '#FFC200', padding: '12px', fontSize: '18px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '2px', textAlign: 'center' },
@@ -1036,13 +1043,12 @@ const styles = {
 
   aboutText: { fontSize: '15px', fontWeight: '500', lineHeight: '1.6', marginBottom: '15px' },
 
-  // UPGRADED STYLE FOR LEGAL LINKS ON DARK BACKGROUND
   footerLegalLink: { 
-    color: '#ffffff', // White text to match the signature
+    color: '#ffffff',
     textDecoration: 'underline', 
     fontWeight: '300', 
     fontFamily: "'Kalam', cursive", 
-    fontSize: '9px' // Scaled down the font size
+    fontSize: '9px' 
   },
 };
 
