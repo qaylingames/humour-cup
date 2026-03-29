@@ -36,9 +36,8 @@ const BGM_TRACKS = [
   'https://ia800201.us.archive.org/5/items/MerryGo/Merry%20Go.mp3'
 ];
 
-// Animated background doodles (stars, zigzags, squiggles)
-const doodleBgSvg = "data:image/svg+xml;charset=utf-8,%3Csvg width='300' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%231a1a1a' stroke-width='4' fill='none' stroke-linecap='round' stroke-linejoin='round' opacity='0.06'%3E%3Cpath d='M40,40 Q60,20 80,50 T120,40'/%3E%3Ccircle cx='200' cy='60' r='8'/%3E%3Cpath d='M250,220 L265,190 L280,220 Z'/%3E%3Cpath d='M50,250 C70,220 100,280 120,240'/%3E%3Cpath d='M150,150 L165,165 L150,180'/%3E%3Cpath d='M270,100 L290,90 L280,110'/%3E%3Ccircle cx='80' cy='150' r='4' fill='%231a1a1a'/%3E%3Cpath d='M20,180 Q30,190 20,200'/%3E%3C/g%3E%3C/svg%3E";
-
+// Upgraded animated background doodles (stars, zigzags, squiggles, crosses, dashed circles)
+const doodleBgSvg = "data:image/svg+xml;charset=utf-8,%3Csvg width='400' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%231a1a1a' stroke-width='4' fill='none' stroke-linecap='round' stroke-linejoin='round' opacity='0.08'%3E%3Cpath d='M40,40 Q60,20 80,50 T120,40'/%3E%3Ccircle cx='200' cy='60' r='8'/%3E%3Cpath d='M250,220 L265,190 L280,220 Z'/%3E%3Cpath d='M50,250 C70,220 100,280 120,240'/%3E%3Cpath d='M150,150 L165,165 L150,180'/%3E%3Cpath d='M270,100 L290,90 L280,110'/%3E%3Ccircle cx='80' cy='150' r='4' fill='%231a1a1a'/%3E%3Cpath d='M20,180 Q30,190 20,200'/%3E%3Cpath d='M320,320 L340,340 M340,320 L320,340'/%3E%3Cpath d='M350,150 Q370,130 380,160 T350,190'/%3E%3Ccircle cx='300' cy='280' r='12' stroke-dasharray='4 4'/%3E%3Cpath d='M100,350 L110,320 L130,340'/%3E%3Cpath d='M180,300 Q200,320 220,300'/%3E%3Ccircle cx='50' cy='320' r='3' fill='%231a1a1a'/%3E%3C/g%3E%3C/svg%3E";
 
 function App() {
   const [appLang, setAppLang] = useState('English'); 
