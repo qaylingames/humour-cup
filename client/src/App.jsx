@@ -848,38 +848,34 @@ function App() {
           width: '50%', 
           height: '4px', 
           backgroundColor: '#1a1a1a', 
-          marginTop: 'auto', // Pushes the line AND the blob to the bottom!
-          marginBottom: '25px', // Gap between the line and the blob
+          marginTop: 'auto', 
+          marginBottom: '25px', 
           marginInline: 'auto',
           borderRadius: '10px', 
           opacity: '0.6' 
       }}></div>
 
-      {/* --- INVISIBLE SPACER FOR TOP GAP --- */}
-      <div style={{ height: '40px', width: '100%', flexShrink: 0 }}></div>
-
       {/* --- NEW LEAN, WHITE-TEXT ORANGE BADGE FOOTER --- */}
       <div style={{
-        marginTop: 'auto', 
-        marginBottom: '40px', // Massive bottom gap so ad banners won't overlap it!
+        marginBottom: '40px', 
         backgroundColor: '#f0982d', 
-        padding: '12px 20px', // Shrunk the blob size
+        padding: '12px 20px', 
         borderRadius: '50px 20px 60px 25px / 20px 60px 25px 50px', 
-        border: '1px solid #1a1a1a', // Reduced border to almost none
-        boxShadow: '3px 3px 0px #1a1a1a', // Smaller shadow to match the thin border
+        border: '1px solid #1a1a1a', 
+        boxShadow: '3px 3px 0px #1a1a1a', 
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        width: 'fit-content', // <--- FIX 1: Makes the blob exactly as long as the text
-        maxWidth: '95%', // A tiny safety net just in case of extremely narrow screens
+        width: 'fit-content', 
+        maxWidth: '95%', 
         textAlign: 'center'
       }}>
         <div style={{ 
-          fontSize: '0.7rem', // Smaller text
-          color: '#ffffff', // Turned text white
+          fontSize: '0.7rem', 
+          color: '#ffffff', 
           fontWeight: '400',
           fontFamily: '"Kalam", cursive',
-          whiteSpace: 'nowrap', // <--- FIX 2: Forces text to stay on one single line!
+          whiteSpace: 'nowrap', 
         }}>
           ⚡made by <a 
             href="https://arpitsrivstva.itch.io/" 
@@ -889,7 +885,7 @@ function App() {
               color: '#ffffff', 
               fontWeight: '400', 
               textDecoration: 'none',
-              borderBottom: '0.25px solid #ffffff', // Thinner underline
+              borderBottom: '0.25px solid #ffffff', 
               paddingBottom: '0.5px'
             }}
           >
