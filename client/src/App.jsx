@@ -899,9 +899,8 @@ function App() {
           <a href="/terms-of-service" style={styles.footerLegalLink}>Terms of Service</a>
           <a href="mailto:qaylingames@gmail.com" style={styles.footerLegalLink}>Contact Us</a>
         </div>
-      </div>
-
     </div>
+
   );
 }
 
