@@ -843,6 +843,18 @@ function App() {
         })()}
       </div>
 
+      {/* --- BOTTOM DIVIDER LINE --- */}
+      <div style={{ 
+          width: '50%', 
+          height: '4px', 
+          backgroundColor: '#1a1a1a', 
+          marginTop: 'auto', // Pushes the line AND the blob to the bottom!
+          marginBottom: '25px', // Gap between the line and the blob
+          marginInline: 'auto',
+          borderRadius: '10px', 
+          opacity: '0.6' 
+      }}></div>
+
       {/* --- INVISIBLE SPACER FOR TOP GAP --- */}
       <div style={{ height: '40px', width: '100%', flexShrink: 0 }}></div>
 
@@ -900,18 +912,6 @@ function App() {
           <a href="mailto:qaylingames@gmail.com" style={styles.footerLegalLink}>Contact Us</a>
         </div>
 
-        {/* --- BOTTOM DIVIDER LINE --- */}
-      <div style={{ 
-          width: '50%', 
-          height: '4px', 
-          backgroundColor: '#1a1a1a', 
-          marginTop: 'auto', // Pushes the line AND the blob to the bottom!
-          marginBottom: '25px', // Gap between the line and the blob
-          marginInline: 'auto',
-          borderRadius: '10px', 
-          opacity: '0.6' 
-      }}></div>
-      
     </div>
 
   );
