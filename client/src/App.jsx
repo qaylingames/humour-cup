@@ -425,23 +425,35 @@ function App() {
               </div>
             </div>
 
-            {/* --- BOTTOM DIVIDER LINE --- */}
-      <div style={{ 
-          width: '50%', 
-          maxWidth: '250px', // <--- FIX: Forces it to match the top divider's exact size!
-          height: '4px', 
-          backgroundColor: '#1a1a1a', 
-          marginTop: 'auto', 
-          marginBottom: '25px', 
-          marginInline: 'auto',
-          borderRadius: '10px', 
-          opacity: '0.6' 
-      }}></div>
+            {/* --- MIDDLE DIVIDER LINE (Fixed!) --- */}
+            <div style={{ 
+                width: '50%', 
+                maxWidth: '250px', 
+                height: '4px', 
+                backgroundColor: '#1a1a1a', 
+                marginTop: '60px', // <-- Changed back to 60px! 
+                marginBottom: '10px',
+                marginInline: 'auto',
+                borderRadius: '10px', 
+                opacity: '0.6' 
+            }}></div>
 
             {/* --- THE COFFEE BUTTON BOX (Tilted) --- */}
             <div style={{...styles.devCardGreen, transform: 'rotate(-2deg)', marginTop: '40px'}}>
-               <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.donateBtn, background: '#6F4E37', color: '#ffffff', marginTop: '0', padding: '12px 24px', fontSize: '15px'}}>
-                 ☕ Buy the Developer a Coffee
+               <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={{
+                   ...styles.donateBtn, 
+                   background: '#6F4E37', 
+                   color: '#ffffff', 
+                   marginTop: '0', 
+                   padding: '12px 24px', 
+                   fontSize: '15px',
+                   display: 'flex',           // Changes the button to a flex container
+                   flexDirection: 'column',   // Stacks the children vertically
+                   alignItems: 'center',      // Centers both lines of text
+                   gap: '4px'                 // Adds a tiny bit of breathing room between the lines
+               }}>
+                 <span style={{ whiteSpace: 'nowrap' }}>☕ Buy the Developer a Coffee ☕</span>
+                 <span style={{ fontSize: '13px', opacity: 0.9 }}>(Donate)</span>
                </a>
                <p style={styles.indieDevText}>
                  This indie dev needs to handle server, moderations and maintenance 🥺. A lil help can boost me up for my ideaz&nbsp;💙.
@@ -824,7 +836,7 @@ function App() {
               }}></div>
 
               <div style={{...styles.devCardGreen, transform: 'rotate(-2deg)', marginTop: '40px'}}>
-                 <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.donateBtn, background: '#6F4E37', color: '#ffffff', marginTop: '0', padding: '12px 24px', fontSize: '15px'}}>
+                 <a href={KOFI_LINK} target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.donateBtn, background: '#6F4E37', fontFamily: "'Kalam', cursive", color: '#ffffff', marginTop: '0', padding: '12px 24px', fontSize: '15px'}}>
                    ☕ Buy the Developer a Coffee
                  </a>
                  <p style={styles.indieDevText}>
@@ -976,7 +988,7 @@ const styles = {
   indieDevText: { fontFamily: "'Kalam', cursive", fontSize: '14px', color: '#ffffff', fontWeight: 'bold', lineHeight: '1.5', margin: '5px 0 0 0' },
   devCardOval: { background: '#e5e7eb', padding: '30px 40px', borderRadius: '100px', border: '4px solid #1a1a1a', boxShadow: '8px 8px 0px #ef4444', width: '100%', maxWidth: '450px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' },
   feedbackText: { fontFamily: "'Kalam', cursive", fontSize: '14px', color: '#1a1a1a', fontWeight: 'bold', margin: '0', lineHeight: '1.4' },
-  emailLink: { color: '#ffffff', background: '#ef4444', padding: '8px 16px', borderRadius: '12px', border: '3px solid #1a1a1a', textDecoration: 'none', fontWeight: '900', fontSize: '15px', margin: '0', boxShadow: '4px 4px 0px #1a1a1a', display: 'inline-block' },
+  emailLink: { color: '#ffffff', fontFamily: "'Kalam', cursive", background: '#ef4444', padding: '8px 16px', borderRadius: '12px', border: '3px solid #1a1a1a', textDecoration: 'none', fontWeight: '900', fontSize: '15px', margin: '0', boxShadow: '4px 4px 0px #1a1a1a', display: 'inline-block' },
 
   aboutText: { fontSize: '15px', fontWeight: '500', lineHeight: '1.6', marginBottom: '15px' },
 
@@ -986,7 +998,7 @@ const styles = {
     textDecoration: 'underline', 
     fontWeight: '300', 
     fontFamily: "'Kalam', cursive", 
-    fontSize: '8px' // Scaled down the font size
+    fontSize: '9px' // Scaled down the font size
   },
 };
 
