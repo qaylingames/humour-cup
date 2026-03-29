@@ -899,6 +899,19 @@ function App() {
           <a href="/terms-of-service" style={styles.footerLegalLink}>Terms of Service</a>
           <a href="mailto:qaylingames@gmail.com" style={styles.footerLegalLink}>Contact Us</a>
         </div>
+
+        {/* --- BOTTOM DIVIDER LINE --- */}
+      <div style={{ 
+          width: '50%', 
+          height: '4px', 
+          backgroundColor: '#1a1a1a', 
+          marginTop: 'auto', // Pushes the line AND the blob to the bottom!
+          marginBottom: '25px', // Gap between the line and the blob
+          marginInline: 'auto',
+          borderRadius: '10px', 
+          opacity: '0.6' 
+      }}></div>
+      
     </div>
 
   );
