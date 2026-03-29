@@ -36,9 +36,6 @@ const BGM_TRACKS = [
   'https://ia800201.us.archive.org/5/items/MerryGo/Merry%20Go.mp3'
 ];
 
-// Dark wave SVG (simplified layered waves for cartoon look)
-const wavyBgSvg = "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%231a1a1a' fill-opacity='1' d='M0,160L40,149.3C80,139,160,117,240,117.3C320,117,400,139,480,165.3C560,192,640,224,720,218.7C800,213,880,171,960,160C1040,149,1120,171,1200,186.7C1280,203,1360,213,1400,218.7L1440,224L1440,320L1400,320C1360,320,1280,320,1200,320C1120,320,1040,320,960,320C880,320,800,320,720,320C640,320,560,320,480,320C400,320,320,320,240,320C160,320,80,320,40,320L0,320Z'%3E%3C/path%3E%3C/svg%3E";
-
 
 function App() {
   const [appLang, setAppLang] = useState('English'); 
@@ -847,55 +844,52 @@ function App() {
         })()}
       </div>
 
-      {/* --- UPGRADED WAVY FOOTER --- */}
-      <footer style={{
-        width: '100%',
-        marginTop: 'auto', // Flex-box trick to push footer to bottom if page content is short
-        backgroundColor: '#1a1a1a', // Footer bottom color
-        backgroundImage: `url(${wavyBgSvg})`,
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'top center',
-        backgroundSize: '100% 70px', // Wave section height
-        paddingTop: '65px', // Push text below the wave curve
-        paddingBottom: '25px', // Extra padding at very bottom
+      {/* --- NEW CURVY ORANGE BADGE FOOTER --- */}
+      <div style={{
+        marginTop: 'auto', // Pushes it to the bottom
+        marginBottom: '40px', // Floats it off the bottom edge
+        backgroundColor: '#ff8c00', // Vibrant, fun orange
+        padding: '20px 30px',
+        // This specific border-radius creates a wavy, curvy, organic "blob" shape!
+        borderRadius: '50px 20px 60px 25px / 20px 60px 25px 50px', 
+        border: '4px solid #1a1a1a',
+        boxShadow: '6px 6px 0px #1a1a1a',
         display: 'flex',
-        justifyContent: 'center',
-        borderTop: '5px solid #1a1a1a', // Bold outline feel
+        flexDirection: 'column',
+        alignItems: 'center',
+        maxWidth: '450px',
+        width: '90%',
+        textAlign: 'center'
       }}>
         <div style={{ 
-          width: '100%',
-          maxWidth: '500px', // Match main container
-          textAlign: 'center', 
-          fontSize: '0.7rem', 
-          color: '#ffffff', 
-          fontWeight: '500',
+          fontSize: '0.8rem', 
+          color: '#1a1a1a', 
+          fontWeight: '900',
           fontFamily: '"Libertinus Serif", serif',
-          padding: '0 20px', // Responsive safety
         }}>
           ⚡ made by <a 
             href="https://arpitsrivstva.itch.io/" 
             target="_blank" 
             rel="noopener noreferrer" 
             style={{ 
-              color: '#FFC200', // Update link to yellow for contrast on dark
-              fontWeight: '700', // Bold it
-              fontSize: '0.75rem', // Slightly bigger
+              color: '#ffffff', 
+              fontWeight: '900', 
               textDecoration: 'none',
-              borderBottom: '1px solid #FFC200',
+              borderBottom: '2px solid #ffffff',
               paddingBottom: '1px'
             }}
           >
             Arpit Srivastava
           </a> to spark your humour ⚡
-
-          {/* Legal links upgraded style for dark BG */}
-          <div style={{ marginTop: '15px', display: 'flex', justifyContent: 'center', gap: '20px', fontSize: '0.65rem', flexWrap: 'wrap' }}>
-            <a href="/privacy-policy" style={styles.footerLegalLink}>Privacy Policy</a>
-            <a href="/terms-of-service" style={styles.footerLegalLink}>Terms of Service</a>
-            <a href="mailto:qaylingames@gmail.com" style={styles.footerLegalLink}>Contact Us</a>
-          </div>
         </div>
-      </footer>
+
+        {/* Legal links container */}
+        <div style={{ marginTop: '15px', display: 'flex', justifyContent: 'center', gap: '20px', fontSize: '0.8rem', flexWrap: 'wrap' }}>
+          <a href="/privacy-policy" style={styles.footerLegalLink}>Privacy Policy</a>
+          <a href="/terms-of-service" style={styles.footerLegalLink}>Terms of Service</a>
+          <a href="mailto:qaylingames@gmail.com" style={styles.footerLegalLink}>Contact Us</a>
+        </div>
+      </div>
 
     </div>
   );
@@ -970,8 +964,15 @@ const styles = {
   emailLink: { color: '#ffffff', background: '#ef4444', padding: '8px 16px', borderRadius: '12px', border: '3px solid #1a1a1a', textDecoration: 'none', fontWeight: '900', fontSize: '15px', margin: '0', boxShadow: '4px 4px 0px #1a1a1a', display: 'inline-block' },
 
   aboutText: { fontSize: '15px', fontWeight: '500', lineHeight: '1.6', marginBottom: '15px' },
+  
   // UPGRADED STYLE FOR LEGAL LINKS ON DARK BACKGROUND
-  footerLegalLink: { color: '#fbbf24', textDecoration: 'underline', fontWeight: 'bold', fontFamily: '"Fredoka One", cursive', letterSpacing: '0.5px' },
+  footerLegalLink: { 
+    color: '#1a1a1a', 
+    textDecoration: 'underline', 
+    fontWeight: '900', 
+    fontFamily: "'Kalam', cursive", 
+    fontSize: '15px' 
+  },
 };
 
 export default App;
