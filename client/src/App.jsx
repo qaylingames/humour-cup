@@ -255,7 +255,6 @@ function App() {
     <div onClick={unlockAudio} style={styles.appWrapper}>
       <style>{`
       @import url('https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap');
-      @import url('https://cdn.jsdelivr.net/npm/@fontsource/libertinus-serif@5.0.8/index.css');
 
         /* --- GLOBAL LAYOUT LOCKS --- */
         * { box-sizing: border-box; } 
@@ -845,7 +844,7 @@ function App() {
       </div>
 
       {/* --- INVISIBLE SPACER FOR TOP GAP --- */}
-      <div style={{ height: '60px', width: '100%', flexShrink: 0 }}></div>
+      <div style={{ height: '40px', width: '100%', flexShrink: 0 }}></div>
 
       {/* --- NEW LEAN, WHITE-TEXT ORANGE BADGE FOOTER --- */}
       <div style={{
@@ -867,7 +866,7 @@ function App() {
           fontSize: '0.7rem', // Smaller text
           color: '#ffffff', // Turned text white
           fontWeight: '400',
-          fontFamily: '"Libertinus Serif", serif',
+          fontFamily: '"Kalam", cursive',
         }}>
           ⚡made by <a 
             href="https://arpitsrivstva.itch.io/" 
@@ -878,7 +877,7 @@ function App() {
               fontWeight: '400', 
               textDecoration: 'none',
               borderBottom: '0.25px solid #ffffff', // Thinner underline
-              paddingBottom: '1px'
+              paddingBottom: '0.5px'
             }}
           >
             Arpit Srivastava
