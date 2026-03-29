@@ -850,7 +850,7 @@ function App() {
       {/* --- NEW LEAN, WHITE-TEXT ORANGE BADGE FOOTER --- */}
       <div style={{
         marginTop: 'auto', 
-        marginBottom: '60px', // Massive bottom gap so ad banners won't overlap it!
+        marginBottom: '40px', // Massive bottom gap so ad banners won't overlap it!
         backgroundColor: '#f0982d', 
         padding: '12px 20px', // Shrunk the blob size
         borderRadius: '50px 20px 60px 25px / 20px 60px 25px 50px', 
@@ -859,14 +859,14 @@ function App() {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        maxWidth: '360px', // Made the whole blob narrower
-        width: '85%',
+        maxWidth: '300px', // Made the whole blob narrower
+        width: '65%',
         textAlign: 'center'
       }}>
         <div style={{ 
-          fontSize: '0.5rem', // Smaller text
+          fontSize: '0.6rem', // Smaller text
           color: '#ffffff', // Turned text white
-          fontWeight: '900',
+          fontWeight: '500',
           fontFamily: '"Libertinus Serif", serif',
         }}>
           ⚡ made by <a 
@@ -877,7 +877,7 @@ function App() {
               color: '#ffffff', 
               fontWeight: '500', 
               textDecoration: 'none',
-              borderBottom: '1px solid #ffffff', // Thinner underline
+              borderBottom: '0.5px solid #ffffff', // Thinner underline
               paddingBottom: '1px'
             }}
           >
@@ -971,9 +971,9 @@ const styles = {
   footerLegalLink: { 
     color: '#ffffff', // White text to match the signature
     textDecoration: 'underline', 
-    fontWeight: '500', 
+    fontWeight: '300', 
     fontFamily: "'Kalam', cursive", 
-    fontSize: '13px' // Scaled down the font size
+    fontSize: '8px' // Scaled down the font size
   },
 };
 
