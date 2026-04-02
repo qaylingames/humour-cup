@@ -5,12 +5,12 @@ const socket = io('https://humour-cup-server.onrender.com');
 
 const uiTranslations = {
   'English': { 
-    name: "Your Funny Name", create: "Create Room", orJoin: "OR JOIN A FRIEND", code: "CODE", join: "Join", rulebook: "👑 How to Play 👑", rule1: "Write your humorous response on each scenario.", rule2: "Reply with your humour punches in the chat round after each scenario.", rule3: "Vote the ones you find humorous.", rule4: "The player with the maximum Humour XP gets the Humour Cup.", 
+    name: "Your Funny Name", create: "Create Room", createGold: "Create GOLD Room!", orJoin: "OR JOIN A FRIEND", code: "CODE", join: "Join", rulebook: "👑 How to Play 👑", rule1: "Write your humorous response on each scenario.", rule2: "Reply with your humour punches in the chat round after each scenario.", rule3: "Vote the ones you find humorous.", rule4: "The player with the maximum Humour XP gets the Humour Cup.", 
     submitPub: "🌍 Submit your humorous Scenarios for Humour Cup players 🌍", pubDesc: "These come randomly to Humour Cup players opting for Public scenarios in the Lobby.", pubPlace: "Type your custom scenario here...", submit: "Submit", lobby: "Lobby", roomCode: "ROOM CODE:", cat: "Category:", scen: "Scenarios:", lang: "Language:", secret: "🤫 Secretly Add to the Game Mix!", secPlace: "Write a surprise scenario...", addPool: "Add to Pool", totPool: "Total Custom Scenarios in Pool:", addCustomAlso: "Add your custom humorous scenarios to the Public scenario box below as well, if suitable.", waitSquad: "Waiting for the squad...", host: "(Host)", launch: "Launch Game 🚀", waitMore: "Waiting for at least 1 more player...", waitHost: "Waiting for the host to start...", fetch: "Fetching Scenarios...", scenTitle: "Scenario", secLeft: "Seconds Left", typeHumour: "Type your humour...", subHumour: "Submit Humour", waitSlow: "Waiting for slower humans...", chatVote: "Chat & Vote Round", humourBtn: "Humorous!", replyBtn: "Reply", repPlace: "Reply...", send: "Send", cancel: "Cancel", done: "I'm Done Reading!", waiting: "Waiting...", upcoming: "Upcoming", enterRound: "Entering Round-", in: "in", seconds: "seconds", load: "Loading...", results: "Final Results", winners: "Winners", winner: "Winner", scoreboard: "Final Scoreboard", receipt: "🧾 MATCH RECEIPT", thanks: "Thanks for playing Humour Cup! 🏆", saveRec: "📸 Save this Match Receipt", playAgain: "Play Again (Host)", waitRes: "Waiting for Host to Restart...", adminVault: "Admin Vault View", backHome: "⬅ Back to Home", noScen: "No scenarios yet!", madeBy: "⚡made by ", toSpark: " to spark your humour⚡", privacy: "Privacy Policy", terms: "Terms of Service", contact: "Contact Us",
-    donateBtn: "☕ Buy the Developer a Coffee ☕", donateSub: "(Donate)", donateText: "This indie dev needs to handle server, moderations and maintenance 🥺. A lil help can boost me up for my ideaz 💙.",
-    feedbackText: "How the heck should I make this game more fun? Tell me everything at", chatInst: "Tap 'Humorous' to the funny responses of each other.", whatIsHC: "🤔 What is Humour Cup?",
-    goldTitle: "👑 Humour Cup GOLD", getGold: "Get GOLD", passPlaceholder: "Enter Gold Passcode...", goldWarn: "Share wisely: 2 rooms can't use 1 passcode at the same time!",
-    modalIntl: "🌍 International (Card/PayPal)", modalInd: "🇮🇳 Indian (UPI/Razorpay)", close: "Close", modBatch: "Moderate 50 Scenarios",
+    donateBtn: "☕ Support via UPI ☕", donateSub: "(Zero Fees!)", donateText: "This indie dev needs to handle server, moderations and maintenance 🥺. A lil help can boost me up for my ideaz 💙.", feedbackText: "How the heck should I make this game more fun? Tell me everything at", chatInst: "Tap 'Humorous' to the funny responses of each other.", whatIsHC: "🤔 What is Humour Cup?",
+    goldTitle: "🏆 Humour Cup GOLD", goldSub: "You cannot create more than 1 Room with this fun key at the same time. So, share the key wisely.",
+    gPerk1: "Unlimited Players (Beyond the 6 player cap!)", gPerk2: "Custom Number of Rounds & Timers", gPerk3: "More Humorous A.I. Scenarios", gPerk4: "Prioritized Best Selected A.I. and Public Scenarios", gPerk5: "Change scenarios while playing", gPerk6: "100% Ad-Free Experience", gPerk7: "Official Supporter of Humour Cup 💙",
+    gInput: "Enter your fun key to activate GOLD...", gInstruction: "Enter this Fun Key in the GOLD box to activate Humour Cup GOLD. After paying, your Fun Key will be emailed to you.", gActive: "Fun Key activated. Create a GOLD Room now.",
     ab1: "Welcome to Humour Cup, the ultimate real-time multiplayer humour competition game where your wit wins the crown! Whether you are hanging out with your boring friends at a party, taking a break with your fake co-workers, or just looking for some great fun online activity like OnlyFans but text version lol - Humour Cup is just right for that endless entertainment. 😼",
     ab2: "How to really play this shi*?:",
     ab3: "You input your sharp wits and the others vote if they find it humorous. You battle with your humorous comments after each scenario with others. The most humorous one wins the so called - Humour Cup.🏆 You can also save the game you played with everyone at the end, for collecting memories.",
@@ -29,257 +29,257 @@ const uiTranslations = {
     ab16: "Test your humour today. Find out your humour rank amongst your friends. Create a room, share the code with your friends, and let the humour battle begin!"
   },
   'Hindi': { 
-    name: "आपका मज़ेदार नाम", create: "रूम बनाएं", orJoin: "या दोस्त से जुड़ें", code: "कोड", join: "जुड़ें", rulebook: "👑 कैसे खेलें 👑", rule1: "प्रत्येक परिदृश्य पर अपनी मज़ेदार प्रतिक्रिया लिखें।", rule2: "परिदृश्य के बाद चैट राउंड में अपने हास्य का जवाब दें।", rule3: "जो आपको मज़ेदार लगें, उन्हें वोट दें।", rule4: "सबसे अधिक ह्यूमर XP वाले खिलाड़ी को ह्यूमर कप मिलता है।", submitPub: "🌍 ह्यूमर कप खिलाड़ियों के लिए अपने मज़ेदार परिदृश्य जमा करें 🌍", pubDesc: "ये लॉबी में सार्वजनिक परिदृश्य चुनने वाले ह्यूमर कप खिलाड़ियों को बेतरतीब ढंग से आते हैं।", pubPlace: "अपना कस्टम परिदृश्य यहां टाइप करें...", submit: "जमा करें", lobby: "लॉबी", roomCode: "रूम कोड:", cat: "श्रेणी:", scen: "परिदृश्य:", lang: "भाषा:", secret: "🤫 चुपके से गेम में जोड़ें!", secPlace: "एक परिदृश्य लिखें...", addPool: "पूल में जोड़ें", totPool: "पूल में कुल कस्टम परिदृश्य:", addCustomAlso: "यदि उपयुक्त हो, तो कृपया अपने कस्टम मज़ेदार परिदृश्यों को नीचे दिए गए सार्वजनिक परिदृश्य बॉक्स में भी जोड़ें।", waitSquad: "स्क्वाड की प्रतीक्षा में...", host: "(होस्ट)", launch: "गेम शुरू करें 🚀", waitMore: "1 और खिलाड़ी की प्रतीक्षा में...", waitHost: "होस्ट के शुरू करने की प्रतीक्षा में...", fetch: "परिदृश्य प्राप्त कर रहा है...", scenTitle: "परिदृश्य", secLeft: "सेकंड शेष", typeHumour: "अपना हास्य टाइप करें...", subHumour: "हास्य जमा करें", waitSlow: "धीमे इंसानों की प्रतीक्षा में...", chatVote: "चैट और वोट राउंड", humourBtn: "मज़ेदार!", replyBtn: "उत्तर दें", repPlace: "उत्तर...", send: "भेजें", cancel: "रद्द करें", done: "पढ़ना समाप्त कर लिया!", waiting: "प्रतीक्षा में...", upcoming: "आगामी", enterRound: "राउंड-", in: "में प्रवेश", seconds: "सेकंड में", load: "लोड हो रहा है...", results: "अंतिम परिणाम", winners: "विजेता", winner: "विजेता", scoreboard: "अंतिम स्कोरबोर्ड", receipt: "🧾 MATCH RECEIPT", thanks: "खेलने के लिए धन्यवाद! 🏆", saveRec: "📸 यह रसीद सहेजें", playAgain: "फिर से खेलें (होस्ट)", waitRes: "होस्ट की प्रतीक्षा में...", adminVault: "एडमिन वॉल्ट", backHome: "⬅ वापस", noScen: "कोई परिदृश्य नहीं!", madeBy: "⚡निर्माता ", toSpark: " आपके हास्य को जगाने के लिए⚡", privacy: "गोपनीयता नीति", terms: "सेवा की शर्तें", contact: "संपर्क करें",
-    donateBtn: "☕ डेवलपर को कॉफ़ी पिलाएं ☕", donateSub: "(दान करें)", donateText: "इस इंडी डेवलपर को सर्वर, मॉडरेशन और रखरखाव संभालना होता है 🥺। आपकी थोड़ी सी मदद मेरे आइडियाज़ को बूस्ट कर सकती है 💙।",
-    feedbackText: "मैं इस गेम को और मज़ेदार कैसे बनाऊं? मुझे सब कुछ यहां बताएं", chatInst: "एक-दूसरे के मज़ेदार जवाबों पर 'मज़ेदार!' टैप करें।", whatIsHC: "🤔 ह्यूमर कप क्या है?",
-    goldTitle: "👑 ह्यूमर कप GOLD", getGold: "GOLD प्राप्त करें", passPlaceholder: "Gold पासकोड दर्ज करें...", goldWarn: "बुद्धिमानी से साझा करें: 2 कमरे एक ही समय में 1 पासकोड का उपयोग नहीं कर सकते!",
-    modalIntl: "🌍 अंतर्राष्ट्रीय (Card/PayPal)", modalInd: "🇮🇳 भारतीय (UPI/Razorpay)", close: "बंद करें", modBatch: "50 परिदृश्यों को मॉडरेट करें",
-    ab1: "ह्यूमर कप में आपका स्वागत है! यह परम रीयल-टाइम मल्टीप्लेयर हास्य प्रतियोगिता है जहां आपकी बुद्धि ताज जीतती है! चाहे आप पार्टी में अपने उबाऊ दोस्तों के साथ हों, नकली सहकर्मियों के साथ ब्रेक ले रहे हों, या बस OnlyFans जैसी मज़ेदार ऑनलाइन गतिविधि (लेकिन टेक्स्ट संस्करण lol) की तलाश में हों - ह्यूमर कप उस अंतहीन मनोरंजन के लिए बिल्कुल सही है। 😼",
+    name: "आपका मज़ेदार नाम", create: "रूम बनाएं", createGold: "गोल्ड रूम बनाएं!", orJoin: "या दोस्त से जुड़ें", code: "कोड", join: "जुड़ें", rulebook: "👑 कैसे खेलें 👑", rule1: "प्रत्येक परिदृश्य पर अपनी मज़ेदार प्रतिक्रिया लिखें।", rule2: "परिदृश्य के बाद चैट राउंड में अपने हास्य का जवाब दें।", rule3: "जो आपको मज़ेदार लगें, उन्हें वोट दें।", rule4: "सबसे अधिक ह्यूमर XP वाले खिलाड़ी को ह्यूमर कप मिलता है।", submitPub: "🌍 ह्यूमर कप खिलाड़ियों के लिए अपने मज़ेदार परिदृश्य जमा करें 🌍", pubDesc: "ये लॉबी में सार्वजनिक परिदृश्य चुनने वाले ह्यूमर कप खिलाड़ियों को बेतरतीब ढंग से आते हैं।", pubPlace: "अपना कस्टम परिदृश्य यहां टाइप करें...", submit: "जमा करें", lobby: "लॉबी", roomCode: "रूम कोड:", cat: "श्रेणी:", scen: "परिदृश्य:", lang: "भाषा:", secret: "🤫 चुपके से गेम में जोड़ें!", secPlace: "एक परिदृश्य लिखें...", addPool: "पूल में जोड़ें", totPool: "पूल में कुल कस्टम परिदृश्य:", addCustomAlso: "यदि उपयुक्त हो, तो कृपया अपने कस्टम मज़ेदार परिदृश्यों को नीचे दिए गए सार्वजनिक परिदृश्य बॉक्स में भी जोड़ें।", waitSquad: "स्क्वाड की प्रतीक्षा में...", host: "(होस्ट)", launch: "गेम शुरू करें 🚀", waitMore: "1 और खिलाड़ी की प्रतीक्षा में...", waitHost: "होस्ट के शुरू करने की प्रतीक्षा में...", fetch: "परिदृश्य प्राप्त कर रहा है...", scenTitle: "परिदृश्य", secLeft: "सेकंड शेष", typeHumour: "अपना हास्य टाइप करें...", subHumour: "हास्य जमा करें", waitSlow: "धीमे इंसानों की प्रतीक्षा में...", chatVote: "चैट और वोट राउंड", humourBtn: "मज़ेदार!", replyBtn: "उत्तर दें", repPlace: "उत्तर...", send: "भेजें", cancel: "रद्द करें", done: "पढ़ना समाप्त कर लिया!", waiting: "प्रतीक्षा में...", upcoming: "आगामी", enterRound: "राउंड-", in: "में प्रवेश", seconds: "सेकंड में", load: "लोड हो रहा है...", results: "अंतिम परिणाम", winners: "विजेता", winner: "विजेता", scoreboard: "अंतिम स्कोरबोर्ड", receipt: "🧾 MATCH RECEIPT", thanks: "खेलने के लिए धन्यवाद! 🏆", saveRec: "📸 यह रसीद सहेजें", playAgain: "फिर से खेलें (होस्ट)", waitRes: "होस्ट की प्रतीक्षा में...", adminVault: "एडमिन वॉल्ट", backHome: "⬅ वापस", noScen: "कोई परिदृश्य नहीं!", madeBy: "⚡निर्माता ", toSpark: " आपके हास्य को जगाने के लिए⚡", privacy: "गोपनीयता नीति", terms: "सेवा की शर्तें", contact: "संपर्क करें",
+    donateBtn: "☕ UPI के माध्यम से समर्थन करें ☕", donateSub: "(शून्य शुल्क!)", donateText: "इस इंडी डेवलपर को सर्वर, मॉडरेशन और रखरखाव संभालना होता है 🥺। आपकी थोड़ी सी मदद मेरे आइडियाज़ को बूस्ट कर सकती है 💙।", feedbackText: "मैं इस गेम को और मज़ेदार कैसे बनाऊं? मुझे सब कुछ यहां बताएं", chatInst: "एक-दूसरे के मज़ेदार जवाबों पर 'मज़ेदार!' टैप करें।", whatIsHC: "🤔 ह्यूमर कप क्या है?",
+    goldTitle: "🏆 ह्यूमर कप गोल्ड", goldSub: "आप इस फन की (Fun Key) के साथ एक ही समय में 1 से अधिक रूम नहीं बना सकते। इसलिए, इसे समझदारी से शेयर करें।",
+    gPerk1: "असीमित खिलाड़ी (6 की सीमा से परे!)", gPerk2: "कस्टम राउंड और कस्टम टाइमर", gPerk3: "अधिक मज़ेदार A.I. परिदृश्य", gPerk4: "आपके लिए प्राथमिकता वाले सर्वश्रेष्ठ A.I. और सार्वजनिक परिदृश्य", gPerk5: "खेलते समय परिदृश्य बदलें", gPerk6: "100% विज्ञापन-मुक्त अनुभव", gPerk7: "ह्यूमर कप के आधिकारिक समर्थक 💙",
+    gInput: "गोल्ड सक्रिय करने के लिए अपनी फन की (Fun Key) दर्ज करें...", gInstruction: "ह्यूमर कप गोल्ड को सक्रिय करने के लिए गोल्ड बॉक्स में यह फन की (Fun Key) दर्ज करें। भुगतान के बाद, आपकी फन की आपको ईमेल कर दी जाएगी।", gActive: "फन की सक्रिय। अब गोल्ड रूम बनाएं।",
+    ab1: "ह्यूमर कप में आपका स्वागत है! यह परम रीयल-टाइम मल्टीप्लेयर हास्य प्रतियोगिता है जहां आपकी बुद्धि ताज जीतती है! चाहे आप पार्टी में अपने उबाऊ दोस्तों के साथ हों, अपने नकली सहकर्मियों के साथ ब्रेक ले रहे हों, या बस OnlyFans जैसी मज़ेदार ऑनलाइन गतिविधि (लेकिन टेक्स्ट संस्करण lol) की तलाश में हों - ह्यूमर कप उस अंतहीन मनोरंजन के लिए एकदम सही है। 😼",
     ab2: "इसे असल में कैसे खेलें?:",
-    ab3: "आप अपनी तीखी बुद्धि का प्रयोग करें और अन्य वोट करेंगे कि उन्हें यह मज़ेदार लगा या नहीं। आप हर परिदृश्य के बाद दूसरों के साथ अपने हास्यपूर्ण कमेंट्स से लड़ते हैं। सबसे मज़ेदार प्रतिक्रिया तथाकथित ह्यूमर कप जीतती है। 🏆 यादों को इकट्ठा करने के लिए आप अंत में खेले गए गेम को सहेज भी सकते हैं।",
-    ab4: "गेमप्ले को और अधिक विस्तृत करने के लिए: आप हर राउंड में अपने बुद्धि IQ के साथ परिदृश्यों का जवाब देते हैं। 🧠 और हर परिदृश्य के बाद, आप चैट और वोट चरण में दूसरों के वोट के माध्यम से ह्यूमर XP अर्जित करने के लिए अपने मज़ेदार कमेंट्स के माध्यम से लड़ते हैं। ⚔️ स्कोरबोर्ड के शीर्ष पर रहने वाला अंत में ह्यूमर कप जीतता है। 🏆🥇",
-    ab5: "चरण दर चरण स्पष्टीकरण: होस्ट एक सुरक्षित कमरा बनाता है और एक 4-अंकीय कोड साझा करता है जिसे आप अपने दोस्तों को दे सकते हैं ताकि वे अजीबोगरीब नामों से जुड़ सकें - पूर्ण गुमनामी। 😈 एक बार जब सभी लॉबी में शामिल हो जाते हैं, तो वे चुन सकते हैं कि वे दिए गए विभिन्न विकल्पों के माध्यम से कैसे खेलना चाहते हैं। सर्वर होस्ट (जिसने कमरा बनाया है) द्वारा चुने गए विकल्पों के अनुसार काम करता है।",
+    ab3: "आप अपनी तीखी बुद्धि का प्रयोग करें और अन्य वोट करेंगे कि उन्हें यह मज़ेदार लगा या नहीं। आप हर परिदृश्य के बाद दूसरों के साथ अपनी मज़ेदार टिप्पणियों से मुकाबला करते हैं। सबसे मज़ेदार प्रतिक्रिया तथाकथित - ह्यूमर कप जीतती है। 🏆 आप यादें इकट्ठा करने के लिए अंत में खेले गए गेम को सभी के साथ सहेज भी सकते हैं।",
+    ab4: "गेमप्ले को और अधिक विस्तार से बताने के लिए: आप हर राउंड में अपने बुद्धि IQ के साथ परिदृश्यों का जवाब देते हैं। 🧠 और हर परिदृश्य के बाद, आप सबसे मज़ेदार प्रतिक्रियाओं के लिए वोट करते हैं और दूसरों के वोट के माध्यम से ह्यूमर XP अर्जित करने के लिए चैट और वोट चरण में अपनी मज़ेदार टिप्पणियों के माध्यम से लड़ाई करते हैं। ⚔️ स्कोरबोर्ड के शीर्ष पर रहने वाला अंत में ह्यूमर कप जीतता है। 🏆🥇",
+    ab5: "चरण दर चरण स्पष्टीकरण: होस्ट एक सुरक्षित कमरा बनाता है और एक 4-अंकीय कोड साझा करता है जिसे आप अपने दोस्तों को दे सकते हैं ताकि वे अजीबोगरीब नामों से जुड़ सकें जिससे किसी को पता न चले कि कौन कौन है - पूर्ण गुमनामी। 😈 कमरा बनाने के बाद जब सभी लॉबी में शामिल हो जाते हैं, तो वे चुन सकते हैं कि वे दिए गए विभिन्न विकल्पों के माध्यम से कैसे खेलना चाहते हैं, और आपको बिगाड़ने के लिए उनमें से बहुत सारे हैं। सर्वर होस्ट (जिसने कमरा बनाया है) द्वारा चुने गए विकल्पों के अनुसार काम करता है।",
     ab6: "यदि आप A.I. चुनते हैं, तो हास्यास्पद परिदृश्य A.I. द्वारा बेतरतीब ढंग से उत्पन्न किए जाएंगे - बेतुके सवालों से लेकर मीम-योग्य स्थितियों तक। 🤖",
     ab7: "यदि आप Public चुनते हैं, तो परिदृश्य वैश्विक स्तर पर खिलाड़ियों द्वारा 'सार्वजनिक परिदृश्य' बॉक्स में दर्ज किए गए परिदृश्यों से आएंगे। जाओ और वहां अपने कुछ मज़ेदार परिदृश्य दर्ज करो। अभी! 😠",
     ab8: "Custom विकल्प सबसे प्रफुल्लित करने वाला है। यह लॉबी में मौजूद सभी लोगों को अपने गेम के लिए बेनामी रूप से अपने स्वयं के परिदृश्य दर्ज करने की स्वतंत्रता देता है। 🤫",
     ab9: "सावधान रहें, खेल सरल लेकिन अत्यधिक व्यसनी है। बाद में शिकायत मत करना कि मैंने चेतावनी नहीं दी जब आपको टेक्स्ट नेक सिंड्रोम (Text Neck Syndrome) हो जाए। आप इसे सर्च करेंगे, है ना? 😏",
     ab10: "ह्यूमर कप इतना शानदार क्यों है? ❤️‍🔥 :",
     ab11: "डायनामिक एआई परिदृश्य: उन्नत एआई द्वारा संचालित, आप कभी भी एक ही खेल दो बार खेलने जैसा महसूस नहीं करेंगे।",
-    ab12: "खिलाड़ियों के लिए अपने परिदृश्य जमा करें: क्या आपके पास एक चुटकुला है? तो अपने परिदृश्यों को बॉक्स में जोड़ें।",
+    ab12: "खिलाड़ियों के लिए अपने परिदृश्य जमा करें: क्या आपके पास एक चुटकुला है? तो अपने परिदृश्यों को 'सार्वजनिक परिदृश्य' बॉक्स में जोड़ें।",
     ab13: "अपने स्वयं के परिदृश्य बनाएं: लॉबी के कस्टम विकल्प में, आप सभी गुमनाम रूप से कोई भी परिदृश्य लिख सकते हैं।",
     ab14: "वैश्विक भाषाएँ: अंग्रेजी, हिंदी, स्पेनिश, फ्रेंच, मंदारिन और अन्य जैसी दुनिया की कुछ सबसे हॉट भाषाओं में खेलें!",
     ab15: "पारिवारिक या 18+: वह श्रेणी चुनें जो आपके स्क्वाड के अनुकूल हो।",
-    ab16: "आज ही अपने हास्य का परीक्षण करें। अपने दोस्तों के बीच अपना हास्य रैंक खोजें। एक कमरा बनाएं, कोड साझा करें, और हास्य की लड़ाई शुरू होने दें!"
+    ab16: "आज ही अपने हास्य का परीक्षण करें। अपने दोस्तों के बीच अपनी हास्य रैंक का पता लगाएं। एक कमरा बनाएं, दोस्तों के साथ कोड साझा करें, और हास्य की लड़ाई शुरू होने दें!"
   },
   'Spanish': { 
-    name: "Tu Nombre Divertido", create: "Crear Sala", orJoin: "O UNIRSE A UN AMIGO", code: "CÓDIGO", join: "Unirse", rulebook: "👑 Cómo Jugar 👑", rule1: "Escribe tu respuesta humorística en cada escenario.", rule2: "Responde con tus chistes en la ronda de chat.", rule3: "Vota los que te parezcan graciosos.", rule4: "El jugador con más XP gana la Copa.", submitPub: "🌍 Envía tus Escenarios para Humour Cup 🌍", pubDesc: "Estos aparecen aleatoriamente a los jugadores de Humour Cup que optan por escenarios Públicos en el Vestíbulo.", pubPlace: "Escribe tu escenario aquí...", submit: "Enviar", lobby: "Vestíbulo", roomCode: "CÓDIGO DE SALA:", cat: "Categoría:", scen: "Escenarios:", lang: "Idioma:", secret: "🤫 ¡Añadir en secreto!", secPlace: "Escribe un escenario sorpresa...", addPool: "Añadir", totPool: "Total de Escenarios Personalizados:", addCustomAlso: "Añade también tus escenarios a la caja de escenarios Públicos de abajo, si son adecuados.", waitSquad: "Esperando al equipo...", host: "(Anfitrión)", launch: "Lanzar Juego 🚀", waitMore: "Esperando a 1 jugador más...", waitHost: "Esperando al anfitrión...", fetch: "Obteniendo Escenarios...", scenTitle: "Escenario", secLeft: "Segundos Restantes", typeHumour: "Escribe tu humor...", subHumour: "Enviar Humor", waitSlow: "Esperando a los lentos...", chatVote: "Ronda de Chat y Votos", humourBtn: "¡Gracioso!", replyBtn: "Responder", repPlace: "Responder...", send: "Enviar", cancel: "Cancelar", done: "¡Terminé de leer!", waiting: "Esperando...", upcoming: "Próximo", enterRound: "Entrando a la Ronda-", in: "en", seconds: "segundos", load: "Cargando...", results: "Resultados Finales", winners: "Ganadores", winner: "Ganador", scoreboard: "Marcador Final", receipt: "🧾 MATCH RECEIPT", thanks: "¡Gracias por jugar! 🏆", saveRec: "📸 Guardar este recibo", playAgain: "Jugar de nuevo", waitRes: "Esperando al anfitrión...", adminVault: "Bóveda Admin", backHome: "⬅ Volver", noScen: "¡Sin escenarios!", madeBy: "⚡creado por ", toSpark: " para despertar tu humor⚡", privacy: "Política de Privacidad", terms: "Términos de Servicio", contact: "Contáctanos",
-    donateBtn: "☕ Cómprale un café al desarrollador ☕", donateSub: "(Donar)", donateText: "Este desarrollador indie tiene que pagar servidores, moderación y mantenimiento 🥺. Una pequeña ayuda impulsará mis ideas 💙.",
-    feedbackText: "¿Cómo diablos hago este juego más divertido? Cuéntamelo todo en", chatInst: "Toca '¡Gracioso!' en las respuestas divertidas de los demás.", whatIsHC: "🤔 ¿Qué es Humour Cup?",
-    goldTitle: "👑 Humour Cup GOLD", getGold: "Obtener GOLD", passPlaceholder: "Introduce el código Gold...", goldWarn: "Comparte con cuidado: ¡2 salas no pueden usar 1 código a la vez!",
-    modalIntl: "🌍 Internacional (Card/PayPal)", modalInd: "🇮🇳 India (UPI/Razorpay)", close: "Cerrar", modBatch: "Moderar 50 Escenarios",
-    ab1: "¡Bienvenido a Humour Cup, el juego de competición de humor multijugador donde tu ingenio gana la corona! Ya sea que estés con amigos aburridos, con compañeros de trabajo falsos, o buscando una actividad como OnlyFans pero en texto lol - Humour Cup es perfecto para ese entretenimiento infinito. 😼",
-    ab2: "¿Cómo se juega a esta mi*rda?:",
-    ab3: "Escribes tus agudas respuestas y los demás votan. Luchas con tus comentarios humorísticos. El más gracioso gana la Humour Cup.🏆 Puedes guardar el juego al final para coleccionar recuerdos.",
-    ab4: "Para elaborar más: Respondes a los escenarios con tu IQ de ingenio.🧠 Luego, votas y luchas en la Fase de Chat y Votos para ganar XP.⚔️ ¡El que esté en la cima gana la Copa!🏆🥇",
-    ab5: "Paso a paso: El anfitrión crea una sala segura y comparte un código de 4 dígitos para unirse con nombres locos para un anonimato total.😈 El servidor funciona según las opciones seleccionadas por el Anfitrión.",
-    ab6: "Si seleccionas A.I., los escenarios serán generados aleatoriamente por la IA. Desde preguntas absurdas hasta situaciones de memes.🤖",
-    ab7: "Si seleccionas Público, los escenarios serán generados a partir de los ingresados por los jugadores globalmente. ¡Ve a escribir los tuyos ahí! ¡Ahora!😠",
-    ab8: "La opción Personalizada (Custom) te da la libertad de ingresar tus propios escenarios de forma anónima.🤫",
-    ab9: "Cuidado, el juego es simple pero altamente adictivo. No te quejes de que no te advertí del Síndrome del Cuello de Texto. Lo buscarías, ¿verdad?😏",
+    name: "Tu Nombre Divertido", create: "Crear Sala", createGold: "¡Crear Sala GOLD!", orJoin: "O UNIRSE A UN AMIGO", code: "CÓDIGO", join: "Unirse", rulebook: "👑 Cómo Jugar 👑", rule1: "Escribe tu respuesta humorística en cada escenario.", rule2: "Responde con tus chistes en la ronda de chat.", rule3: "Vota los que te parezcan graciosos.", rule4: "El jugador con más XP gana la Copa.", submitPub: "🌍 Envía tus Escenarios para Humour Cup 🌍", pubDesc: "Estos aparecen aleatoriamente a los jugadores de Humour Cup que optan por escenarios Públicos en el Vestíbulo.", pubPlace: "Escribe tu escenario aquí...", submit: "Enviar", lobby: "Vestíbulo", roomCode: "CÓDIGO DE SALA:", cat: "Categoría:", scen: "Escenarios:", lang: "Idioma:", secret: "🤫 ¡Añadir en secreto!", secPlace: "Escribe un escenario sorpresa...", addPool: "Añadir", totPool: "Total de Escenarios Personalizados:", addCustomAlso: "Añade también tus escenarios a la caja de escenarios Públicos de abajo, si son adecuados.", waitSquad: "Esperando al equipo...", host: "(Anfitrión)", launch: "Lanzar Juego 🚀", waitMore: "Esperando a 1 jugador más...", waitHost: "Esperando al anfitrión...", fetch: "Obteniendo Escenarios...", scenTitle: "Escenario", secLeft: "Segundos Restantes", typeHumour: "Escribe tu humor...", subHumour: "Enviar Humor", waitSlow: "Esperando a los lentos...", chatVote: "Ronda de Chat y Votos", humourBtn: "¡Gracioso!", replyBtn: "Responder", repPlace: "Responder...", send: "Enviar", cancel: "Cancelar", done: "¡Terminé de leer!", waiting: "Esperando...", upcoming: "Próximo", enterRound: "Entrando a la Ronda-", in: "en", seconds: "segundos", load: "Cargando...", results: "Resultados Finales", winners: "Ganadores", winner: "Ganador", scoreboard: "Marcador Final", receipt: "🧾 MATCH RECEIPT", thanks: "¡Gracias por jugar! 🏆", saveRec: "📸 Guardar este recibo", playAgain: "Jugar de nuevo", waitRes: "Esperando al anfitrión...", adminVault: "Bóveda Admin", backHome: "⬅ Volver", noScen: "¡Sin escenarios!", madeBy: "⚡creado por ", toSpark: " para despertar tu humor⚡", privacy: "Política de Privacidad", terms: "Términos de Servicio", contact: "Contáctanos",
+    donateBtn: "☕ Apoya vía UPI ☕", donateSub: "(¡Sin comisiones!)", donateText: "Este desarrollador indie tiene que pagar servidores, moderación y mantenimiento 🥺. Una pequeña ayuda impulsará mis ideas 💙.", feedbackText: "¿Cómo diablos hago este juego más divertido? Cuéntamelo todo en", chatInst: "Toca '¡Gracioso!' en las respuestas divertidas de los demás.", whatIsHC: "🤔 ¿Qué es Humour Cup?",
+    goldTitle: "🏆 Humour Cup GOLD", goldSub: "No puedes crear más de 1 Sala al mismo tiempo con esta Fun Key. Úsala con sabiduría.",
+    gPerk1: "Jugadores ilimitados (¡Más de 6!)", gPerk2: "Número de rondas y temporizadores personalizados", gPerk3: "Escenarios A.I. más humorísticos", gPerk4: "Mejores escenarios A.I. y Públicos priorizados para ti", gPerk5: "Cambiar escenarios mientras juegas", gPerk6: "Experiencia 100% sin anuncios", gPerk7: "Colaborador oficial de Humour Cup 💙",
+    gInput: "Ingresa tu Fun Key para activar GOLD...", gInstruction: "Ingresa esta Fun Key en la caja GOLD para activar Humour Cup GOLD. Después de pagar, se te enviará la Fun Key por correo.", gActive: "Fun Key activada. Crea una Sala GOLD ahora.",
+    ab1: "¡Bienvenido a Humour Cup, el juego de competición de humor multijugador en tiempo real donde tu ingenio gana la corona! Ya sea que estés pasando el rato con amigos aburridos, en un descanso con tus falsos compañeros de trabajo, o buscando una actividad divertida como OnlyFans pero en versión texto lol - Humour Cup es perfecto para ese entretenimiento sin fin. 😼",
+    ab2: "¿Cómo jugar a esta mi*rda?:",
+    ab3: "Ingresas tus agudas respuestas y los demás votan si les parece gracioso. Luchas con tus comentarios humorísticos después de cada escenario. El más gracioso gana la llamada - Humour Cup.🏆 También puedes guardar el juego al final para coleccionar recuerdos.",
+    ab4: "Para detallar más la jugabilidad: Respondes a los escenarios en cada ronda con tu coeficiente intelectual de ingenio.🧠 Y después de cada Escenario, votas por las respuestas más divertidas y luchas a través de tus comentarios en una Fase de Chat y Voto para ganar Humour XPs a través de los votos de los demás.⚔️ El que esté en la cima del marcador gana la Humour Cup al final.🏆🥇",
+    ab5: "Explicación paso a paso: El anfitrión crea una sala segura y comparte un código de 4 dígitos que puedes dar a tus amigos para que se unan con nombres locos para que nadie sepa quién es quién - anonimato total.😈 Una vez que todos se unen al vestíbulo, pueden seleccionar cómo quieren jugar a través de las diferentes opciones dadas, y hay suficientes para mimarte. El servidor funciona según las opciones seleccionadas por el Anfitrión.",
+    ab6: "Si seleccionas A.I., los escenarios humorísticos serán generados aleatoriamente por la IA. Desde preguntas absurdas hasta situaciones dignas de memes.🤖",
+    ab7: "Si seleccionas Público, los escenarios serán generados aleatoriamente a partir de los ingresados por los jugadores globalmente en la caja. ¡Ve a ingresar algunos de tus escenarios divertidos ahí. ¡Ahora!😠",
+    ab8: "La opción Personalizada es la más divertida. Les da a todos en el vestíbulo la libertad de ingresar sus propios escenarios para el juego (anónimamente🤫).",
+    ab9: "Cuidado, el juego es simple pero altamente adictivo. No te quejes más tarde de que no te advertí cuando tengas el Síndrome de Cuello de Texto. Lo buscarías, ¿verdad?😏",
     ab10: "¿Por qué Humour Cup es brutal?❤️‍🔥 :",
-    ab11: "Escenarios Dinámicos de IA: Nunca jugarás el mismo juego dos veces.",
-    ab12: "Envía tus Escenarios: ¿Tienes un chiste interno? Añádelo a la caja pública.",
-    ab13: "Crea tus propios Escenarios: Escribe cualquier escenario de forma anónima.",
-    ab14: "Idiomas Globales: ¡Juega en inglés, español, francés, mandarín y más!",
-    ab15: "Para toda la familia o 18+: Elige la vibra de tu equipo.",
-    ab16: "Prueba tu humor hoy. Descubre tu rango de humor entre tus amigos. ¡Crea una sala y que comience la batalla!"
+    ab11: "Escenarios Dinámicos de IA: Impulsado por IA avanzada, nunca sentirás que juegas el mismo juego dos veces.",
+    ab12: "Envía tus Escenarios para jugadores de Humour Cup: ¿Tienes un chiste interno? - Entonces añade tus propios escenarios a la caja.",
+    ab13: "Crea tus propios Escenarios en Humour Cup: En la opción Personalizada del Vestíbulo, todos pueden escribir cualquier escenario anónimamente.",
+    ab14: "Idiomas Globales: ¡Juega en algunos de los idiomas más populares del mundo como Inglés, Hindi, Español, Francés, Mandarín, y más!",
+    ab15: "Familiar o 18+: Elige la categoría que se adapte al ambiente de tu equipo. Eres libre de jugar como quieras.",
+    ab16: "Pon a prueba tu humor hoy. Descubre tu rango de humor entre tus amigos. ¡Crea una sala, comparte el código con tus amigos, y deja que comience la batalla del humor!"
   },
   'French': { 
-    name: "Votre nom drôle", create: "Créer un Salon", orJoin: "OU REJOINDRE", code: "CODE", join: "Rejoindre", rulebook: "👑 Comment Jouer 👑", rule1: "Écrivez votre réponse humoristique.", rule2: "Répondez avec vos blagues dans le chat.", rule3: "Votez pour ceux que vous trouvez drôles.", rule4: "Le joueur avec le plus d'XP gagne.", submitPub: "🌍 Soumettez vos Scénarios pour Humour Cup 🌍", pubDesc: "Ceux-ci apparaissent aléatoirement aux joueurs optant pour les scénarios Publics dans le Lobby.", pubPlace: "Tapez votre scénario ici...", submit: "Soumettre", lobby: "Lobby", roomCode: "CODE DU SALON:", cat: "Catégorie:", scen: "Scénarios:", lang: "Langue:", secret: "🤫 Ajouter secrètement !", secPlace: "Écrivez un scénario surprise...", addPool: "Ajouter", totPool: "Total personnalisés:", addCustomAlso: "Ajoutez également vos scénarios dans la boîte de scénario Public ci-dessous, si approprié.", waitSquad: "En attente de l'équipe...", host: "(Hôte)", launch: "Lancer le jeu 🚀", waitMore: "En attente d'un joueur...", waitHost: "En attente de l'hôte...", fetch: "Récupération...", scenTitle: "Scénario", secLeft: "Secondes", typeHumour: "Tapez votre humour...", subHumour: "Soumettre l'humour", waitSlow: "En attente des humains lents...", chatVote: "Round de Chat & Vote", humourBtn: "Drôle !", replyBtn: "Répondre", repPlace: "Répondre...", send: "Envoyer", cancel: "Annuler", done: "J'ai fini !", waiting: "En attente...", upcoming: "À venir", enterRound: "Entrée au Round-", in: "dans", seconds: "secondes", load: "Chargement...", results: "Résultats Finaux", winners: "Gagnants", winner: "Gagnant", scoreboard: "Tableau de bord", receipt: "🧾 MATCH RECEIPT", thanks: "Merci d'avoir joué ! 🏆", saveRec: "📸 Sauvegarder ce reçu", playAgain: "Rejouer", waitRes: "En attente de l'hôte...", adminVault: "Vue Admin", backHome: "⬅ Retour", noScen: "Pas de scénarios !", madeBy: "⚡créé par ", toSpark: " pour éveiller votre humour⚡", privacy: "Politique de confidentialité", terms: "Conditions d'utilisation", contact: "Nous contacter",
-    donateBtn: "☕ Offrez un café au développeur ☕", donateSub: "(Faire un don)", donateText: "Ce développeur indé doit gérer les serveurs, la modération et la maintenance 🥺. Un peu d'aide boostera mes idées 💙.",
-    feedbackText: "Comment diable puis-je rendre ce jeu plus amusant ? Dites-moi tout à", chatInst: "Appuyez sur 'Drôle !' sur les réponses amusantes des autres.", whatIsHC: "🤔 Qu'est-ce que Humour Cup ?",
-    goldTitle: "👑 Humour Cup GOLD", getGold: "Obtenir GOLD", passPlaceholder: "Entrer le code Gold...", goldWarn: "Partagez judicieusement : 2 salons ne peuvent pas utiliser 1 code en même temps !",
-    modalIntl: "🌍 International (Card/PayPal)", modalInd: "🇮🇳 Inde (UPI/Razorpay)", close: "Fermer", modBatch: "Modérer 50 Scénarios",
-    ab1: "Bienvenue dans Humour Cup, le jeu de compétition humoristique où votre esprit gagne la couronne ! Que vous traîniez avec des amis ennuyeux, des faux collègues, ou cherchiez une activité comme OnlyFans mais en version texte lol - Humour Cup est parfait. 😼",
-    ab2: "Comment jouer à ce truc ?:",
-    ab3: "Vous entrez votre esprit vif et les autres votent. Le plus drôle gagne la Humour Cup.🏆 Vous pouvez aussi sauvegarder le jeu à la fin pour les souvenirs.",
-    ab4: "Pour élaborer : Vous répondez avec votre QI d'esprit.🧠 Ensuite, vous vous battez dans un round de Chat et Vote pour gagner des XP.⚔️ Le premier gagne la Coupe à la fin !🏆🥇",
-    ab5: "Explication étape par étape : L'hôte crée un salon sécurisé et partage un code à 4 chiffres pour un anonymat total.😈 Le serveur fonctionne selon les options de l'Hôte.",
-    ab6: "Si vous sélectionnez A.I., les scénarios seront générés aléatoirement par l'A.I. 🤖",
-    ab7: "Si vous sélectionnez Public, les scénarios seront générés à partir de ceux entrés par les joueurs. Allez y entrer les vôtres !😠",
-    ab8: "L'option Personnalisée (Custom) vous donne la liberté d'entrer vos propres scénarios de manière anonyme.🤫",
-    ab9: "Attention, le jeu est très addictif. Ne vous plaignez pas du Syndrome du Cou de Texte plus tard.😏",
-    ab10: "Pourquoi Humour Cup est génial ❤️‍🔥 :",
-    ab11: "Scénarios IA dynamiques : Vous ne jouerez jamais deux fois au même jeu.",
-    ab12: "Soumettez vos Scénarios : Ajoutez vos propres scénarios à la boîte publique.",
-    ab13: "Créez vos propres Scénarios : Écrivez n'importe quel scénario anonymement.",
-    ab14: "Langues mondiales : Jouez en anglais, français, espagnol et plus !",
-    ab15: "Tout public ou 18+ : Choisissez la catégorie qui convient à votre équipe.",
-    ab16: "Testez votre humour aujourd'hui. Découvrez votre rang parmi vos amis. Que la bataille commence !"
+    name: "Votre nom drôle", create: "Créer un Salon", createGold: "Créer un Salon GOLD!", orJoin: "OU REJOINDRE", code: "CODE", join: "Rejoindre", rulebook: "👑 Comment Jouer 👑", rule1: "Écrivez votre réponse humoristique.", rule2: "Répondez avec vos blagues dans le chat.", rule3: "Votez pour ceux que vous trouvez drôles.", rule4: "Le joueur avec le plus d'XP gagne.", submitPub: "🌍 Soumettez vos Scénarios pour Humour Cup 🌍", pubDesc: "Ceux-ci apparaissent aléatoirement aux joueurs optant pour les scénarios Publics dans le Lobby.", pubPlace: "Tapez votre scénario ici...", submit: "Soumettre", lobby: "Lobby", roomCode: "CODE DU SALON:", cat: "Catégorie:", scen: "Scénarios:", lang: "Langue:", secret: "🤫 Ajouter secrètement !", secPlace: "Écrivez un scénario surprise...", addPool: "Ajouter", totPool: "Total personnalisés:", addCustomAlso: "Ajoutez également vos scénarios dans la boîte de scénario Public ci-dessous, si approprié.", waitSquad: "En attente de l'équipe...", host: "(Hôte)", launch: "Lancer le jeu 🚀", waitMore: "En attente d'un joueur...", waitHost: "En attente de l'hôte...", fetch: "Récupération...", scenTitle: "Scénario", secLeft: "Secondes", typeHumour: "Tapez votre humour...", subHumour: "Soumettre l'humour", waitSlow: "En attente des humains lents...", chatVote: "Round de Chat & Vote", humourBtn: "Drôle !", replyBtn: "Répondre", repPlace: "Répondre...", send: "Envoyer", cancel: "Annuler", done: "J'ai fini !", waiting: "En attente...", upcoming: "À venir", enterRound: "Entrée au Round-", in: "dans", seconds: "secondes", load: "Chargement...", results: "Résultats Finaux", winners: "Gagnants", winner: "Gagnant", scoreboard: "Tableau de bord", receipt: "🧾 MATCH RECEIPT", thanks: "Merci d'avoir joué ! 🏆", saveRec: "📸 Sauvegarder ce reçu", playAgain: "Rejouer", waitRes: "En attente de l'hôte...", adminVault: "Vue Admin", backHome: "⬅ Retour", noScen: "Pas de scénarios !", madeBy: "⚡créé par ", toSpark: " pour éveiller votre humour⚡", privacy: "Politique de confidentialité", terms: "Conditions d'utilisation", contact: "Nous contacter",
+    donateBtn: "☕ Soutenir via UPI ☕", donateSub: "(Zéro frais !)", donateText: "Ce développeur indé doit gérer les serveurs, la modération et la maintenance 🥺. Un peu d'aide boostera mes idées 💙.", feedbackText: "Comment diable puis-je rendre ce jeu plus amusant ? Dites-moi tout à", chatInst: "Appuyez sur 'Drôle !' sur les réponses amusantes des autres.", whatIsHC: "🤔 Qu'est-ce que Humour Cup ?",
+    goldTitle: "🏆 Humour Cup GOLD", goldSub: "Vous ne pouvez pas créer plus d'un salon avec cette Fun Key. Partagez-la judicieusement.",
+    gPerk1: "Joueurs illimités (Au-delà de 6!)", gPerk2: "Nombre de rounds et minuteries personnalisés", gPerk3: "Scénarios A.I. plus humoristiques", gPerk4: "Meilleurs scénarios A.I. et Publics classés par ordre de priorité", gPerk5: "Changer de scénario en jouant", gPerk6: "100% sans publicité", gPerk7: "Supporter officiel de Humour Cup 💙",
+    gInput: "Entrez votre Fun Key pour activer GOLD...", gInstruction: "Entrez cette Fun Key dans la boîte GOLD pour activer Humour Cup GOLD. Après le paiement, votre Fun Key vous sera envoyée par e-mail.", gActive: "Fun Key activée. Créez un salon GOLD maintenant.",
+    ab1: "Bienvenue dans Humour Cup, l'ultime jeu de compétition d'humour multijoueur en temps réel où votre esprit gagne la couronne ! Que vous traîniez avec vos amis ennuyeux, preniez une pause avec vos faux collègues, ou cherchiez simplement une activité amusante en ligne comme OnlyFans mais en version texte lol - Humour Cup est parfait pour ce divertissement sans fin. 😼",
+    ab2: "Comment vraiment jouer à ce truc ?:",
+    ab3: "Vous entrez votre esprit vif et les autres votent s'ils le trouvent humoristique. Vous vous battez avec vos commentaires humoristiques après chaque scénario avec d'autres. Le plus humoristique gagne la soi-disant - Humour Cup.🏆 Vous pouvez également enregistrer la partie jouée à la fin, pour collectionner des souvenirs.",
+    ab4: "Pour élaborer davantage le gameplay : Vous répondez aux scénarios à chaque tour avec votre QI d'esprit.🧠 Et après chaque Scénario, vous votez pour les réponses les plus humoristiques et vous vous battez à travers vos commentaires dans une phase de discussion et de vote pour gagner des XP Humour.⚔️ Celui en haut du tableau de bord gagne la Humour Cup à la fin.🏆🥇",
+    ab5: "Explication étape par étape : L'hôte crée une salle sécurisée et partage un code unique à 4 chiffres pour que personne ne sache qui est qui - anonymat total.😈 Une fois que tout le monde a rejoint le lobby, ils peuvent sélectionner comment ils veulent jouer grâce aux différentes options données. Le serveur fonctionne selon les options sélectionnées par l'Hôte.",
+    ab6: "Si vous sélectionnez A.I., alors les scénarios humoristiques seront générés aléatoirement par l'IA allant de questions hypothétiques absurdes à des situations dignes de mèmes.🤖",
+    ab7: "Si vous sélectionnez Public, les scénarios seront générés à partir de ceux saisis par les joueurs mondialement. Allez y entrer quelques-uns de vos scénarios amusants. Maintenant !😠",
+    ab8: "L'option Personnalisée (Custom) est la plus hilarante. Elle vous donne à tous la liberté de saisir vos propres scénarios pour votre jeu (anonymement🤫).",
+    ab9: "Attention, le jeu est simple mais très addictif. Ne vous plaignez pas plus tard que je ne vous ai pas prévenu du Syndrome du Cou de Texte. Vous chercheriez ça, n'est-ce pas ?😏",
+    ab10: "Pourquoi Humour Cup est génial ?❤️‍🔥 :",
+    ab11: "Scénarios IA dynamiques : Propulsé par une IA avancée, vous ne jouerez jamais deux fois au même jeu.",
+    ab12: "Soumettez vos Scénarios pour les joueurs : Vous avez une blague d'initié ? - Alors ajoutez vos propres scénarios à la boîte.",
+    ab13: "Créez vos propres Scénarios : Dans l'option Personnalisée, vous pouvez tous écrire des scénarios anonymement.",
+    ab14: "Langues Mondiales : Jouez dans certaines des langues les plus chaudes du monde comme l'Anglais, l'Hindi, l'Espagnol, le Français, le Mandarin, et plus !",
+    ab15: "Familial ou 18+ : Choisissez la catégorie qui correspond à l'ambiance de votre groupe. Vous êtes libre de jouer comme vous le souhaitez.",
+    ab16: "Testez votre humour aujourd'hui. Découvrez votre classement d'humour parmi vos amis. Créez une salle, partagez le code, et que la bataille d'humour commence !"
   },
   'Mandarin': { 
-    name: "你的搞笑名字", create: "创建房间", orJoin: "或加入朋友", code: "代码", join: "加入", rulebook: "👑 怎么玩 👑", rule1: "在每个场景上写下你的幽默回应。", rule2: "在聊天回合中回复你的幽默段子。", rule3: "为你觉得好笑的投票。", rule4: "拥有最高幽默XP的玩家获胜。", submitPub: "🌍 为Humour Cup玩家提交你的幽默场景 🌍", pubDesc: "这些场景会随机出现给在大厅选择公开场景的Humour Cup玩家。", pubPlace: "在这里输入你的场景...", submit: "提交", lobby: "大厅", roomCode: "房间代码：", cat: "类别：", scen: "场景：", lang: "语言：", secret: "🤫 秘密添加！", secPlace: "写一个惊喜场景...", addPool: "添加到池中", totPool: "自定义场景总数：", addCustomAlso: "如果合适的话，也将您的自定义幽默场景添加到下方的公开场景框中。", waitSquad: "等待队伍...", host: "(房主)", launch: "开始游戏 🚀", waitMore: "等待至少一名玩家...", waitHost: "等待房主开始...", fetch: "获取场景中...", scenTitle: "场景", secLeft: "剩余秒数", typeHumour: "输入你的幽默...", subHumour: "提交", waitSlow: "等待较慢的玩家...", chatVote: "聊天和投票回合", humourBtn: "好笑！", replyBtn: "回复", repPlace: "回复...", send: "发送", cancel: "取消", done: "我读完了！", waiting: "等待中...", upcoming: "即将到来", enterRound: "进入回合-", in: "还有", seconds: "秒", load: "加载中...", results: "最终结果", winners: "赢家", winner: "赢家", scoreboard: "最终记分牌", receipt: "🧾 MATCH RECEIPT", thanks: "感谢游玩！🏆", saveRec: "📸 保存收据", playAgain: "再玩一次", waitRes: "等待房主...", adminVault: "管理员", backHome: "⬅ 返回", noScen: "暂无场景！", madeBy: "⚡由 ", toSpark: " 制作，点燃你的幽默⚡", privacy: "隐私政策", terms: "服务条款", contact: "联系我们",
-    donateBtn: "☕ 请开发者喝杯咖啡 ☕", donateSub: "(赞助)", donateText: "这个独立开发者需要处理服务器、审核和维护 🥺。一点点帮助能激发我更多灵感 💙。",
-    feedbackText: "我到底该怎么让这游戏更好玩？在这里告诉我一切", chatInst: "点击其他人搞笑回答旁边的“好笑！”。", whatIsHC: "🤔 什么是 Humour Cup？",
-    goldTitle: "👑 Humour Cup GOLD", getGold: "获取 GOLD", passPlaceholder: "输入 Gold 密码...", goldWarn: "请谨慎分享：2个房间不能同时使用1个密码！",
-    modalIntl: "🌍 国际 (Card/PayPal)", modalInd: "🇮🇳 印度 (UPI/Razorpay)", close: "关闭", modBatch: "审核 50 个场景",
-    ab1: "欢迎来到Humour Cup，这是一个实时的多人幽默竞技游戏！无论你是和无聊的朋友聚会，和虚伪的同事休息，还是只想找点像文字版OnlyFans一样的在线乐子lol——Humour Cup都能带来无尽的娱乐。😼",
+    name: "你的搞笑名字", create: "创建房间", createGold: "创建黄金房间！", orJoin: "或加入朋友", code: "代码", join: "加入", rulebook: "👑 怎么玩 👑", rule1: "在每个场景上写下你的幽默回应。", rule2: "在聊天回合中回复你的幽默段子。", rule3: "为你觉得好笑的投票。", rule4: "拥有最高幽默XP的玩家获胜。", submitPub: "🌍 为Humour Cup玩家提交你的幽默场景 🌍", pubDesc: "这些场景会随机出现给在大厅选择公开场景的Humour Cup玩家。", pubPlace: "在这里输入你的场景...", submit: "提交", lobby: "大厅", roomCode: "房间代码：", cat: "类别：", scen: "场景：", lang: "语言：", secret: "🤫 秘密添加！", secPlace: "写一个惊喜场景...", addPool: "添加到池中", totPool: "自定义场景总数：", addCustomAlso: "如果合适的话，也将您的自定义幽默场景添加到下方的公开场景框中。", waitSquad: "等待队伍...", host: "(房主)", launch: "开始游戏 🚀", waitMore: "等待至少一名玩家...", waitHost: "等待房主开始...", fetch: "获取场景中...", scenTitle: "场景", secLeft: "剩余秒数", typeHumour: "输入你的幽默...", subHumour: "提交", waitSlow: "等待较慢的玩家...", chatVote: "聊天和投票回合", humourBtn: "好笑！", replyBtn: "回复", repPlace: "回复...", send: "发送", cancel: "取消", done: "我读完了！", waiting: "等待中...", upcoming: "即将到来", enterRound: "进入回合-", in: "还有", seconds: "秒", load: "加载中...", results: "最终结果", winners: "赢家", winner: "赢家", scoreboard: "最终记分牌", receipt: "🧾 MATCH RECEIPT", thanks: "感谢游玩！🏆", saveRec: "📸 保存收据", playAgain: "再玩一次", waitRes: "等待房主...", adminVault: "管理员", backHome: "⬅ 返回", noScen: "暂无场景！", madeBy: "⚡由 ", toSpark: " 制作，点燃你的幽默⚡", privacy: "隐私政策", terms: "服务条款", contact: "联系我们",
+    donateBtn: "☕ 通过 UPI 支持 ☕", donateSub: "(免手续费！)", donateText: "这个独立开发者需要处理服务器、审核和维护 🥺。一点点帮助能激发我更多灵感 💙。", feedbackText: "我到底该怎么让这游戏更好玩？在这里告诉我一切", chatInst: "点击其他人搞笑回答旁边的“好笑！”。", whatIsHC: "🤔 什么是 Humour Cup？",
+    goldTitle: "🏆 Humour Cup 黄金版", goldSub: "您不能同时使用此Fun Key创建超过1个房间。所以，请谨慎分享您的密钥。",
+    gPerk1: "无限制玩家 (突破6人限制！)", gPerk2: "自定义回合数和计时器", gPerk3: "更幽默的AI场景", gPerk4: "为您优先推荐最佳的AI和公共场景", gPerk5: "在游玩时更改场景", gPerk6: "100%无广告体验", gPerk7: "Humour Cup 官方支持者 💙",
+    gInput: "输入您的Fun Key以激活黄金版...", gInstruction: "在GOLD框中输入此Fun Key以激活 Humour Cup 黄金版。付款后，您的Fun Key将发送到您的邮箱。", gActive: "Fun Key已激活。现在创建黄金房间。",
+    ab1: "欢迎来到Humour Cup，这是一个终极实时多人幽默竞技游戏，你的机智将为你赢得王冠！无论你是和无聊的朋友在聚会上消磨时间，还是和虚伪的同事休息，或者只是寻找像文字版OnlyFans一样有趣的在线活动，哈哈 - Humour Cup 正适合那种无尽的娱乐。😼",
     ab2: "这游戏到底怎么玩？：",
-    ab3: "你输入机智的回答，其他人投票。最搞笑的人赢得Humour Cup。🏆 你还可以在最后保存游戏记录，留作回忆。",
-    ab4: "详细玩法：你用智商回应场景。🧠 然后在聊天和投票环节通过搞笑评论赚取XP。⚔️ 分数最高的人赢得奖杯！🏆🥇",
-    ab5: "步骤说明：房主创建一个安全的房间并分享4位代码，完全匿名。😈 所有人加入后，可以选择怎么玩。服务器根据房主的选择运行。",
-    ab6: "选择A.I.，场景由AI随机生成。🤖",
-    ab7: "选择Public，场景来自全球玩家提交的“公共场景”。去填你的搞笑场景吧！😠",
-    ab8: "Custom（自定义）选项赋予大厅中所有人匿名输入自己场景的自由。🤫",
-    ab9: "注意，游戏很简单但容易上瘾。别抱怨我没警告过你得“短信脖”。你会去搜这个词的，对吧？😏",
+    ab3: "你输入机智的回答，其他人觉得搞笑就会投票。在每个场景后，你会和其他人通过搞笑评论进行交锋。最搞笑的人赢得所谓的 - Humour Cup。🏆 游戏结束时你还可以保存和大家一起玩的游戏，作为美好回忆。",
+    ab4: "详细玩法：你在每轮中用你的智商回应场景。🧠 在每个场景后，你为最搞笑的回答投票，并在聊天投票阶段通过你的搞笑评论与其他玩家对战，赚取Humour XP。⚔️ 最终积分榜榜首赢得Humour Cup。🏆🥇",
+    ab5: "分步解释：房主创建一个安全的房间并分享一个4位数的代码，你可以把代码给朋友，让他们用疯狂的名字加入，这样没人知道谁是谁 - 完全匿名。😈 所有人加入大厅后，可以选择怎么玩。服务器将根据房主选择的选项运行。",
+    ab6: "如果选择A.I.，幽默场景将由AI随机生成，从荒谬的假设问题到日常尴尬，再到奇怪的短信和梗图般的状况。🤖",
+    ab7: "如果选择Public，场景将随机从全球玩家提交的“为Humour Cup玩家提交你的幽默场景”框中生成。去那里写几个你觉得好笑的场景吧。现在就去！😠",
+    ab8: "Custom（自定义）选项是最搞笑的。它给了大厅里所有人自由输入自己场景的权利（匿名🤫）。",
+    ab9: "注意，游戏很简单但很容易上瘾。不要以后抱怨我没警告过你会得“短信脖”（Text Neck Syndrome）。你会去搜这个的，对吧？😏",
     ab10: "为什么Humour Cup这么燃？❤️‍🔥 :",
-    ab11: "动态AI场景：永远不会玩到完全相同的游戏。",
-    ab12: "提交你的场景：把你的内部梗加到公共池里。",
-    ab13: "自定义场景：在大厅匿名写下场景立刻玩。",
-    ab14: "全球语言：支持多种最热门的语言！",
-    ab15: "全年龄或18禁：选择适合你们团队的类别。",
-    ab16: "今天就来测试你的幽默感。找出你在朋友中的幽默排名。开始幽默对决吧！"
+    ab11: "动态AI场景：由先进的AI驱动，你永远不会感觉在玩两次完全相同的游戏。",
+    ab12: "提交你的场景：有个内部梗？那就把你自己的场景添加到框中。",
+    ab13: "创建你自己的场景：在自定义选项中，你们都可以匿名写下任何场景。",
+    ab14: "全球语言：支持世界上最热门的语言，如英语、印地语、西班牙语、法语、中文等！",
+    ab15: "全年龄或18禁：选择适合你们团队氛围的类别。随你怎么玩，随你怎么写。",
+    ab16: "今天就来测试你的幽默感。看看你在朋友中的幽默排名。创建房间，分享代码，让幽默对决开始吧！"
   },
   'Arabic': { 
-    name: "اسمك المضحك", create: "إنشاء غرفة", orJoin: "أو الانضمام", code: "رمز", join: "انضمام", rulebook: "👑 كيف تلعب 👑", rule1: "اكتب ردك المضحك على كل سيناريو.", rule2: "رد بنكاتك في جولة الدردشة.", rule3: "صوت لمن تجده مضحكًا.", rule4: "اللاعب صاحب أعلى نقاط يفوز.", submitPub: "🌍 أرسل سيناريوهاتك المضحكة للاعبي Humour Cup 🌍", pubDesc: "تظهر هذه السيناريوهات عشوائيًا للاعبي Humour Cup الذين يختارون السيناريوهات العامة في اللوبي.", pubPlace: "اكتب هنا...", submit: "إرسال", lobby: "اللوبي", roomCode: "رمز الغرفة:", cat: "الفئة:", scen: "السيناريوهات:", lang: "اللغة:", secret: "🤫 أضف سرا!", secPlace: "اكتب مفاجأة...", addPool: "إضافة", totPool: "المجموع:", addCustomAlso: "أضف سيناريوهاتك المضحكة المخصصة إلى مربع السيناريو العام أدناه أيضًا ، إذا كانت مناسبة.", waitSquad: "في انتظار الفريق...", host: "(مضيف)", launch: "ابدأ اللعبة 🚀", waitMore: "في انتظار لاعب آخر...", waitHost: "في انتظار المضيف...", fetch: "جاري الجلب...", scenTitle: "سيناريو", secLeft: "ثواني", typeHumour: "اكتب نكتتك...", subHumour: "إرسال", waitSlow: "في انتظار الباقين...", chatVote: "الدردشة والتصويت", humourBtn: "مضحك!", replyBtn: "رد", repPlace: "رد...", send: "إرسال", cancel: "إلغاء", done: "انتهيت!", waiting: "انتظار...", upcoming: "القادم", enterRound: "دخول الجولة-", in: "في", seconds: "ثانية", load: "تحميل...", results: "النتائج", winners: "الفائزون", winner: "الفائز", scoreboard: "النقاط", receipt: "🧾 MATCH RECEIPT", thanks: "شكرا للعب! 🏆", saveRec: "📸 حفظ الإيصال", playAgain: "العب مرة أخرى", waitRes: "في انتظار المضيف...", adminVault: "المسؤول", backHome: "⬅ رجوع", noScen: "لا توجد سيناريوهات!", madeBy: "⚡صنع بواسطة ", toSpark: " لإشعال حس الفكاهة لديك⚡", privacy: "سياسة الخصوصية", terms: "شروط الخدمة", contact: "اتصل بنا",
-    donateBtn: "☕ اشترِ للمطور قهوة ☕", donateSub: "(تبرع)", donateText: "يحتاج هذا المطور المستقل للتعامل مع الخوادم والإشراف والصيانة 🥺. القليل من المساعدة سيعزز أفكاري 💙.",
-    feedbackText: "كيف بحق الجحيم أجعل هذه اللعبة أكثر متعة؟ أخبرني بكل شيء على", chatInst: "انقر على 'مضحك!' للردود المضحكة للآخرين.", whatIsHC: "🤔 ما هو Humour Cup؟",
-    goldTitle: "👑 Humour Cup GOLD", getGold: "احصل على GOLD", passPlaceholder: "أدخل رمز Gold...", goldWarn: "شارك بحكمة: لا يمكن لغرفتين استخدام رمز واحد في نفس الوقت!",
-    modalIntl: "🌍 دولي (Card/PayPal)", modalInd: "🇮🇳 هندي (UPI/Razorpay)", close: "إغلاق", modBatch: "إشراف على 50 سيناريو",
-    ab1: "مرحبًا بك في Humour Cup! لعبة الكوميديا الجماعية حيث يفوز ذكائك بالتاج. سواء كنت تتسكع مع أصدقاء مملين أو تبحث عن نشاط مثل OnlyFans بنسخة نصية ههه - إنها الترفيه المثالي. 😼",
-    ab2: "كيف تلعب هذا الشيء؟:",
-    ab3: "تكتب ردودك المضحكة ويصوت الآخرون. الفائز يحصل على Humour Cup.🏆 يمكنك أيضًا حفظ اللعبة في النهاية للذكريات.",
-    ab4: "رد على السيناريوهات بذكائك.🧠 وصوت ونافس في جولة الدردشة لتربح XP.⚔️ الفائز يتوج بالكأس في النهاية!🏆🥇",
-    ab5: "ينشئ المضيف غرفة ويشارك رمزًا مكونًا من 4 أرقام لتنضموا بأسماء مجهولة.😈 يحدد الخادم الخيارات بناءً على اختيار المضيف.",
-    ab6: "الذكاء الاصطناعي يولد سيناريوهات عشوائية.🤖",
-    ab7: "السيناريوهات العامة تأتي من لاعبين حول العالم. أضف سيناريوهاتك هناك!😠",
-    ab8: "الخيار المخصص يسمح للجميع بكتابة سيناريوهاتهم بسرية تامة.🤫",
-    ab9: "احذر، اللعبة تسبب الإدمان. لا تشتكِ من متلازمة عنق النص لاحقًا.😏",
-    ab10: "لماذا Humour Cup رائع؟❤️‍🔥 :",
-    ab11: "سيناريوهات متجددة مدعومة بالذكاء الاصطناعي.",
-    ab12: "أضف سيناريوهاتك ليستخدمها الآخرون في الصندوق العام.",
-    ab13: "كتابة سيناريوهات مخصصة أثناء اللعب.",
-    ab14: "لغات متعددة حول العالم.",
-    ab15: "اختر الفئة المناسبة لفريقك (+18 أو عائلي).",
-    ab16: "اختبر حسك الفكاهي اليوم وابدأ معركة الكوميديا!"
+    name: "اسمك المضحك", create: "إنشاء غرفة", createGold: "إنشاء غرفة GOLD!", orJoin: "أو الانضمام", code: "رمز", join: "انضمام", rulebook: "👑 كيف تلعب 👑", rule1: "اكتب ردك المضحك على كل سيناريو.", rule2: "رد بنكاتك في جولة الدردشة.", rule3: "صوت لمن تجده مضحكًا.", rule4: "اللاعب صاحب أعلى نقاط يفوز.", submitPub: "🌍 أرسل سيناريوهاتك المضحكة للاعبي Humour Cup 🌍", pubDesc: "تظهر هذه السيناريوهات عشوائيًا للاعبي Humour Cup الذين يختارون السيناريوهات العامة في اللوبي.", pubPlace: "اكتب هنا...", submit: "إرسال", lobby: "اللوبي", roomCode: "رمز الغرفة:", cat: "الفئة:", scen: "السيناريوهات:", lang: "اللغة:", secret: "🤫 أضف سرا!", secPlace: "اكتب مفاجأة...", addPool: "إضافة", totPool: "المجموع:", addCustomAlso: "أضف سيناريوهاتك المضحكة المخصصة إلى مربع السيناريو العام أدناه أيضًا ، إذا كانت مناسبة.", waitSquad: "في انتظار الفريق...", host: "(مضيف)", launch: "ابدأ اللعبة 🚀", waitMore: "في انتظار لاعب آخر...", waitHost: "في انتظار المضيف...", fetch: "جاري الجلب...", scenTitle: "سيناريو", secLeft: "ثواني", typeHumour: "اكتب نكتتك...", subHumour: "إرسال", waitSlow: "في انتظار الباقين...", chatVote: "الدردشة والتصويت", humourBtn: "مضحك!", replyBtn: "رد", repPlace: "رد...", send: "إرسال", cancel: "إلغاء", done: "انتهيت!", waiting: "انتظار...", upcoming: "القادم", enterRound: "دخول الجولة-", in: "في", seconds: "ثانية", load: "تحميل...", results: "النتائج", winners: "الفائزون", winner: "الفائز", scoreboard: "النقاط", receipt: "🧾 MATCH RECEIPT", thanks: "شكرا للعب! 🏆", saveRec: "📸 حفظ الإيصال", playAgain: "العب مرة أخرى", waitRes: "في انتظار المضيف...", adminVault: "المسؤول", backHome: "⬅ رجوع", noScen: "لا توجد سيناريوهات!", madeBy: "⚡صنع بواسطة ", toSpark: " لإشعال حس الفكاهة لديك⚡", privacy: "سياسة الخصوصية", terms: "شروط الخدمة", contact: "اتصل بنا",
+    donateBtn: "☕ دعم عبر UPI ☕", donateSub: "(بدون رسوم!)", donateText: "يحتاج هذا المطور المستقل للتعامل مع الخوادم والإشراف والصيانة 🥺. القليل من المساعدة سيعزز أفكاري 💙.", feedbackText: "كيف بحق الجحيم أجعل هذه اللعبة أكثر متعة؟ أخبرني بكل شيء على", chatInst: "انقر على 'مضحك!' للردود المضحكة للآخرين.", whatIsHC: "🤔 ما هو Humour Cup؟",
+    goldTitle: "🏆 Humour Cup GOLD", goldSub: "لا يمكنك إنشاء أكثر من غرفة واحدة باستخدام مفتاح المرح هذا في نفس الوقت. استخدمه بحكمة.",
+    gPerk1: "لاعبين غير محدودين (أكثر من 6!)", gPerk2: "عدد جولات ومؤقتات مخصصة", gPerk3: "سيناريوهات ذكاء اصطناعي أكثر فكاهة", gPerk4: "أفضل سيناريوهات الذكاء الاصطناعي والعامة ذات الأولوية لك", gPerk5: "تغيير السيناريوهات أثناء اللعب", gPerk6: "تجربة خالية من الإعلانات 100%", gPerk7: "داعم رسمي لـ Humour Cup 💙",
+    gInput: "أدخل مفتاح المرح الخاص بك لتفعيل GOLD...", gInstruction: "أدخل مفتاح المرح هذا في مربع GOLD لتفعيل Humour Cup GOLD. بعد الدفع، سيتم إرسال مفتاح المرح إليك عبر البريد الإلكتروني.", gActive: "تم تفعيل مفتاح المرح. قم بإنشاء غرفة GOLD الآن.",
+    ab1: "مرحبًا بك في Humour Cup، لعبة مسابقة الكوميديا الجماعية في الوقت الفعلي حيث يفوز ذكاؤك بالتاج! سواء كنت تتسكع مع أصدقائك المملين في حفلة، أو تأخذ استراحة مع زملائك المزيفين في العمل، أو تبحث فقط عن نشاط ممتع عبر الإنترنت مثل OnlyFans ولكن بنسخة نصية هههه - Humour Cup مناسب تمامًا لهذا الترفيه اللامتناهي. 😼",
+    ab2: "كيف تلعب هذا الشيء حقًا؟:",
+    ab3: "أنت تدخل ذكائك الحاد ويصوت الآخرون إذا وجدوه مضحكًا. أنت تقاتل بتعليقاتك المضحكة بعد كل سيناريو مع الآخرين. الشخص الأكثر إضحاكًا يفوز بما يسمى - Humour Cup. 🏆 يمكنك أيضًا حفظ اللعبة التي لعبتها مع الجميع في النهاية لجمع الذكريات.",
+    ab4: "لتفصيل طريقة اللعب أكثر: أنت ترد على السيناريوهات في كل جولة بمعدل ذكائك. 🧠 وبعد كل سيناريو، تصوت للردود الأكثر إضحاكًا وتقاتل من خلال تعليقاتك في مرحلة الدردشة والتصويت لكسب Humour XP من خلال أصوات الآخرين. ⚔️ من يتصدر لوحة النتائج يفوز بكأس Humour Cup في النهاية. 🏆🥇",
+    ab5: "شرح خطوة بخطوة: ينشئ المضيف غرفة آمنة ويشارك رمزًا فريدًا مكونًا من 4 أرقام يمكنك إعطاؤه لأصدقائك للانضمام بأسماء مجنونة حتى لا يعرف أحد من هو من - إخفاء هوية تام. 😈 بمجرد انضمام الجميع إلى اللوبي، يمكنهم تحديد الطريقة التي يريدون اللعب بها. يعمل الخادم وفقًا للخيارات التي حددها المضيف.",
+    ab6: "إذا اخترت A.I.، فسيتم إنشاء السيناريوهات بشكل عشوائي بواسطة الذكاء الاصطناعي بدءًا من الأسئلة الافتراضية السخيفة إلى المواقف الغريبة. 🤖",
+    ab7: "إذا حددت عام، فسيتم إنشاء السيناريوهات عشوائيًا من السيناريوهات التي أدخلها اللاعبون عالميًا. اذهب وأدخل بعض السيناريوهات المضحكة هناك. الآن! 😠",
+    ab8: "يعد الخيار المخصص هو الخيار الأكثر إمتاعًا. إنه يمنحكم جميعًا الحرية في إدخال السيناريوهات الخاصة بكم (بشكل مجهول 🤫).",
+    ab9: "احذر، اللعبة بسيطة ولكنها تسبب الإدمان بشدة. لا تشتكي لاحقًا من أنني لم أحذرك عندما تصاب بمتلازمة نص الرقبة (Text Neck Syndrome). سوف تبحث عن ذلك، أليس كذلك؟ 😏",
+    ab10: "لماذا Humour Cup رائع؟ ❤️‍🔥 :",
+    ab11: "سيناريوهات ذكاء اصطناعي ديناميكية: مدعوم بذكاء اصطناعي متقدم، لن تشعر أبدًا أنك تلعب نفس اللعبة مرتين.",
+    ab12: "أرسل سيناريوهاتك: هل لديك نكتة داخلية؟ - إذن أضف سيناريوهاتك الخاصة.",
+    ab13: "اصنع سيناريوهاتك الخاصة: في الخيار المخصص، يمكنكم جميعًا كتابة أي سيناريوهات بشكل مجهول.",
+    ab14: "لغات عالمية: العب بأكثر اللغات شيوعًا مثل الإنجليزية، الهندية، الإسبانية والمزيد!",
+    ab15: "ملائم للعائلة أو 18+: اختر الفئة التي تناسب أجواء فريقك.",
+    ab16: "اختبر حس الفكاهة لديك اليوم. اكتشف ترتيبك في الفكاهة بين أصدقائك. أنشئ غرفة ودع معركة الفكاهة تبدأ!"
   },
   'Portuguese': { 
-    name: "Seu Nome Engraçado", create: "Criar Sala", orJoin: "OU ENTRAR", code: "CÓDIGO", join: "Entrar", rulebook: "👑 Como Jogar 👑", rule1: "Escreva sua resposta humorística.", rule2: "Responda no chat após cada cenário.", rule3: "Vote nas mais engraçadas.", rule4: "O jogador com mais XP ganha.", submitPub: "🌍 Envie seus Cenários para o Humour Cup 🌍", pubDesc: "Estes aparecem aleatoriamente para os jogadores do Humour Cup que optam por cenários Públicos no Lobby.", pubPlace: "Digite seu cenário aqui...", submit: "Enviar", lobby: "Lobby", roomCode: "CÓDIGO DA SALA:", cat: "Categoria:", scen: "Cenários:", lang: "Idioma:", secret: "🤫 Adicionar em segredo!", secPlace: "Escreva um cenário surpresa...", addPool: "Adicionar", totPool: "Total de cenários:", addCustomAlso: "Adicione também seus cenários à caixa de cenário Público abaixo, se adequado.", waitSquad: "Esperando a equipe...", host: "(Host)", launch: "Lançar Jogo 🚀", waitMore: "Esperando mais 1 jogador...", waitHost: "Esperando o host...", fetch: "Buscando Cenários...", scenTitle: "Cenário", secLeft: "Segundos Restantes", typeHumour: "Digite seu humor...", subHumour: "Enviar Humor", waitSlow: "Esperando os lentos...", chatVote: "Rodada de Chat e Votos", humourBtn: "Engraçado!", replyBtn: "Responder", repPlace: "Responder...", send: "Enviar", cancel: "Cancelar", done: "Terminei de ler!", waiting: "Esperando...", upcoming: "Próximo", enterRound: "Entrando na Rodada-", in: "em", seconds: "segundos", load: "Carregando...", results: "Resultados Finais", winners: "Vencedores", winner: "Vencedor", scoreboard: "Placar Final", receipt: "🧾 MATCH RECEIPT", thanks: "Obrigado por jogar! 🏆", saveRec: "📸 Salvar este recibo", playAgain: "Jogar Novamente", waitRes: "Esperando o host...", adminVault: "Cofre Admin", backHome: "⬅ Voltar", noScen: "Sem cenários!", madeBy: "⚡criado por ", toSpark: " para despertar seu humor⚡", privacy: "Política de Privacidade", terms: "Termos de Serviço", contact: "Contate-Nos",
-    donateBtn: "☕ Pague um café para o desenvolvedor ☕", donateSub: "(Doar)", donateText: "Este dev indie precisa lidar com servidores, moderação e manutenção 🥺. Uma ajudinha vai impulsionar minhas ideias 💙.",
-    feedbackText: "Como diabos eu deixo esse jogo mais divertido? Me conte tudo em", chatInst: "Toque em 'Engraçado!' nas respostas divertidas dos outros.", whatIsHC: "🤔 O que é o Humour Cup?",
-    goldTitle: "👑 Humour Cup GOLD", getGold: "Obter GOLD", passPlaceholder: "Digite a Senha Gold...", goldWarn: "Compartilhe com cuidado: 2 salas não podem usar a mesma senha ao mesmo tempo!",
-    modalIntl: "🌍 Internacional (Card/PayPal)", modalInd: "🇮🇳 Índia (UPI/Razorpay)", close: "Fechar", modBatch: "Moderar 50 Cenários",
-    ab1: "Bem-vindo ao Humour Cup, o jogo de competição humorística onde seu intelecto ganha a coroa! Quer esteja com amigos chatos, colegas falsos, ou procurando algo tipo OnlyFans versão texto lol - é diversão sem fim. 😼",
-    ab2: "Como jogar essa p*rra?:",
-    ab3: "Você escreve suas respostas afiadas e os outros votam. O mais engraçado ganha a Taça.🏆 Você também pode salvar o jogo no final para recordar.",
-    ab4: "Para elaborar: Você responde com seu QI.🧠 Depois, você batalha e vota no Chat para ganhar XP.⚔️ O topo do placar ganha a Copa!🏆🥇",
-    ab5: "Passo a passo: O host cria uma sala e compartilha um código de 4 dígitos. Anonimato total!😈 Uma vez no lobby, vocês escolhem como jogar.",
-    ab6: "Opção A.I.: Cenários bizarros gerados por inteligência artificial.🤖",
-    ab7: "Opção Pública: Cenários enviados por jogadores do mundo todo. Vá mandar os seus!😠",
-    ab8: "A opção Custom dá a todos no lobby a liberdade de criar cenários anonimamente.🤫",
-    ab9: "Cuidado, o jogo é muito viciante. Não reclame da Síndrome do Pescoço de Texto depois.😏",
-    ab10: "Por que o Humour Cup é f*da?❤️‍🔥 :",
-    ab11: "A.I. Dinâmica: Nunca jogue a mesma coisa duas vezes.",
-    ab12: "Envie seus próprios cenários para a caixa pública global.",
-    ab13: "Crie cenários secretos ao vivo com seus amigos no lobby.",
-    ab14: "Muitos idiomas disponíveis para jogar em todo o mundo!",
-    ab15: "Family Friendly ou 18+: Escolha a vibe.",
-    ab16: "Teste seu humor hoje. Crie uma sala e que comece a batalha!"
+    name: "Seu Nome Engraçado", create: "Criar Sala", createGold: "Criar Sala GOLD!", orJoin: "OU ENTRAR", code: "CÓDIGO", join: "Entrar", rulebook: "👑 Como Jogar 👑", rule1: "Escreva sua resposta humorística.", rule2: "Responda no chat após cada cenário.", rule3: "Vote nas mais engraçadas.", rule4: "O jogador com mais XP ganha.", submitPub: "🌍 Envie seus Cenários para o Humour Cup 🌍", pubDesc: "Estes aparecem aleatoriamente para os jogadores do Humour Cup que optam por cenários Públicos no Lobby.", pubPlace: "Digite seu cenário aqui...", submit: "Enviar", lobby: "Lobby", roomCode: "CÓDIGO DA SALA:", cat: "Categoria:", scen: "Cenários:", lang: "Idioma:", secret: "🤫 Adicionar em segredo!", secPlace: "Escreva um cenário surpresa...", addPool: "Adicionar", totPool: "Total de cenários:", addCustomAlso: "Adicione também seus cenários à caixa de cenário Público abaixo, se adequado.", waitSquad: "Esperando a equipe...", host: "(Host)", launch: "Lançar Jogo 🚀", waitMore: "Esperando mais 1 jogador...", waitHost: "Esperando o host...", fetch: "Buscando Cenários...", scenTitle: "Cenário", secLeft: "Segundos Restantes", typeHumour: "Digite seu humor...", subHumour: "Enviar Humor", waitSlow: "Esperando os lentos...", chatVote: "Rodada de Chat e Votos", humourBtn: "Engraçado!", replyBtn: "Responder", repPlace: "Responder...", send: "Enviar", cancel: "Cancelar", done: "Terminei de ler!", waiting: "Esperando...", upcoming: "Próximo", enterRound: "Entrando na Rodada-", in: "em", seconds: "segundos", load: "Carregando...", results: "Resultados Finais", winners: "Vencedores", winner: "Vencedor", scoreboard: "Placar Final", receipt: "🧾 MATCH RECEIPT", thanks: "Obrigado por jogar! 🏆", saveRec: "📸 Salvar este recibo", playAgain: "Jogar Novamente", waitRes: "Esperando o host...", adminVault: "Cofre Admin", backHome: "⬅ Voltar", noScen: "Sem cenários!", madeBy: "⚡criado por ", toSpark: " para despertar seu humor⚡", privacy: "Política de Privacidade", terms: "Termos de Serviço", contact: "Contate-Nos",
+    donateBtn: "☕ Apoie via UPI ☕", donateSub: "(Sem taxas!)", donateText: "Este dev indie precisa lidar com servidores, moderação e manutenção 🥺. Uma ajudinha vai impulsionar minhas ideias 💙.", feedbackText: "Como diabos eu deixo esse jogo mais divertido? Me conte tudo em", chatInst: "Toque em 'Engraçado!' nas respostas divertidas dos outros.", whatIsHC: "🤔 O que é o Humour Cup?",
+    goldTitle: "🏆 Humour Cup GOLD", goldSub: "Você não pode criar mais de 1 Sala com esta Fun Key ao mesmo tempo. Compartilhe com sabedoria.",
+    gPerk1: "Jogadores Ilimitados (Mais de 6!)", gPerk2: "Rodadas e Temporizadores Personalizados", gPerk3: "Cenários de I.A. mais hilários", gPerk4: "Os melhores cenários de I.A. e Públicos priorizados", gPerk5: "Mudar cenários durante o jogo", gPerk6: "100% Sem Anúncios", gPerk7: "Apoiador Oficial do Humour Cup 💙",
+    gInput: "Digite sua Fun Key para ativar o GOLD...", gInstruction: "Insira esta Fun Key na caixa GOLD para ativar. Após o pagamento, sua Fun Key será enviada por e-mail.", gActive: "Fun Key ativada. Crie uma Sala GOLD agora.",
+    ab1: "Bem-vindo ao Humour Cup, o melhor jogo de competição de humor multijogador em tempo real, onde sua inteligência vence a coroa! Esteja você saindo com seus amigos chatos em uma festa, fazendo uma pausa com seus falsos colegas de trabalho ou apenas procurando por uma atividade online divertida como o OnlyFans, mas em versão de texto, rs - Humour Cup é ideal para esse entretenimento sem fim. 😼",
+    ab2: "Como jogar essa p*rra realmente?:",
+    ab3: "Você insere sua sagacidade e os outros votam se acham engraçado. Você batalha com seus comentários humorísticos após cada cenário com os outros. O mais bem humorado ganha a chamada - Humour Cup.🏆 Você também pode salvar o jogo no final para guardar memórias.",
+    ab4: "Para elaborar mais a jogabilidade: Você responde aos cenários em cada rodada com o seu QI de humor.🧠 E após cada Cenário, você vota nas respostas mais bem humoradas e batalha através dos seus comentários em uma Fase de Chat para ganhar Humour XPs.⚔️ Quem estiver no topo ganha a Taça.🏆🥇",
+    ab5: "Explicação passo a passo: O anfitrião cria uma sala e compartilha um código de 4 dígitos para anonimato total.😈 O servidor funciona com base nas opções selecionadas pelo Host.",
+    ab6: "Se você selecionar A.I., os cenários humorísticos serão gerados aleatoriamente pela I.A. 🤖",
+    ab7: "Se você selecionar Public, os cenários serão gerados a partir daqueles inseridos pelos jogadores globalmente. Vá inserir os seus! 😠",
+    ab8: "A opção Custom é a mais hilária. Dá a todos a liberdade de entrar com seus próprios cenários anonimamente.🤫",
+    ab9: "Cuidado, o jogo é simples, mas altamente viciante. Cuidado com a Síndrome do Pescoço de Texto. Você vai pesquisar isso, né? 😏",
+    ab10: "Por que Humour Cup é f*da?❤️‍🔥 :",
+    ab11: "Cenários Dinâmicos: Desenvolvido por IA avançada, você nunca jogará o mesmo jogo duas vezes.",
+    ab12: "Envie seus Cenários: Adicione seus próprios cenários à caixa Pública.",
+    ab13: "Crie seus próprios Cenários: Na opção Custom, todos podem escrever cenários anonimamente.",
+    ab14: "Idiomas Globais: Jogue nos idiomas mais populares do mundo!",
+    ab15: "Family Friendly ou 18+: Escolha a categoria que combina com a sua equipe.",
+    ab16: "Teste seu humor hoje. Crie uma sala, compartilhe o código e que a batalha comece!"
   },
   'German': { 
-    name: "Dein lustiger Name", create: "Raum erstellen", orJoin: "ODER BEITRETEN", code: "CODE", join: "Beitreten", rulebook: "👑 Wie man spielt 👑", rule1: "Schreibe deine humorvolle Antwort.", rule2: "Antworte mit Witzen in der Chat-Runde.", rule3: "Stimme für die lustigsten ab.", rule4: "Der Spieler mit den meisten XP gewinnt.", submitPub: "🌍 Reiche deine Szenarien für Humour Cup ein 🌍", pubDesc: "Diese erscheinen zufällig für Humour Cup-Spieler, die sich in der Lobby für öffentliche Szenarien entscheiden.", pubPlace: "Tippe dein Szenario hier...", submit: "Einreichen", lobby: "Lobby", roomCode: "RAUMCODE:", cat: "Kategorie:", scen: "Szenarien:", lang: "Sprache:", secret: "🤫 Heimlich hinzufügen!", secPlace: "Schreibe ein Überraschungs-Szenario...", addPool: "Hinzufügen", totPool: "Gesamte eigene Szenarien:", addCustomAlso: "Fügen Sie Ihre Szenarien nach Möglichkeit auch der Box für öffentliche Szenarien unten hinzu.", waitSquad: "Warten auf das Team...", host: "(Host)", launch: "Spiel starten 🚀", waitMore: "Warten auf 1 weiteren Spieler...", waitHost: "Warten auf den Host...", fetch: "Lade Szenarien...", scenTitle: "Szenario", secLeft: "Sekunden übrig", typeHumour: "Tippe deinen Humor...", subHumour: "Humor einreichen", waitSlow: "Warten auf die Langsamen...", chatVote: "Chat & Abstimmung", humourBtn: "Witzig!", replyBtn: "Antworten", repPlace: "Antworten...", send: "Senden", cancel: "Abbrechen", done: "Ich bin fertig!", waiting: "Warten...", upcoming: "Kommend", enterRound: "Runde-", in: "in", seconds: "Sekunden", load: "Lädt...", results: "Endergebnisse", winners: "Gewinner", winner: "Gewinner", scoreboard: "Endstand", receipt: "🧾 MATCH RECEIPT", thanks: "Danke fürs Spielen! 🏆", saveRec: "📸 Beleg speichern", playAgain: "Nochmal spielen", waitRes: "Warten auf Host...", adminVault: "Admin-Tresor", backHome: "⬅ Zurück", noScen: "Noch keine Szenarien!", madeBy: "⚡erstellt von ", toSpark: " um deinen Humor zu wecken⚡", privacy: "Datenschutzrichtlinie", terms: "Nutzungsbedingungen", contact: "Kontaktiere uns",
-    donateBtn: "☕ Spendier dem Entwickler einen Kaffee ☕", donateSub: "(Spenden)", donateText: "Dieser Indie-Entwickler muss sich um Server, Moderation und Wartung kümmern 🥺. Ein wenig Hilfe beflügelt meine Ideen 💙.",
-    feedbackText: "Wie zum Teufel mache ich dieses Spiel spaßiger? Sag mir alles unter", chatInst: "Tippe bei den lustigen Antworten der anderen auf 'Witzig!'.", whatIsHC: "🤔 Was ist der Humour Cup?",
-    goldTitle: "👑 Humour Cup GOLD", getGold: "GOLD Holen", passPlaceholder: "Gold Passcode eingeben...", goldWarn: "Weise teilen: 2 Räume können nicht gleichzeitig denselben Passcode nutzen!",
-    modalIntl: "🌍 International (Card/PayPal)", modalInd: "🇮🇳 Indien (UPI/Razorpay)", close: "Schließen", modBatch: "50 Szenarien moderieren",
-    ab1: "Willkommen beim Humour Cup! Ein bisschen wie OnlyFans, aber als Textversion lol. Perfekt für langweilige Partys oder falsche Kollegen. 😼",
-    ab2: "Wie spielt man diesen Mist?:",
-    ab3: "Du gibst deinen scharfen Verstand ein und die anderen stimmen ab. Der Gewinner bekommt den Humour Cup.🏆 Speichere das Spiel am Ende für Erinnerungen.",
-    ab4: "Antworte mit deinem IQ.🧠 Kämpfe in der Chat-Runde mit Humor, um XP zu verdienen.⚔️ Der Erste auf der Anzeigetafel gewinnt!🏆🥇",
-    ab5: "Schritt für Schritt: Der Host erstellt einen Raum und teilt einen 4-stelligen Code. Totale Anonymität.😈 Der Server arbeitet nach den Optionen des Hosts.",
-    ab6: "A.I.: Absurde Fragen und Meme-Situationen, generiert von der KI.🤖",
-    ab7: "Public: Szenarien von Spielern weltweit. Reiche deine eigenen ein! Jetzt!😠",
-    ab8: "Custom: Jeder tippt heimlich eigene Szenarien in der Lobby ein.🤫",
-    ab9: "Achtung, sehr süchtig machend! Beschwer dich nicht über dein Text-Nacken-Syndrom.😏",
+    name: "Dein lustiger Name", create: "Raum erstellen", createGold: "GOLD Raum erstellen!", orJoin: "ODER BEITRETEN", code: "CODE", join: "Beitreten", rulebook: "👑 Wie man spielt 👑", rule1: "Schreibe deine humorvolle Antwort.", rule2: "Antworte mit Witzen in der Chat-Runde.", rule3: "Stimme für die lustigsten ab.", rule4: "Der Spieler mit den meisten XP gewinnt.", submitPub: "🌍 Reiche deine Szenarien für Humour Cup ein 🌍", pubDesc: "Diese erscheinen zufällig für Humour Cup-Spieler, die sich in der Lobby für öffentliche Szenarien entscheiden.", pubPlace: "Tippe dein Szenario hier...", submit: "Einreichen", lobby: "Lobby", roomCode: "RAUMCODE:", cat: "Kategorie:", scen: "Szenarien:", lang: "Sprache:", secret: "🤫 Heimlich hinzufügen!", secPlace: "Schreibe ein Überraschungs-Szenario...", addPool: "Hinzufügen", totPool: "Gesamte eigene Szenarien:", addCustomAlso: "Fügen Sie Ihre Szenarien nach Möglichkeit auch der Box für öffentliche Szenarien unten hinzu.", waitSquad: "Warten auf das Team...", host: "(Host)", launch: "Spiel starten 🚀", waitMore: "Warten auf 1 weiteren Spieler...", waitHost: "Warten auf den Host...", fetch: "Lade Szenarien...", scenTitle: "Szenario", secLeft: "Sekunden übrig", typeHumour: "Tippe deinen Humor...", subHumour: "Humor einreichen", waitSlow: "Warten auf die Langsamen...", chatVote: "Chat & Abstimmung", humourBtn: "Witzig!", replyBtn: "Antworten", repPlace: "Antworten...", send: "Senden", cancel: "Abbrechen", done: "Ich bin fertig!", waiting: "Warten...", upcoming: "Kommend", enterRound: "Runde-", in: "in", seconds: "Sekunden", load: "Lädt...", results: "Endergebnisse", winners: "Gewinner", winner: "Gewinner", scoreboard: "Endstand", receipt: "🧾 MATCH RECEIPT", thanks: "Danke fürs Spielen! 🏆", saveRec: "📸 Beleg speichern", playAgain: "Nochmal spielen", waitRes: "Warten auf Host...", adminVault: "Admin-Tresor", backHome: "⬅ Zurück", noScen: "Noch keine Szenarien!", madeBy: "⚡erstellt von ", toSpark: " um deinen Humor zu wecken⚡", privacy: "Datenschutzrichtlinie", terms: "Nutzungsbedingungen", contact: "Kontaktiere uns",
+    donateBtn: "☕ Unterstütze via UPI ☕", donateSub: "(Ohne Gebühren!)", donateText: "Dieser Indie-Entwickler muss sich um Server, Moderation und Wartung kümmern 🥺. Ein wenig Hilfe beflügelt meine Ideen 💙.", feedbackText: "Wie zum Teufel mache ich dieses Spiel spaßiger? Sag mir alles unter", chatInst: "Tippe bei den lustigen Antworten der anderen auf 'Witzig!'.", whatIsHC: "🤔 Was ist der Humour Cup?",
+    goldTitle: "🏆 Humour Cup GOLD", goldSub: "Du kannst mit diesem Fun Key nicht mehr als 1 Raum gleichzeitig erstellen. Teile ihn weise.",
+    gPerk1: "Unbegrenzte Spieler (Mehr als 6!)", gPerk2: "Benutzerdefinierte Runden & Timer", gPerk3: "Noch witzigere KI-Szenarien", gPerk4: "Beste KI- & Public-Szenarien priorisiert", gPerk5: "Szenarien während des Spiels ändern", gPerk6: "100% Werbefrei", gPerk7: "Offizieller Supporter 💙",
+    gInput: "Gib deinen Fun Key ein, um GOLD zu aktivieren...", gInstruction: "Gib diesen Fun Key ein, um Humour Cup GOLD zu aktivieren. Nach der Zahlung wird dir dein Fun Key per E-Mail zugeschickt.", gActive: "Fun Key aktiviert. Erstelle jetzt einen GOLD Raum.",
+    ab1: "Willkommen beim Humour Cup, dem ultimativen Echtzeit-Multiplayer-Humor-Wettbewerbsspiel, bei dem dein Witz die Krone gewinnt! Ob du nun auf einer Party mit deinen langweiligen Freunden abrumhängst, eine Pause mit deinen falschen Arbeitskollegen machst oder einfach nur eine spaßige Online-Aktivität suchst wie OnlyFans, aber als Textversion lol - Humour Cup ist genau richtig für diese endlose Unterhaltung. 😼",
+    ab2: "Wie spielt man diesen Mist wirklich?:",
+    ab3: "Du gibst deinen scharfen Verstand ein und die anderen stimmen ab. Du kämpfst mit deinen Kommentaren gegen andere. Der Humorvollste gewinnt den Humour Cup.🏆 Du kannst am Ende auch das gespielte Spiel speichern.",
+    ab4: "Um das Gameplay genauer zu erklären: Du reagierst auf die Szenarien in jeder Runde mit deinem Witz-IQ.🧠 Du kämpfst in einer Chat- und Abstimmungsphase mit deinen humorvollen Kommentaren.⚔️ Der Erste gewinnt den Humour Cup.🏆🥇",
+    ab5: "Schritt für Schritt Erklärung: Der Host erstellt einen sicheren Raum und teilt einen 4-stelligen Code. Totale Anonymität.😈 Der Server arbeitet nach den vom Host ausgewählten Optionen.",
+    ab6: "Wenn du A.I. wählst, werden die humorvollen Szenarien zufällig von der KI generiert.🤖",
+    ab7: "Wenn du Public wählst, werden die Szenarien aus den von Spielern weltweit eingegebenen Szenarien generiert. Trag dort jetzt deine lustigen Szenarien ein!😠",
+    ab8: "Die Custom-Option ist die lustigste. Jeder gibt anonym eigene Szenarien ein.🤫",
+    ab9: "Achtung, extrem süchtig machend. Beschwer dich später nicht über das Text-Nacken-Syndrom. Du googelst das jetzt, oder?😏",
     ab10: "Warum ist Humour Cup geil?❤️‍🔥 :",
-    ab11: "Dynamische KI-Szenarien: Spiele nie zweimal dasselbe Spiel.",
-    ab12: "Reiche deine eigenen Witze global in der Box ein.",
-    ab13: "Schreibe anonyme Szenarien direkt im Spiel.",
-    ab14: "Globale Sprachen verfügbar.",
-    ab15: "Familienfreundlich oder 18+.",
-    ab16: "Teste deinen Humor heute. Lass die Humorschlacht beginnen!"
+    ab11: "Dynamische KI-Szenarien: Dank fortschrittlicher KI fühlt es sich nie an, als würdest du zweimal dasselbe Spiel spielen.",
+    ab12: "Reiche deine Szenarien ein: Füge deine eigenen Szenarien hinzu.",
+    ab13: "Erstelle deine eigenen Szenarien: In der Custom-Option könnt ihr alle anonym Szenarien schreiben.",
+    ab14: "Globale Sprachen: Spiele auf Englisch, Hindi, Spanisch, Französisch, Mandarin und mehr!",
+    ab15: "Familienfreundlich oder 18+: Wähle die Kategorie, die zu deiner Gruppe passt.",
+    ab16: "Teste deinen Humor noch heute. Erstelle einen Raum und lass die Humor-Schlacht beginnen!"
   },
   'Japanese': { 
-    name: "あなたの面白い名前", create: "ルームを作成", orJoin: "または参加", code: "コード", join: "参加", rulebook: "👑 遊び方 👑", rule1: "各お題に面白い回答を書きます。", rule2: "チャットでジョークを返信します。", rule3: "面白いものに投票します。", rule4: "XPが最も多いプレイヤーの勝ちです。", submitPub: "🌍 Humour Cupプレイヤーのためにお題を送信 🌍", pubDesc: "これらはロビーで公開お題を選択したHumour Cupプレイヤーにランダムに出題されます。", pubPlace: "ここにお題を入力...", submit: "送信", lobby: "ロビー", roomCode: "ルームコード:", cat: "カテゴリー:", scen: "お題:", lang: "言語:", secret: "🤫 こっそり追加！", secPlace: "サプライズお題を書く...", addPool: "追加", totPool: "カスタムお題の合計:", addCustomAlso: "適切であれば、下の公開お題ボックスにもカスタムのお題を追加してください。", waitSquad: "チームを待っています...", host: "(ホスト)", launch: "ゲーム開始 🚀", waitMore: "あと1人待っています...", waitHost: "ホストを待っています...", fetch: "お題を取得中...", scenTitle: "お題", secLeft: "残り秒数", typeHumour: "ユーモアを入力...", subHumour: "送信", waitSlow: "他のプレイヤーを待っています...", chatVote: "チャット＆投票", humourBtn: "面白い！", replyBtn: "返信", repPlace: "返信...", send: "送信", cancel: "キャンセル", done: "読み終わりました！", waiting: "待機中...", upcoming: "次", enterRound: "ラウンド-", in: "開始まで", seconds: "秒", load: "ロード中...", results: "最終結果", winners: "勝者", winner: "勝者", scoreboard: "最終スコアボード", receipt: "🧾 MATCH RECEIPT", thanks: "遊んでくれてありがとう！🏆", saveRec: "📸 このレシートを保存", playAgain: "もう一度プレイ", waitRes: "ホストを待っています...", adminVault: "管理者", backHome: "⬅ 戻る", noScen: "まだお題がありません！", madeBy: "⚡作成者 ", toSpark: " あなたのユーモアを刺激するために⚡", privacy: "プライバシーポリシー", terms: "利用規約", contact: "お問い合わせ",
-    donateBtn: "☕ 開発者にコーヒーを奢る ☕", donateSub: "(寄付)", donateText: "この個人開発者はサーバー、モデレーション、保守を管理する必要があります🥺。少しの支援が私のアイデアを後押しします💙。",
-    feedbackText: "どうすればこのゲームをもっと面白くできる？ここで全部教えて", chatInst: "他の人の面白い回答に「面白い！」をタップしてください。", whatIsHC: "🤔 Humour Cupとは？",
-    goldTitle: "👑 Humour Cup GOLD", getGold: "GOLDを入手", passPlaceholder: "Goldパスコードを入力...", goldWarn: "注意：2つのルームで同時に同じパスコードは使えません！",
-    modalIntl: "🌍 海外 (Card/PayPal)", modalInd: "🇮🇳 インド (UPI/Razorpay)", close: "閉じる", modBatch: "50個のお題をモデレート",
-    ab1: "Humour Cupへようこそ！テキスト版OnlyFansみたいなものです(笑) 退屈な友達や偽の同僚との暇つぶしに最適です。 😼",
-    ab2: "遊び方：",
-    ab3: "面白い回答をして、みんなで投票。一番面白い人がHumour Cupをゲット！🏆 思い出のために最後にゲームを保存することもできます。",
-    ab4: "IQを駆使して回答します。🧠 チャットと投票フェーズでユーモアを交えて戦い、XPを稼ぎます。⚔️ スコアボードのトップが優勝です！🏆🥇",
-    ab5: "ホストが部屋を作り、4桁のコードを共有して完全匿名で遊びます。😈 サーバーはホストが選んだオプションで動作します。",
-    ab6: "A.I.モード：AIがカオスなお題を生成します。🤖",
-    ab7: "Publicモード：世界中のプレイヤーが投稿したお題。あなたも今すぐ投稿して！😠",
-    ab8: "Customモード：ロビーにいる全員が自由に匿名でお題を作れます。🤫",
-    ab9: "中毒性注意！後でスマホ首になっても文句言わないでね。😏",
+    name: "あなたの面白い名前", create: "ルームを作成", createGold: "GOLDルームを作成！", orJoin: "または参加", code: "コード", join: "参加", rulebook: "👑 遊び方 👑", rule1: "各お題に面白い回答を書きます。", rule2: "チャットでジョークを返信します。", rule3: "面白いものに投票します。", rule4: "XPが最も多いプレイヤーの勝ちです。", submitPub: "🌍 Humour Cupプレイヤーのためにお題を送信 🌍", pubDesc: "これらはロビーで公開お題を選択したHumour Cupプレイヤーにランダムに出題されます。", pubPlace: "ここにお題を入力...", submit: "送信", lobby: "ロビー", roomCode: "ルームコード:", cat: "カテゴリー:", scen: "お題:", lang: "言語:", secret: "🤫 こっそり追加！", secPlace: "サプライズお題を書く...", addPool: "追加", totPool: "カスタムお題の合計:", addCustomAlso: "適切であれば、下の公開お題ボックスにもカスタムのお題を追加してください。", waitSquad: "チームを待っています...", host: "(ホスト)", launch: "ゲーム開始 🚀", waitMore: "あと1人待っています...", waitHost: "ホストを待っています...", fetch: "お題を取得中...", scenTitle: "お題", secLeft: "残り秒数", typeHumour: "ユーモアを入力...", subHumour: "送信", waitSlow: "他のプレイヤーを待っています...", chatVote: "チャット＆投票", humourBtn: "面白い！", replyBtn: "返信", repPlace: "返信...", send: "送信", cancel: "キャンセル", done: "読み終わりました！", waiting: "待機中...", upcoming: "次", enterRound: "ラウンド-", in: "開始まで", seconds: "秒", load: "ロード中...", results: "最終結果", winners: "勝者", winner: "勝者", scoreboard: "最終スコアボード", receipt: "🧾 MATCH RECEIPT", thanks: "遊んでくれてありがとう！🏆", saveRec: "📸 このレシートを保存", playAgain: "もう一度プレイ", waitRes: "ホストを待っています...", adminVault: "管理者", backHome: "⬅ 戻る", noScen: "まだお題がありません！", madeBy: "⚡作成者 ", toSpark: " あなたのユーモアを刺激するために⚡", privacy: "プライバシーポリシー", terms: "利用規約", contact: "お問い合わせ",
+    donateBtn: "☕ UPIでサポート ☕", donateSub: "(手数料ゼロ！)", donateText: "この個人開発者はサーバー、モデレーション、保守を管理する必要があります🥺。少しの支援が私のアイデアを後押しします💙。", feedbackText: "どうすればこのゲームをもっと面白くできる？ここで全部教えて", chatInst: "他の人の面白い回答に「面白い！」をタップしてください。", whatIsHC: "🤔 Humour Cupとは？",
+    goldTitle: "🏆 Humour Cup GOLD", goldSub: "このFun Keyで同時に複数のルームを作成することはできません。キーは賢く共有してください。",
+    gPerk1: "無制限のプレイヤー (6人の制限なし！)", gPerk2: "カスタムラウンドとタイマー", gPerk3: "よりユーモラスなAIお題", gPerk4: "ベストなAIとパブリックお題を優先的に提供", gPerk5: "プレイ中にお題を変更", gPerk6: "100% 広告なし", gPerk7: "Humour Cup 公式サポーター 💙",
+    gInput: "Fun Keyを入力してGOLDをアクティブに...", gInstruction: "GOLDボックスにこのFun Keyを入力してHumour Cup GOLDを有効にします。支払い後、Fun Keyがメールで送信されます。", gActive: "Fun Keyが有効になりました。今すぐGOLDルームを作成してください。",
+    ab1: "Humour Cupへようこそ！あなたの機知が王冠を獲得する究極のリアルタイムマルチプレイヤーユーモア競争ゲームです！退屈な友達とパーティーで遊んだり、偽物の同僚と休憩したり、テキスト版OnlyFans(笑)のような楽しいオンラインアクティビティを探している場合でも - Humour Cupはその無限のエンターテイメントに最適です。😼",
+    ab2: "このクソゲーの本当の遊び方：",
+    ab3: "鋭い機知を入力し、他の人がそれを面白いと思ったら投票します。お題の後にユーモアのあるコメントで他の人と戦います。最も面白い人がいわゆる - Humour Cupを獲得します。🏆 最後にみんなで遊んだゲームを保存して、思い出を集めることもできます。",
+    ab4: "ゲームプレイをさらに詳しく説明すると：各ラウンドであなたの機知IQでお題に答えます。🧠 そして、チャットと投票フェーズでのユーモアのあるコメントを通じて戦い、他の人からの投票を通じてHumour XPを獲得します。⚔️ スコアボードの一番上にいる人が最終的にHumour Cupを獲得します。🏆🥇",
+    ab5: "ステップバイステップの説明：ホストが安全な部屋を作成し、4桁のコードを共有します。完全な匿名性です。😈 サーバーはホストが選択したオプションとして機能します。",
+    ab6: "A.I.を選択すると、ユーモアのあるお題がAIによってランダムに生成されます。🤖",
+    ab7: "Publicを選択すると、世界中のプレイヤーが入力したお題からランダムに生成されます。さあ、あなたの面白いお題をそこに入力しに行きましょう。今すぐ！😠",
+    ab8: "Customオプションは最も陽気なものです。ロビーにいる全員に、ゲームの独自のお題を（匿名で🤫）入力する自由を与えます。",
+    ab9: "注意してください、ゲームは非常に中毒性があります。スマホ首（Text Neck Syndrome）になった時に文句を言わないでください。今検索するでしょ？😏",
     ab10: "Humour Cupの魅力❤️‍🔥 :",
-    ab11: "ダイナミックなAIお題：二度と同じゲームにはなりません。",
-    ab12: "お題を送信：あなたのお題を公開ボックスに追加して。",
-    ab13: "自分でお題を作る：ロビーで匿名でお題を書いて遊ぼう。",
-    ab14: "多言語対応：英語、日本語、スペイン語など！",
-    ab15: "全年齢 or 18禁：チームの雰囲気に合わせて。",
-    ab16: "さあ、ユーモアの戦いを始めよう！"
+    ab11: "ダイナミックなAIお題：高度なAIを搭載しているため、全く同じゲームを2回プレイしていると感じることはありません。",
+    ab12: "お題を送信：内輪ネタがある？ - ならば自分のお題を追加してください。",
+    ab13: "独自のお題を作成：Customオプションでは、全員が匿名でどんなお題でも書くことができます。",
+    ab14: "グローバル言語：世界で最もホットな言語でプレイできます！",
+    ab15: "全年齢または18禁：チームの雰囲気に合ったカテゴリーを選択してください。",
+    ab16: "今日、あなたのユーモアをテストしてください。部屋を作成し、コードを共有して、ユーモアの戦いを始めましょう！"
   },
   'Korean': { 
-    name: "재미있는 이름", create: "방 만들기", orJoin: "또는 참가", code: "코드", join: "참가", rulebook: "👑 플레이 방법 👑", rule1: "각 시나리오에 재미있는 답변을 쓰세요.", rule2: "채팅 라운드에서 농담을 주고받으세요.", rule3: "재미있는 것에 투표하세요.", rule4: "가장 많은 XP를 얻은 사람이 승리합니다.", submitPub: "🌍 Humour Cup 플레이어를 위한 시나리오 제출 🌍", pubDesc: "이 시나리오들은 로비에서 공개 시나리오를 선택한 Humour Cup 플레이어에게 무작위로 나타납니다.", pubPlace: "여기에 시나리오를 입력하세요...", submit: "제출", lobby: "로비", roomCode: "방 코드:", cat: "카테고리:", scen: "시나리오:", lang: "언어:", secret: "🤫 몰래 추가하기!", secPlace: "깜짝 시나리오 쓰기...", addPool: "추가", totPool: "총 커스텀 시나리오:", addCustomAlso: "적절한 경우 아래의 공개 시나리오 상자에도 맞춤형 시나리오를 추가하세요.", waitSquad: "팀을 기다리는 중...", host: "(방장)", launch: "게임 시작 🚀", waitMore: "1명 더 기다리는 중...", waitHost: "방장을 기다리는 중...", fetch: "시나리오 가져오는 중...", scenTitle: "시나리오", secLeft: "초 남음", typeHumour: "유머를 입력하세요...", subHumour: "제출", waitSlow: "다른 플레이어 기다리는 중...", chatVote: "채팅 및 투표 라운드", humourBtn: "웃겨요!", replyBtn: "답글", repPlace: "답글...", send: "보내기", cancel: "취소", done: "다 읽었어요!", waiting: "대기 중...", upcoming: "다음", enterRound: "라운드-", in: "시작까지", seconds: "초", load: "로딩 중...", results: "최종 결과", winners: "우승자들", winner: "우승자", scoreboard: "최종 점수판", receipt: "🧾 MATCH RECEIPT", thanks: "플레이해주셔서 감사합니다! 🏆", saveRec: "📸 이 영수증 저장", playAgain: "다시 플레이", waitRes: "방장을 기다리는 중...", adminVault: "관리자 금고", backHome: "⬅ 뒤로", noScen: "아직 시나리오가 없습니다!", madeBy: "⚡제작: ", toSpark: " 당신의 유머를 자극하기 위해⚡", privacy: "개인정보 처리방침", terms: "서비스 약관", contact: "문의하기",
-    donateBtn: "☕ 개발자에게 커피 사주기 ☕", donateSub: "(후원하기)", donateText: "이 1인 개발자는 서버, 모니터링, 유지보수를 감당해야 합니다 🥺. 작은 도움이 제 아이디어에 큰 힘이 됩니다 💙.",
-    feedbackText: "어떻게 해야 이 게임을 더 재밌게 만들 수 있을까요? 여기에 다 말해주세요", chatInst: "서로의 재미있는 답변에 '웃겨요!'를 탭하세요.", whatIsHC: "🤔 Humour Cup이 무엇인가요?",
-    goldTitle: "👑 Humour Cup GOLD", getGold: "GOLD 받기", passPlaceholder: "Gold 패스코드 입력...", goldWarn: "주의: 2개의 방에서 1개의 패스코드를 동시에 사용할 수 없습니다!",
-    modalIntl: "🌍 해외 (Card/PayPal)", modalInd: "🇮🇳 인도 (UPI/Razorpay)", close: "닫기", modBatch: "50개 시나리오 검토",
-    ab1: "Humour Cup에 오신 것을 환영합니다! 지루한 파티나 가짜 직장 동료들 사이에서, 텍스트 버전의 OnlyFans 같은 끝없는 재미를 선사합니다. ㅋㅋ 😼",
-    ab2: "게임 방법:",
-    ab3: "재미있는 답변을 쓰고 투표를 받으세요. 우승자가 Humour Cup을 차지합니다!🏆 나중에 추억을 위해 게임을 저장할 수도 있습니다.",
-    ab4: "당신의 IQ로 시나리오에 응답하세요.🧠 채팅과 투표 라운드에서 전투하여 XP를 얻으세요.⚔️ 점수판의 1위가 승리합니다!🏆🥇",
-    ab5: "방장이 방을 만들고 4자리 코드를 공유하여 완전 익명으로 플레이합니다.😈 서버는 방장이 선택한 옵션으로 작동합니다.",
-    ab6: "A.I. 모드: AI가 황당한 시나리오를 생성합니다.🤖",
-    ab7: "Public 모드: 전 세계 유저들이 만든 시나리오. 지금 당장 당신도 제출하세요!😠",
-    ab8: "Custom 모드: 로비에 있는 모두가 자유롭게 익명으로 시나리오를 입력합니다.🤫",
-    ab9: "거북목 증후군 조심하세요😏 검색해볼 거죠?",
+    name: "재미있는 이름", create: "방 만들기", createGold: "GOLD 방 만들기!", orJoin: "또는 참가", code: "코드", join: "참가", rulebook: "👑 플레이 방법 👑", rule1: "각 시나리오에 재미있는 답변을 쓰세요.", rule2: "채팅 라운드에서 농담을 주고받으세요.", rule3: "재미있는 것에 투표하세요.", rule4: "가장 많은 XP를 얻은 사람이 승리합니다.", submitPub: "🌍 Humour Cup 플레이어를 위한 시나리오 제출 🌍", pubDesc: "이 시나리오들은 로비에서 공개 시나리오를 선택한 Humour Cup 플레이어에게 무작위로 나타납니다.", pubPlace: "여기에 시나리오를 입력하세요...", submit: "제출", lobby: "로비", roomCode: "방 코드:", cat: "카테고리:", scen: "시나리오:", lang: "언어:", secret: "🤫 몰래 추가하기!", secPlace: "깜짝 시나리오 쓰기...", addPool: "추가", totPool: "총 커스텀 시나리오:", addCustomAlso: "적절한 경우 아래의 공개 시나리오 상자에도 맞춤형 시나리오를 추가하세요.", waitSquad: "팀을 기다리는 중...", host: "(방장)", launch: "게임 시작 🚀", waitMore: "1명 더 기다리는 중...", waitHost: "방장을 기다리는 중...", fetch: "시나리오 가져오는 중...", scenTitle: "시나리오", secLeft: "초 남음", typeHumour: "유머를 입력하세요...", subHumour: "제출", waitSlow: "다른 플레이어 기다리는 중...", chatVote: "채팅 및 투표 라운드", humourBtn: "웃겨요!", replyBtn: "답글", repPlace: "답글...", send: "보내기", cancel: "취소", done: "다 읽었어요!", waiting: "대기 중...", upcoming: "다음", enterRound: "라운드-", in: "시작까지", seconds: "초", load: "로딩 중...", results: "최종 결과", winners: "우승자들", winner: "우승자", scoreboard: "최종 점수판", receipt: "🧾 MATCH RECEIPT", thanks: "플레이해주셔서 감사합니다! 🏆", saveRec: "📸 이 영수증 저장", playAgain: "다시 플레이", waitRes: "방장을 기다리는 중...", adminVault: "관리자 금고", backHome: "⬅ 뒤로", noScen: "아직 시나리오가 없습니다!", madeBy: "⚡제작: ", toSpark: " 당신의 유머를 자극하기 위해⚡", privacy: "개인정보 처리방침", terms: "서비스 약관", contact: "문의하기",
+    donateBtn: "☕ UPI로 후원하기 ☕", donateSub: "(수수료 제로!)", donateText: "이 1인 개발자는 서버, 모니터링, 유지보수를 감당해야 합니다 🥺. 작은 도움이 제 아이디어에 큰 힘이 됩니다 💙.", feedbackText: "어떻게 해야 이 게임을 더 재밌게 만들 수 있을까요? 여기에 다 말해주세요", chatInst: "서로의 재미있는 답변에 '웃겨요!'를 탭하세요.", whatIsHC: "🤔 Humour Cup이 무엇인가요?",
+    goldTitle: "🏆 Humour Cup GOLD", goldSub: "이 Fun Key로 동시에 1개 이상의 방을 만들 수 없습니다. 코드를 지혜롭게 공유하세요.",
+    gPerk1: "무제한 플레이어 (6명 제한 해제!)", gPerk2: "커스텀 라운드 및 타이머", gPerk3: "더 재미있는 AI 시나리오", gPerk4: "엄선된 AI 및 공개 시나리오 우선 제공", gPerk5: "게임 중 시나리오 변경", gPerk6: "100% 광고 없는 환경", gPerk7: "Humour Cup 공식 서포터 💙",
+    gInput: "GOLD를 활성화하려면 Fun Key를 입력하세요...", gInstruction: "Humour Cup GOLD를 활성화하려면 GOLD 상자에 Fun Key를 입력하세요. 결제 후 이메일로 Fun Key가 전송됩니다.", gActive: "Fun Key가 활성화되었습니다. 지금 GOLD 방을 만드세요.",
+    ab1: "Humour Cup에 오신 것을 환영합니다! 당신의 재치가 왕관을 차지하는 궁극의 실시간 멀티플레이어 유머 경쟁 게임입니다! 파티에서 지루한 친구들과 어울리거나, 가식적인 직장 동료들과 휴식을 취하거나, 아니면 텍스트 버전의 OnlyFans ㅋㅋ 같은 재미있는 온라인 활동을 찾고 있든 - Humour Cup은 끝없는 즐거움에 딱 맞습니다. 😼",
+    ab2: "이 게임을 진짜로 어떻게 하나요?:",
+    ab3: "날카로운 재치를 입력하고 다른 사람들이 재밌다고 생각하면 투표합니다. 각 시나리오 이후 유머러스한 댓글로 다른 사람들과 배틀합니다. 가장 웃긴 사람이 소위 - Humour Cup을 우승합니다.🏆 추억을 수집하기 위해 마지막에 모두와 함께 한 게임을 저장할 수도 있습니다.",
+    ab4: "게임 플레이를 더 자세히 설명하자면: 당신은 각 라운드에서 재치 IQ로 시나리오에 응답합니다.🧠 그리고 채팅 및 투표 단계에서 유머러스한 댓글을 통해 다른 사람들의 투표를 받아 Humour XP를 얻습니다.⚔️ 스코어보드 맨 위에 있는 사람이 우승합니다.🏆🥇",
+    ab5: "단계별 설명: 방장이 안전한 방을 만들고 4자리 코드를 공유합니다. 완전한 익명성입니다.😈 서버는 방장이 선택한 옵션에 따라 작동합니다.",
+    ab6: "A.I.를 선택하면 황당한 가상 질문부터 밈이 될 만한 상황까지 AI가 무작위로 시나리오를 생성합니다.🤖",
+    ab7: "Public을 선택하면 전 세계 유저들이 제출한 시나리오가 나옵니다. 지금 당장 재밌는 시나리오를 입력하러 가세요!😠",
+    ab8: "Custom 옵션은 가장 웃긴 모드입니다. 로비에 있는 모두가 자신의 시나리오를 (익명으로🤫) 입력할 수 있습니다.",
+    ab9: "주의하세요. 게임은 중독성이 강합니다. 거북목 증후군(Text Neck Syndrome)에 걸렸을 때 경고하지 않았다고 나중에 불평하지 마세요. 찾아보실 거죠?😏",
     ab10: "Humour Cup이 쩌는 이유❤️‍🔥 :",
-    ab11: "다이내믹 AI 시나리오: 똑같은 게임은 없습니다.",
-    ab12: "시나리오 제출: 내부 조크를 공개 박스에 추가하세요.",
-    ab13: "커스텀 시나리오: 익명으로 마음껏 시나리오를 만드세요.",
-    ab14: "글로벌 언어 지원: 영어, 한국어 등 지원!",
-    ab15: "전체 이용가 또는 18세 이상: 팀의 분위기에 맞게.",
-    ab16: "오늘 당장 유머 배틀을 시작하세요!"
+    ab11: "다이내믹 AI 시나리오: 진보된 AI로 구동되어 두 번 같은 게임을 하는 느낌을 받지 못할 것입니다.",
+    ab12: "플레이어를 위한 시나리오 제출: 내부 조크가 있나요? 시나리오를 추가하세요.",
+    ab13: "나만의 시나리오 만들기: 커스텀 옵션에서 모두가 익명으로 시나리오를 작성할 수 있습니다.",
+    ab14: "글로벌 언어 지원: 다양한 언어 지원!",
+    ab15: "전체 이용가 또는 18세 이상: 팀의 분위기에 맞는 카테고리를 선택하세요.",
+    ab16: "지금 바로 유머 배틀을 시작하세요!"
   },
   'Indonesian': { 
-    name: "Nama Lucumu", create: "Buat Ruang", orJoin: "ATAU GABUNG", code: "KODE", join: "Gabung", rulebook: "👑 Cara Bermain 👑", rule1: "Tulis respons lucumu.", rule2: "Balas dengan candaan di ronde obrolan.", rule3: "Pilih yang menurutmu lucu.", rule4: "Pemain dengan XP terbanyak menang.", submitPub: "🌍 Kirimkan Skenario untuk pemain Humour Cup 🌍", pubDesc: "Ini muncul secara acak kepada pemain Humour Cup yang memilih skenario Publik di Lobi.", pubPlace: "Ketik skenariomu di sini...", submit: "Kirim", lobby: "Lobi", roomCode: "KODE RUANG:", cat: "Kategori:", scen: "Skenario:", lang: "Bahasa:", secret: "🤫 Tambah diam-diam!", secPlace: "Tulis skenario kejutan...", addPool: "Tambah", totPool: "Total Skenario Khusus:", addCustomAlso: "Tambahkan skenario khususmu ke kotak skenario Publik di bawah ini juga, jika cocok.", waitSquad: "Menunggu skuad...", host: "(Host)", launch: "Mulai Game 🚀", waitMore: "Menunggu 1 pemain lagi...", waitHost: "Menunggu host...", fetch: "Mengambil Skenario...", scenTitle: "Skenario", secLeft: "Detik Tersisa", typeHumour: "Ketik lucumu...", subHumour: "Kirim Kelucuan", waitSlow: "Menunggu yang lambat...", chatVote: "Ronde Obrolan & Pilih", humourBtn: "Lucu!", replyBtn: "Balas", repPlace: "Balas...", send: "Kirim", cancel: "Batal", done: "Saya Selesai Membaca!", waiting: "Menunggu...", upcoming: "Mendatang", enterRound: "Masuk Ronde-", in: "dalam", seconds: "detik", load: "Memuat...", results: "Hasil Akhir", winners: "Pemenang", winner: "Pemenang", scoreboard: "Papan Skor", receipt: "🧾 MATCH RECEIPT", thanks: "Terima kasih sudah bermain! 🏆", saveRec: "📸 Simpan struk ini", playAgain: "Main Lagi", waitRes: "Menunggu Host...", adminVault: "Brankas Admin", backHome: "⬅ Kembali", noScen: "Belum ada skenario!", madeBy: "⚡dibuat oleh ", toSpark: " untuk memancing humormu⚡", privacy: "Kebijakan Privasi", terms: "Ketentuan Layanan", contact: "Hubungi Kami",
-    donateBtn: "☕ Belikan Developer Kopi ☕", donateSub: "(Donasi)", donateText: "Developer indie ini harus ngurus server, moderasi, dan pemeliharaan 🥺. Bantuan kecil bisa dorong ide-ideku 💙.",
-    feedbackText: "Gimana caranya bikin game ini lebih seru? Kasih tau semuanya di", chatInst: "Ketuk 'Lucu!' pada respons lucu pemain lain.", whatIsHC: "🤔 Apa itu Humour Cup?",
-    goldTitle: "👑 Humour Cup GOLD", getGold: "Dapatkan GOLD", passPlaceholder: "Masukkan Kode Gold...", goldWarn: "Berbagi dengan bijak: 2 ruang tidak bisa pakai 1 kode secara bersamaan!",
-    modalIntl: "🌍 Internasional (Card/PayPal)", modalInd: "🇮🇳 India (UPI/Razorpay)", close: "Tutup", modBatch: "Moderasi 50 Skenario",
-    ab1: "Selamat datang di Humour Cup! Seperti OnlyFans tapi versi teks lol. Pas banget buat hiburan bareng teman membosankan atau rekan kerja palsu. 😼",
-    ab2: "Cara bermain game ini:",
-    ab3: "Ketik respons lucumu dan orang lain akan memilih. Yang terlucu menang Humour Cup!🏆 Simpan permainannya di akhir untuk kenangan.",
-    ab4: "Jawab skenario dengan IQ mu.🧠 Lalu bertarung di ronde Chat & Vote untuk dapat XP.⚔️ Siapa yang di atas menang!🏆🥇",
-    ab5: "Host membuat ruang dan membagikan kode 4 digit, semua anonim!😈 Server mengikuti opsi yang dipilih Host.",
-    ab6: "A.I.: Skenario konyol dari kecerdasan buatan.🤖",
-    ab7: "Public: Skenario dari pemain di seluruh dunia. Ayo kirim punyamu sekarang!😠",
-    ab8: "Custom: Kalian semua bebas membuat skenario secara rahasia di lobi.🤫",
-    ab9: "Hati-hati, game ini bikin candu. Jangan ngeluh kena Sindrom Leher Teks😏",
+    name: "Nama Lucumu", create: "Buat Ruang", createGold: "Buat Ruang GOLD!", orJoin: "ATAU GABUNG", code: "KODE", join: "Gabung", rulebook: "👑 Cara Bermain 👑", rule1: "Tulis respons lucumu.", rule2: "Balas dengan candaan di ronde obrolan.", rule3: "Pilih yang menurutmu lucu.", rule4: "Pemain dengan XP terbanyak menang.", submitPub: "🌍 Kirimkan Skenario untuk pemain Humour Cup 🌍", pubDesc: "Ini muncul secara acak kepada pemain Humour Cup yang memilih skenario Publik di Lobi.", pubPlace: "Ketik skenariomu di sini...", submit: "Kirim", lobby: "Lobi", roomCode: "KODE RUANG:", cat: "Kategori:", scen: "Skenario:", lang: "Bahasa:", secret: "🤫 Tambah diam-diam!", secPlace: "Tulis skenario kejutan...", addPool: "Tambah", totPool: "Total Skenario Khusus:", addCustomAlso: "Tambahkan skenario khususmu ke kotak skenario Publik di bawah ini juga, jika cocok.", waitSquad: "Menunggu skuad...", host: "(Host)", launch: "Mulai Game 🚀", waitMore: "Menunggu 1 pemain lagi...", waitHost: "Menunggu host...", fetch: "Mengambil Skenario...", scenTitle: "Skenario", secLeft: "Detik Tersisa", typeHumour: "Ketik lucumu...", subHumour: "Kirim Kelucuan", waitSlow: "Menunggu yang lambat...", chatVote: "Ronde Obrolan & Pilih", humourBtn: "Lucu!", replyBtn: "Balas", repPlace: "Balas...", send: "Kirim", cancel: "Batal", done: "Saya Selesai Membaca!", waiting: "Menunggu...", upcoming: "Mendatang", enterRound: "Masuk Ronde-", in: "dalam", seconds: "detik", load: "Memuat...", results: "Hasil Akhir", winners: "Pemenang", winner: "Pemenang", scoreboard: "Papan Skor", receipt: "🧾 MATCH RECEIPT", thanks: "Terima kasih sudah bermain! 🏆", saveRec: "📸 Simpan struk ini", playAgain: "Main Lagi", waitRes: "Menunggu Host...", adminVault: "Brankas Admin", backHome: "⬅ Kembali", noScen: "Belum ada skenario!", madeBy: "⚡dibuat oleh ", toSpark: " untuk memancing humormu⚡", privacy: "Kebijakan Privasi", terms: "Ketentuan Layanan", contact: "Hubungi Kami",
+    donateBtn: "☕ Dukung via UPI ☕", donateSub: "(Bebas Biaya!)", donateText: "Developer indie ini harus ngurus server, moderasi, dan pemeliharaan 🥺. Bantuan kecil bisa dorong ide-ideku 💙.", feedbackText: "Gimana caranya bikin game ini lebih seru? Kasih tau semuanya di", chatInst: "Ketuk 'Lucu!' pada respons lucu pemain lain.", whatIsHC: "🤔 Apa itu Humour Cup?",
+    goldTitle: "🏆 Humour Cup GOLD", goldSub: "Kamu nggak bisa bikin lebih dari 1 Ruang barengan pakai Fun Key ini. Bagiin kodenya secara bijak ya.",
+    gPerk1: "Pemain Tanpa Batas (Lebih dari 6!)", gPerk2: "Custom Jumlah Ronde & Timer", gPerk3: "Skenario AI yang Lebih Lucu", gPerk4: "Prioritas Skenario AI & Publik Terbaik", gPerk5: "Ubah Skenario saat Bermain", gPerk6: "100% Bebas Iklan", gPerk7: "Supporter Resmi Humour Cup 💙",
+    gInput: "Masukkan Fun Key kamu untuk aktifin GOLD...", gInstruction: "Masukkan Fun Key di kotak GOLD ini buat aktifin Humour Cup GOLD. Setelah bayar, Fun Key bakal dikirim ke emailmu.", gActive: "Fun Key aktif. Buat Ruang GOLD sekarang.",
+    ab1: "Selamat datang di Humour Cup, game kompetisi humor multiplayer real-time pamungkas di mana kecerdasanmu memenangkan mahkota! Baik kamu nongkrong dengan teman yang membosankan, atau istirahat dengan rekan kerja palsumu, atau sekadar mencari aktivitas online menyenangkan seperti OnlyFans tapi versi teks lol - Humour Cup sangat tepat untuk hiburan tanpa akhir itu. 😼",
+    ab2: "Bagaimana cara mainin game ini?:",
+    ab3: "Kamu masukin kecerdasan tajammu dan yang lain voting kalau mereka menganggapnya lucu. Kamu bertarung dengan komentar lucumu setelah setiap skenario. Yang paling lucu memenangkan yang disebut - Humour Cup.🏆 Kamu juga bisa nyimpen game yang kamu mainin sama semuanya di akhir.",
+    ab4: "Untuk merinci gameplay lebih lanjut: Kamu merespons skenario di setiap putaran dengan IQ kecerdasanmu.🧠 Dan bertarung melalui komentar lucumu di Fase Obrolan untuk mendapatkan Humour XP.⚔️ Yang di atas papan skor menang.🏆🥇",
+    ab5: "Penjelasan langkah demi langkah: Host bikin ruang aman dan bagikan kode 4 digit anonim total.😈 Setelah semua masuk lobi, server bekerja sesuai opsi Host.",
+    ab6: "Jika pilih A.I., skenario lucu akan di-generate AI.🤖",
+    ab7: "Jika pilih Public, skenario muncul dari pemain global. Ayo masukin skenario lucumu sekarang!😠",
+    ab8: "Opsi Custom paling kocak. Bebas masukin skenario sendiri secara anonim.🤫",
+    ab9: "Awas, game ini simpel tapi bikin candu. Jangan ngeluh kena Text Neck Syndrome ya. Kamu bakal nyari itu kan?😏",
     ab10: "Kenapa Humour Cup keren?❤️‍🔥 :",
-    ab11: "Skenario AI Dinamis: Tidak akan pernah bosan.",
-    ab12: "Kirim Skenario: Tambahkan candaan kalian ke kotak publik.",
-    ab13: "Buat Skenario Sendiri: Tulis anonim di lobi.",
-    ab14: "Bahasa Global: Banyak pilihan bahasa!",
-    ab15: "Ramah Keluarga atau 18+: Pilih sesukamu.",
-    ab16: "Mulai pertarungan komedi sekarang!"
+    ab11: "Skenario AI Dinamis: Didukung AI canggih, nggak akan kerasa main game yang sama dua kali.",
+    ab12: "Kirim Skenariomu: Punya jokes tongkrongan? Tambahkan ke kotak Publik.",
+    ab13: "Buat Skenariomu sendiri: Di opsi Custom, kalian semua bisa nulis skenario apapun secara anonim.",
+    ab14: "Bahasa Global: Main dalam bahasa Inggris, Hindi, Spanyol, dll!",
+    ab15: "Ramah Keluarga atau 18+: Pilih kategori yang pas buat kalian.",
+    ab16: "Uji humormu hari ini. Buat ruang dan mulai pertarungannya!"
   },
   'Russian': { 
-    name: "Твое смешное имя", create: "Создать комнату", orJoin: "ИЛИ ПРИСОЕДИНИТЬСЯ", code: "КОД", join: "Вход", rulebook: "👑 Как играть 👑", rule1: "Напиши смешной ответ на сценарий.", rule2: "Отвечай шутками в чате.", rule3: "Голосуй за самые смешные.", rule4: "Игрок с наибольшим XP побеждает.", submitPub: "🌍 Предложите Сценарии для игроков Humour Cup 🌍", pubDesc: "Они выпадают игрокам Humour Cup, выбравшим публичные сценарии в Лобби.", pubPlace: "Введи свой сценарий здесь...", submit: "Отправить", lobby: "Лобби", roomCode: "КОД КОМНАТЫ:", cat: "Категория:", scen: "Сценарии:", lang: "Язык:", secret: "🤫 Добавить тайно!", secPlace: "Напиши сценарий-сюрприз...", addPool: "Добавить", totPool: "Всего сценариев:", addCustomAlso: "Добавьте свои забавные сценарии также в окно публичных сценариев ниже.", waitSquad: "Ждем команду...", host: "(Хост)", launch: "Запуск 🚀", waitMore: "Ждем еще 1 игрока...", waitHost: "Ждем хоста...", fetch: "Получение...", scenTitle: "Сценарий", secLeft: "Секунд осталось", typeHumour: "Введи шутку...", subHumour: "Отправить", waitSlow: "Ждем остальных...", chatVote: "Чат и Голосование", humourBtn: "Смешно!", replyBtn: "Ответить", repPlace: "Ответить...", send: "Отправить", cancel: "Отмена", done: "Я прочитал!", waiting: "Ожидание...", upcoming: "Следующий", enterRound: "Начало раунда-", in: "через", seconds: "секунд", load: "Загрузка...", results: "Результаты", winners: "Победители", winner: "Победитель", scoreboard: "Счет", receipt: "🧾 MATCH RECEIPT", thanks: "Спасибо за игру! 🏆", saveRec: "📸 Сохранить этот чек", playAgain: "Играть снова", waitRes: "Ждем хоста...", adminVault: "Хранилище Админа", backHome: "⬅ Назад", noScen: "Нет сценариев!", madeBy: "⚡создано ", toSpark: " чтобы разжечь твой юмор⚡", privacy: "Конфиденциальность", terms: "Условия", contact: "Связаться с нами",
-    donateBtn: "☕ Купить разработчику кофе ☕", donateSub: "(Донат)", donateText: "Этому инди-разработчику нужно оплачивать серверы, модерацию и поддержку 🥺. Ваша помощь даст толчок моим идеям 💙.",
-    feedbackText: "Как, черт возьми, сделать эту игру веселее? Расскажите мне все по адресу", chatInst: "Нажимайте 'Смешно!' на забавные ответы друг друга.", whatIsHC: "🤔 Что такое Humour Cup?",
-    goldTitle: "👑 Humour Cup GOLD", getGold: "Взять GOLD", passPlaceholder: "Ввести Gold-код...", goldWarn: "Делитесь с умом: 2 комнаты не могут использовать 1 код одновременно!",
-    modalIntl: "🌍 Международный (Card/PayPal)", modalInd: "🇮🇳 Индия (UPI/Razorpay)", close: "Закрыть", modBatch: "Модерация 50 сценариев",
-    ab1: "Добро пожаловать в Humour Cup! Как OnlyFans, только текстовая версия лол. Отлично подходит для отдыха с фальшивыми коллегами. 😼",
-    ab2: "Как играть в эту фигню?:",
-    ab3: "Пиши смешные ответы, а остальные голосуют. Самый смешной выигрывает Humour Cup.🏆 Можешь сохранить игру на память.",
-    ab4: "Отвечай с IQ.🧠 Набирай XP в чате, чтобы победить!🏆🥇",
-    ab5: "Хост создает комнату и делится 4-значным кодом для анонимности.😈 Режимы игры зависят от Хоста.",
-    ab6: "ИИ: Бредовые сценарии от нейросети.🤖",
-    ab7: "Публичные: Сценарии от игроков. Добавь свой!😠",
-    ab8: "Свои (Custom): Все в лобби тайно пишут сценарии.🤫",
-    ab9: "Осторожно, затягивает. Береги шею от смартфона!😏",
+    name: "Твое смешное имя", create: "Создать комнату", createGold: "Создать GOLD комнату!", orJoin: "ИЛИ ПРИСОЕДИНИТЬСЯ", code: "КОД", join: "Вход", rulebook: "👑 Как играть 👑", rule1: "Напиши смешной ответ на сценарий.", rule2: "Отвечай шутками в чате.", rule3: "Голосуй за самые смешные.", rule4: "Игрок с наибольшим XP побеждает.", submitPub: "🌍 Предложите Сценарии для игроков Humour Cup 🌍", pubDesc: "Они выпадают игрокам Humour Cup, выбравшим публичные сценарии в Лобби.", pubPlace: "Введи свой сценарий здесь...", submit: "Отправить", lobby: "Лобби", roomCode: "КОД КОМНАТЫ:", cat: "Категория:", scen: "Сценарии:", lang: "Язык:", secret: "🤫 Добавить тайно!", secPlace: "Напиши сценарий-сюрприз...", addPool: "Добавить", totPool: "Всего сценариев:", addCustomAlso: "Добавьте свои забавные сценарии также в окно публичных сценариев ниже.", waitSquad: "Ждем команду...", host: "(Хост)", launch: "Запуск 🚀", waitMore: "Ждем еще 1 игрока...", waitHost: "Ждем хоста...", fetch: "Получение...", scenTitle: "Сценарий", secLeft: "Секунд осталось", typeHumour: "Введи шутку...", subHumour: "Отправить", waitSlow: "Ждем остальных...", chatVote: "Чат и Голосование", humourBtn: "Смешно!", replyBtn: "Ответить", repPlace: "Ответить...", send: "Отправить", cancel: "Отмена", done: "Я прочитал!", waiting: "Ожидание...", upcoming: "Следующий", enterRound: "Начало раунда-", in: "через", seconds: "секунд", load: "Загрузка...", results: "Результаты", winners: "Победители", winner: "Победитель", scoreboard: "Счет", receipt: "🧾 MATCH RECEIPT", thanks: "Спасибо за игру! 🏆", saveRec: "📸 Сохранить этот чек", playAgain: "Играть снова", waitRes: "Ждем хоста...", adminVault: "Хранилище Админа", backHome: "⬅ Назад", noScen: "Нет сценариев!", madeBy: "⚡создано ", toSpark: " чтобы разжечь твой юмор⚡", privacy: "Конфиденциальность", terms: "Условия", contact: "Связаться с нами",
+    donateBtn: "☕ Поддержать через UPI ☕", donateSub: "(Без комиссий!)", donateText: "Этому инди-разработчику нужно оплачивать серверы, модерацию и поддержку 🥺. Ваша помощь даст толчок моим идеям 💙.", feedbackText: "Как, черт возьми, сделать эту игру веселее? Расскажите мне все по адресу", chatInst: "Нажимайте 'Смешно!' на забавные ответы друг друга.", whatIsHC: "🤔 Что такое Humour Cup?",
+    goldTitle: "🏆 Humour Cup GOLD", goldSub: "С этим Fun Key нельзя создать более 1 комнаты одновременно. Делитесь ключом с умом.",
+    gPerk1: "Без лимита игроков (Больше 6!)", gPerk2: "Свои раунды и таймеры", gPerk3: "Более смешные сценарии ИИ", gPerk4: "Лучшие ИИ и публичные сценарии", gPerk5: "Смена сценариев во время игры", gPerk6: "100% без рекламы", gPerk7: "Официальный спонсор 💙",
+    gInput: "Введите ваш Fun Key для активации GOLD...", gInstruction: "Введите Fun Key в поле GOLD. После оплаты ключ будет отправлен вам на email.", gActive: "Fun Key активирован. Создайте GOLD комнату.",
+    ab1: "Добро пожаловать в Humour Cup, многопользовательскую игру, где ваш острый ум выигрывает корону! Тусите ли вы со скучными друзьями, делаете перерыв с фальшивыми коллегами или ищете аналог OnlyFans в текстовом виде лол — эта игра для вас. 😼",
+    ab2: "Как вообще в это играть?:",
+    ab3: "Вы вводите остроумные ответы, а остальные голосуют. Вы сражаетесь своими комментариями. Самый смешной забирает Кубок!🏆 Вы также можете сохранить игру в конце.",
+    ab4: "Подробнее: Вы отвечаете на сценарии, используя свой IQ.🧠 Затем в чате бьетесь комментариями и зарабатываете XP.⚔️ Первый в таблице побеждает.🏆🥇",
+    ab5: "Шаг за шагом: Хост создает комнату и делится 4-значным кодом. Заходите под дурацкими именами — полная анонимность.😈 Выбирайте режим в лобби, и сервер запустит игру.",
+    ab6: "Если выбрать A.I., ИИ сгенерирует безумные сценарии.🤖",
+    ab7: "Если Public, сценарии берутся из тех, что игроки добавили в базу. Иди и добавь свои!😠",
+    ab8: "Custom (свои) — самый смешной вариант. Все в лобби анонимно пишут свои сценарии.🤫",
+    ab9: "Осторожно, затягивает. Не жалуйтесь на синдром компьютерной шеи (погуглите, ага?).😏",
     ab10: "Почему Humour Cup крут?❤️‍🔥 :",
-    ab11: "Динамичный ИИ: Игры не повторяются.",
-    ab12: "Сценарии: Добавляй шутки в общую базу.",
-    ab13: "Кастомные: Пиши сценарии прямо в игре.",
-    ab14: "Глобально: Поддержка многих языков.",
-    ab15: "Для всех или 18+.",
-    ab16: "Начни битву юмора прямо сейчас!"
+    ab11: "Динамичный ИИ: Игры никогда не повторяются.",
+    ab12: "Предложите сценарии: Есть шутка для своих? Добавь в базу.",
+    ab13: "Свои сценарии: В Custom режиме каждый пишет свой бред.",
+    ab14: "Глобальные языки: Играйте на английском, русском, испанском и других!",
+    ab15: "Для всех или 18+: Выбирай категорию под компанию.",
+    ab16: "Проверь свой юмор сегодня. Создай комнату и начни битву!"
   }
 };
 
@@ -329,11 +329,11 @@ function App() {
   const [timeLeft, setTimeLeft] = useState(0);
 
   const [isAboutOpen, setIsAboutOpen] = useState(false); 
+  const [showUpiModal, setShowUpiModal] = useState(false); 
   
-  // --- NEW STATES FOR GOLD & MONETIZATION ---
-  const [goldPasscode, setGoldPasscode] = useState(localStorage.getItem('hc_gold_passcode') || '');
   const [showGoldModal, setShowGoldModal] = useState(false);
-  const [showSupportModal, setShowSupportModal] = useState(false);
+  const [goldKeyInput, setGoldKeyInput] = useState('');
+  const [activeGoldKey, setActiveGoldKey] = useState(null);
 
   const [bgmIndex, setBgmIndex] = useState(() => Math.floor(Math.random() * BGM_TRACKS.length));
   const audioRef = useRef(null);
@@ -358,8 +358,7 @@ function App() {
     return () => clearInterval(timer);
   }, [pubCooldown]);
   
-  // Save Passcode automatically
-  useEffect(() => { localStorage.setItem('hc_gold_passcode', goldPasscode); }, [goldPasscode]);
+  const KOFI_LINK = "https://ko-fi.com/arpitsrivstva"; 
 
   useEffect(() => { setPubLang(appLang); }, [appLang]);
 
@@ -448,21 +447,26 @@ function App() {
     socket.emit('getAdminPublicScenarios', keyToUse, (data) => setAdminPublicScenarios(data));
   };
 
-  const handleBatchModerate = () => {
-    playSound('click');
-    socket.emit('batchModerateScenarios', adminKey, (res) => {
-      alert(res.message);
-      refreshStats();
-    });
+  const handleActivateGold = () => {
+      if(goldKeyInput.trim() !== '') {
+          playSound('win');
+          setActiveGoldKey(goldKeyInput.trim());
+          setTimeout(() => setShowGoldModal(false), 1500);
+      }
   };
 
   const handleCreateRoom = () => { 
-    playSound('create'); 
-    if (!playerName) return alert("Please enter your funny name!"); 
-    // Passes the passcode to the server to check for GOLD features
-    socket.emit('createRoom', { playerName, language: appLang, passcode: goldPasscode }, (res) => {
-        if(!res.success) alert(res.message);
-    }); 
+      playSound('create'); 
+      if (!playerName) return alert("Please enter your funny name!"); 
+      
+      socket.emit('createRoom', { playerName, language: appLang, funKey: activeGoldKey }, (res) => {
+          if (!res.success) {
+              alert(res.message);
+              if(res.message.includes('already in use')) {
+                  setActiveGoldKey(null);
+              }
+          }
+      }); 
   };
   const handleJoinRoom = () => { playSound('click'); if (!playerName) return alert("Please enter your funny name!"); if (!joinCode) return alert("Please enter a room code!"); socket.emit('joinRoom', { roomId: joinCode, playerName }, (res) => !res.success && alert(res.message)); };
   const handleStartGame = () => { playSound('click'); socket.emit('startGame', room.id); };
@@ -539,13 +543,14 @@ function App() {
         ...styles.howToPlayHeader, 
         backgroundColor: '#ff9900', 
         color: '#ffffff', 
-        fontSize: '20px', 
+        fontSize: '26px', 
         fontWeight: '900',
-        fontFamily: 'inherit', 
+        fontFamily: '"Bangers", cursive', 
         textTransform: 'none', 
-        letterSpacing: 'normal',
-        lineHeight: '1.4', 
-        padding: '15px 20px'
+        letterSpacing: '1px',
+        lineHeight: '1.2', 
+        padding: '15px 20px',
+        textShadow: '3px 3px 0px #1a1a1a, -1px -1px 0px #1a1a1a, 1px -1px 0px #1a1a1a, -1px 1px 0px #1a1a1a', 
       }}>
         {t('submitPub')}
       </div>
@@ -554,10 +559,10 @@ function App() {
         <textarea id="pubScenarioInput" name="pubScenario" value={pubScenario} onChange={(e) => setPubScenario(e.target.value)} placeholder={t('pubPlace')} style={{...styles.textarea, height: '120px', marginBottom: '10px'}} />
         
         <div style={{display: 'flex', gap: '10px', marginBottom: '15px'}}>
-          <select value={pubLang} onChange={(e) => setPubLang(e.target.value)} style={styles.dropdown}>
+          <select id="pubLangSelect" name="pubLang" value={pubLang} onChange={(e) => setPubLang(e.target.value)} style={styles.dropdown}>
             <option value="English">English</option><option value="Mandarin">Mandarin</option><option value="Hindi">Hindi</option><option value="Spanish">Spanish</option><option value="French">French</option><option value="Arabic">Arabic</option><option value="Portuguese">Portuguese</option><option value="Russian">Russian</option><option value="German">German</option><option value="Japanese">Japanese</option><option value="Korean">Korean</option><option value="Indonesian">Indonesian</option>
           </select>
-          <select value={pubCategory} onChange={(e) => setPubCategory(e.target.value)} style={styles.dropdown}>
+          <select id="pubCatSelect" name="pubCat" value={pubCategory} onChange={(e) => setPubCategory(e.target.value)} style={styles.dropdown}>
             <option value="All Ages">All Ages</option><option value="18+">18+</option>
           </select>
         </div>
@@ -604,6 +609,8 @@ function App() {
     <div onClick={unlockAudio} style={styles.appWrapper}>
       <style>{`
       @import url('https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
 
         /* --- GLOBAL LAYOUT LOCKS --- */
         * { box-sizing: border-box; } 
@@ -623,10 +630,15 @@ function App() {
         @keyframes unified-wobble-breathe { 0%, 100% { transform: scale(1) rotate(0deg); } 25% { transform: scale(1.03) rotate(-3deg); } 50% { transform: scale(1) rotate(2deg); } 75% { transform: scale(1.03) rotate(-1deg); } }
         .animated-logo-main { animation: unified-wobble-breathe 5s infinite ease-in-out; max-width: 100%; width: 450px; height: auto; cursor: pointer; user-select: none; margin-bottom: 20px; margin-top: 30px; }
 
-        /* Smooth dropdown animation */
+        /* Smooth dropdown & Modal animation */
         @keyframes slideDown { 
           from { opacity: 0; transform: translateY(-10px); } 
           to { opacity: 1; transform: translateY(0); } 
+        }
+
+        @keyframes popIn {
+          from { transform: scale(0.9); opacity: 0; }
+          to { transform: scale(1); opacity: 1; }
         }
 
         /* --- BACKGROUND DOODLE ANIMATION --- */
@@ -646,41 +658,87 @@ function App() {
 
       `}</style>
 
+      {/* --- THE UPI POPUP MODAL --- */}
+      {showUpiModal && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
+          backgroundColor: 'rgba(0,0,0,0.8)', zIndex: 100000,
+          display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px'
+        }}>
+          <div style={{
+            backgroundColor: '#FFC200', padding: '30px', borderRadius: '24px', border: '5px solid #1a1a1a', 
+            boxShadow: '10px 10px 0px #1a1a1a', maxWidth: '400px', width: '100%', textAlign: 'center', animation: 'popIn 0.3s ease-out'
+          }}>
+            <h2 style={{...styles.phaseTitle, fontSize: '28px', marginBottom: '10px', color: '#1a1a1a', textShadow: 'none', transform: 'rotate(0deg)'}}>☕ Support the Dev</h2>
+            <p style={{fontWeight: 'bold', marginBottom: '20px', color: '#333'}}>Scan the QR below with any UPI app. Put your Humour Cup Username in the notes!</p>
+            
+            <div style={{width: '200px', height: '200px', backgroundColor: '#fff', border: '4px dashed #1a1a1a', margin: '0 auto 20px auto', display: 'flex', justifyContent: 'center', alignItems: 'center', borderRadius: '12px'}}>
+              <span style={{fontWeight: '900', color: '#666'}}>[ Place your UPI QR code image here ]</span>
+            </div>
+            
+            <p style={{fontWeight: '900', fontSize: '18px', color: '#ef4444', marginBottom: '20px'}}>UPI ID: your.upi@okbank</p>
+            
+            <button onClick={() => setShowUpiModal(false)} className="btn-3d" style={{...styles.primaryBtn, backgroundColor: '#1a1a1a', color: '#fff'}}>CLOSE</button>
+          </div>
+        </div>
+      )}
+
+      {/* --- THE GOLD POPUP MODAL --- */}
+      {showGoldModal && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
+          backgroundColor: 'rgba(0,0,0,0.8)', zIndex: 100000,
+          display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px', overflowY: 'auto'
+        }}>
+          <div style={{
+            backgroundColor: '#fff', padding: '30px', borderRadius: '24px', border: '5px solid #1a1a1a', 
+            boxShadow: '10px 10px 0px #1a1a1a', maxWidth: '500px', width: '100%', textAlign: 'center', animation: 'popIn 0.3s ease-out'
+          }}>
+            <div style={{
+              backgroundColor: '#ff9900', padding: '15px', borderRadius: '16px', border: '4px solid #1a1a1a', marginBottom: '20px',
+              boxShadow: '4px 4px 0px #1a1a1a'
+            }}>
+              <h2 style={{...styles.phaseTitle, fontSize: '32px', marginBottom: '5px', textShadow: 'none', transform: 'rotate(0deg)'}}>{t('goldTitle')}</h2>
+            </div>
+            
+            <div style={{textAlign: 'left', marginBottom: '20px', padding: '15px', backgroundColor: '#fef3c7', borderRadius: '12px', border: '3px solid #1a1a1a'}}>
+               <p style={{fontWeight: '800', color: '#1a1a1a', fontSize: '15px', marginBottom: '15px', textAlign: 'center'}}>{t('gInstruction')}</p>
+               
+               <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
+                 <div style={styles.aboutBullet}><span>⭐</span> <span>{t('gPerk1')}</span></div>
+                 <div style={styles.aboutBullet}><span>⭐</span> <span>{t('gPerk2')}</span></div>
+                 <div style={styles.aboutBullet}><span>⭐</span> <span>{t('gPerk3')}</span></div>
+                 <div style={styles.aboutBullet}><span>⭐</span> <span>{t('gPerk4')}</span></div>
+                 <div style={styles.aboutBullet}><span>⭐</span> <span>{t('gPerk5')}</span></div>
+                 <div style={styles.aboutBullet}><span>⭐</span> <span>{t('gPerk6')}</span></div>
+                 <div style={styles.aboutBullet}><span>⭐</span> <span>{t('gPerk7')}</span></div>
+               </div>
+            </div>
+
+            {activeGoldKey ? (
+               <div style={{backgroundColor: '#10b981', padding: '15px', borderRadius: '12px', border: '3px solid #1a1a1a', color: '#fff', fontWeight: '900', fontSize: '18px', marginBottom: '20px'}}>
+                  {t('gActive')}
+               </div>
+            ) : (
+               <div style={{display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '20px'}}>
+                  <input id="goldKeyInputBox" name="goldKey" placeholder={t('gInput')} value={goldKeyInput} onChange={(e) => setGoldKeyInput(e.target.value)} style={{...styles.input, marginBottom: '0'}} />
+                  <button onClick={handleActivateGold} className="btn-3d" style={{...styles.primaryBtn, backgroundColor: '#1a1a1a', color: '#ff9900', borderColor: '#1a1a1a'}}>ACTIVATE KEY</button>
+               </div>
+            )}
+            
+            <p style={{fontSize: '12px', color: '#ef4444', fontWeight: 'bold', marginBottom: '20px'}}>{t('goldSub')}</p>
+            <button onClick={() => setShowGoldModal(false)} className="btn-3d" style={{...styles.secondaryBtn, width: '100%'}}>CLOSE</button>
+          </div>
+        </div>
+      )}
+
       <div className="doodle-bg"></div>
 
-      {/* --- PAYMENT MODALS --- */}
-      {showGoldModal && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modalContent}>
-            <h2 style={{...styles.phaseTitle, fontSize: '28px', color: '#1a1a1a', textShadow: 'none', marginBottom: '10px'}}>{t('goldTitle')}</h2>
-            <p style={{fontWeight: 'bold', marginBottom: '20px', color: '#555'}}>Get custom timers, up to 12 players, and premium AI scenarios!</p>
-            <div style={{display: 'flex', flexDirection: 'column', gap: '15px'}}>
-               <a href="https://rzp.io/l/your-link" target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.primaryBtn, backgroundColor: '#f0982d', color: '#fff'}}>{t('modalInd')}</a>
-               <a href="https://humourcup.paddle.com" target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.primaryBtn, backgroundColor: '#10b981', color: '#fff'}}>{t('modalIntl')}</a>
-            </div>
-            <button onClick={() => setShowGoldModal(false)} className="btn-3d" style={{...styles.secondaryBtn, marginTop: '20px', width: '100%'}}>{t('close')}</button>
-          </div>
-        </div>
-      )}
-
-      {showSupportModal && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modalContent}>
-            <h2 style={{...styles.phaseTitle, fontSize: '28px', color: '#1a1a1a', textShadow: 'none', marginBottom: '10px'}}>☕ Support the Dev</h2>
-            <p style={{fontWeight: 'bold', marginBottom: '20px', color: '#555'}}>Buy me a coffee so I can keep the servers running!</p>
-            <div style={{display: 'flex', flexDirection: 'column', gap: '15px'}}>
-               <a href="https://rzp.io/l/your-link" target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.primaryBtn, backgroundColor: '#f0982d', color: '#fff'}}>{t('modalInd')}</a>
-               <a href="https://humourcup.paddle.com" target="_blank" rel="noreferrer" className="btn-3d" style={{...styles.primaryBtn, backgroundColor: '#10b981', color: '#fff'}}>{t('modalIntl')}</a>
-            </div>
-            <button onClick={() => setShowSupportModal(false)} className="btn-3d" style={{...styles.secondaryBtn, marginTop: '20px', width: '100%'}}>{t('close')}</button>
-          </div>
-        </div>
-      )}
-
+      {/* TOP LEFT LANGUAGE SELECTOR */}
       {!room && !isAdminMode && (
         <div style={styles.translateWrapper}>
           <span style={{fontSize: '16px'}}>🌐</span>
-          <select value={appLang} onChange={(e) => setAppLang(e.target.value)} style={styles.translateSelect}>
+          <select id="appLangSelect" name="appLang" value={appLang} onChange={(e) => setAppLang(e.target.value)} style={styles.translateSelect}>
             <option value="English">EN</option>
             <option value="Hindi">हिन्दी</option>
             <option value="Spanish">ES</option>
@@ -697,6 +755,18 @@ function App() {
         </div>
       )}
 
+      {/* TOP RIGHT GOLD BUTTON */}
+      {!room && !isAdminMode && (
+        <button onClick={() => { playSound('click'); setShowGoldModal(true); }} className="btn-3d" style={{
+          position: 'fixed', top: '15px', right: '15px', zIndex: 10000, display: 'flex', alignItems: 'center', gap: '4px', 
+          background: activeGoldKey ? '#10b981' : '#1a1a1a', color: activeGoldKey ? '#fff' : '#ff9900', padding: '6px 12px', borderRadius: '50px', 
+          border: '3px solid #1a1a1a', boxShadow: '2px 2px 0px #1a1a1a', fontSize: '14px', fontWeight: '900', cursor: 'pointer',
+          fontFamily: '"Fredoka One", "Titan One", "Comic Sans MS", sans-serif'
+        }}>
+          {activeGoldKey ? '⭐ GOLD ACTIVE' : '⭐ GOLD'}
+        </button>
+      )}
+
       <audio ref={audioRef} src={BGM_TRACKS[bgmIndex]} loop />
 
       <div style={{...styles.container, paddingBottom: '40px', flex: '1 0 auto', position: 'relative', zIndex: 1}}>
@@ -704,8 +774,8 @@ function App() {
 
         {isAdminMode && !room && (
           <div style={{width: '100%', maxWidth: '600px', backgroundColor: '#fff', padding: '30px', borderRadius: '16px', border: '4px solid #1a1a1a', boxShadow: '8px 8px 0px #1a1a1a', marginBottom: '40px'}}>
-            <h2 style={{...styles.phaseTitle, textShadow: 'none', color: '#1a1a1a'}}>🌱 SEEDING DATA</h2>
-            <div style={{display: 'flex', gap: '10px', marginBottom: '30px', flexWrap: 'wrap'}}>
+            <h2 style={styles.phaseTitle}>🌱 SEEDING DATA</h2>
+            <div style={{display: 'flex', gap: '10px', marginBottom: '30px'}}>
                <button onClick={() => refreshStats()} className="btn-3d" style={{...styles.secondaryBtn, flex: 1, backgroundColor: '#10b981', color: '#fff'}}>🔄 REFRESH</button>
                <button onClick={() => setIsAdminMode(false)} className="btn-3d" style={{...styles.secondaryBtn, flex: 1}}>❌ CLOSE</button>
             </div>
@@ -728,10 +798,7 @@ function App() {
             </div>
 
             <div style={{ borderTop: '4px solid #1a1a1a', paddingTop: '30px' }}>
-              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
-                <h2 style={{...styles.phaseTitle, fontSize: '24px', margin: 0, textShadow: 'none', color: '#1a1a1a'}}>🌍 USER SUBMISSIONS ({adminPublicScenarios.length})</h2>
-                <button onClick={handleBatchModerate} className="btn-3d" style={{...styles.primaryBtn, width: 'auto', padding: '10px 15px', fontSize: '14px', backgroundColor: '#3b82f6', color: '#fff'}}>{t('modBatch')}</button>
-              </div>
+              <h2 style={{...styles.phaseTitle, fontSize: '24px'}}>🌍 USER SUBMISSIONS ({adminPublicScenarios.length})</h2>
               <div style={{maxHeight: '400px', overflowY: 'auto', background: '#fef3c7', padding: '15px', borderRadius: '12px', border: '3px solid #1a1a1a'}}>
                 {adminPublicScenarios.length === 0 ? <p style={{fontWeight: 'bold'}}>No public scenarios submitted yet.</p> :
                   adminPublicScenarios.map((s, i) => (
@@ -756,28 +823,10 @@ function App() {
             <div style={styles.mainCard}>
               <input id="playerNameInput" name="playerName" placeholder={t('name')} value={playerName} onChange={(e) => setPlayerName(e.target.value)} style={styles.input} />
               
-              <button onClick={handleCreateRoom} className="btn-3d" style={{...styles.primaryBtn, backgroundColor: '#ff9900', color: '#ffffff', borderColor: '#1a1a1a'}}>{t('create')}</button>
+              <button onClick={handleCreateRoom} className="btn-3d" style={{...styles.primaryBtn, backgroundColor: activeGoldKey ? '#10b981' : '#ff9900', color: '#ffffff', borderColor: '#1a1a1a'}}>
+                  {activeGoldKey ? t('createGold') : t('create')}
+              </button>
               
-              {/* --- NEW HUMOUR CUP GOLD PASSCODE UI --- */}
-              <div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#fffbe0', borderRadius: '12px', border: '3px dashed #f0982d', textAlign: 'left' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                  <span style={{ fontWeight: '900', fontSize: '16px', color: '#f0982d' }}>{t('goldTitle')}</span>
-                  <button onClick={() => setShowGoldModal(true)} className="btn-3d" style={{ background: '#10b981', color: '#fff', border: '2px solid #1a1a1a', borderRadius: '8px', padding: '6px 12px', fontWeight: 'bold', cursor: 'pointer', boxShadow: '2px 2px 0px #1a1a1a' }}>{t('getGold')}</button>
-                </div>
-                <input 
-                  type="text" 
-                  id="goldPasscodeInput" 
-                  name="goldPasscode"
-                  placeholder={t('passPlaceholder')} 
-                  value={goldPasscode} 
-                  onChange={(e) => setGoldPasscode(e.target.value)} 
-                  style={{ ...styles.input, marginBottom: '8px', padding: '12px', fontSize: '14px', backgroundColor: '#fff', color: '#1a1a1a' }} 
-                />
-                <p style={{ fontSize: '12px', color: '#ef4444', fontWeight: 'bold', margin: 0, lineHeight: '1.4' }}>
-                  {t('goldWarn')}
-                </p>
-              </div>
-
               <div style={styles.divider}>{t('orJoin')}</div>
               <div style={{display:'flex', gap:'10px', width: '100%'}}>
                 <input id="joinCodeInput" name="joinCode" placeholder={t('code')} value={joinCode} onChange={(e) => setJoinCode(e.target.value)} style={styles.smallInput} maxLength={4} />
@@ -810,8 +859,7 @@ function App() {
             }}></div>
 
             <div style={{...styles.devCardGreen, transform: 'rotate(-2deg)', marginTop: '40px'}}>
-               {/* Swapped to trigger the Support Modal */}
-               <button onClick={() => setShowSupportModal(true)} className="btn-3d" style={{
+               <button onClick={() => setShowUpiModal(true)} className="btn-3d" style={{
                    ...styles.donateBtn, 
                    background: '#6F4E37', 
                    color: '#ffffff', 
@@ -879,9 +927,9 @@ function App() {
                   <p style={styles.aboutText}>{t('ab5')}</p>
                   
                   <div style={{display: 'flex', flexDirection: 'column', gap: '12px', margin: '20px 0'}}>
-                    <div style={styles.aboutBullet}><span>🔶</span> <span>{t('ab6')}</span></div>
-                    <div style={styles.aboutBullet}><span>🔶</span> <span>{t('ab7')}</span></div>
-                    <div style={styles.aboutBullet}><span>🔶</span> <span>{t('ab8')}</span></div>
+                    <div style={styles.aboutBullet}><span>🤖</span> <span>{t('ab6')}</span></div>
+                    <div style={styles.aboutBullet}><span>🌍</span> <span>{t('ab7')}</span></div>
+                    <div style={styles.aboutBullet}><span>🤫</span> <span>{t('ab8')}</span></div>
                   </div>
                   
                   <p style={styles.aboutText}>{t('ab9')}</p>
@@ -913,7 +961,7 @@ function App() {
                  
                  <div style={{flex: 1}}>
                    <label style={{fontWeight: '900', fontSize: '14px'}}>{t('scen')}</label>
-                   <select disabled={!isHost} value={room.settings.source} onChange={(e) => handleSettingChange('source', e.target.value)} style={{...styles.dropdown, width: '100%', marginTop: '5px'}}>
+                   <select id="lobbySourceSelect" name="lobbySource" disabled={!isHost} value={room.settings.source} onChange={(e) => handleSettingChange('source', e.target.value)} style={{...styles.dropdown, width: '100%', marginTop: '5px'}}>
                      <option>AI</option><option>Public</option><option>Custom</option>
                    </select>
                  </div>
@@ -921,7 +969,7 @@ function App() {
                  {room.settings.source !== 'AI' && (
                    <div style={{flex: 1}}>
                      <label style={{fontWeight: '900', fontSize: '14px'}}>{t('cat')}</label>
-                     <select disabled={!isHost} value={room.settings.category} onChange={(e) => handleSettingChange('category', e.target.value)} style={{...styles.dropdown, width: '100%', marginTop: '5px'}}>
+                     <select id="lobbyCatSelect" name="lobbyCat" disabled={!isHost} value={room.settings.category} onChange={(e) => handleSettingChange('category', e.target.value)} style={{...styles.dropdown, width: '100%', marginTop: '5px'}}>
                        <option>All Ages</option><option>18+</option>
                      </select>
                    </div>
@@ -930,7 +978,7 @@ function App() {
                  {(room.settings.source === 'Public' || room.settings.source === 'AI') && (
                    <div style={{flex: '1 1 100%'}}>
                      <label style={{fontWeight: '900', fontSize: '14px'}}>{t('lang')}</label>
-                     <select disabled={!isHost} value={room.settings.language} onChange={(e) => handleSettingChange('language', e.target.value)} style={{...styles.dropdown, width: '100%', marginTop: '5px'}}>
+                     <select id="lobbyLangSelect" name="lobbyLang" disabled={!isHost} value={room.settings.language} onChange={(e) => handleSettingChange('language', e.target.value)} style={{...styles.dropdown, width: '100%', marginTop: '5px'}}>
                         <option value="English">English</option><option value="Mandarin">Mandarin</option><option value="Hindi">Hindi</option><option value="Spanish">Spanish</option><option value="French">French</option><option value="Arabic">Arabic</option><option value="Portuguese">Portuguese</option><option value="Russian">Russian</option><option value="German">German</option><option value="Japanese">Japanese</option><option value="Korean">Korean</option><option value="Indonesian">Indonesian</option>
                      </select>
                    </div>
@@ -944,6 +992,26 @@ function App() {
                    <button onClick={handleSecretSubmit} className="btn-3d" style={{...styles.primaryBtn, fontSize: '14px', padding: '10px'}}>{t('addPool')}</button>
                    <p style={{marginTop: '10px', fontWeight: 'bold', color: '#10b981', marginBottom: 0}}>{t('totPool')} {room.customCount || 0}</p>
                    <p style={{marginTop: '15px', fontWeight: 'bold', color: '#1a1a1a', fontSize: '13px', lineHeight: '1.4'}}>{t('addCustomAlso')}</p>
+                 </div>
+               )}
+               
+               {room.isGold && (
+                 <div style={{marginTop: '20px', padding: '15px', backgroundColor: '#fff', borderRadius: '12px', border: '3px solid #ff9900', textAlign: 'center'}}>
+                   <p style={{fontWeight: '900', color: '#ff9900', margin: '0 0 10px 0'}}>⭐ GOLD SETTINGS ⭐</p>
+                   <div style={{display: 'flex', gap: '10px'}}>
+                     <div style={{flex: 1}}>
+                       <label style={{fontWeight: '900', fontSize: '12px', color: '#666'}}>Rounds</label>
+                       <select id="goldRoundSelect" name="goldRounds" disabled={!isHost} value={room.settings.customRounds || 3} onChange={(e) => handleSettingChange('customRounds', parseInt(e.target.value))} style={{...styles.dropdown, width: '100%', marginTop: '5px', padding: '10px', fontSize: '14px'}}>
+                         <option value={3}>3 Rounds</option><option value={5}>5 Rounds</option><option value={10}>10 Rounds</option>
+                       </select>
+                     </div>
+                     <div style={{flex: 1}}>
+                       <label style={{fontWeight: '900', fontSize: '12px', color: '#666'}}>Timer</label>
+                       <select id="goldTimerSelect" name="goldTimer" disabled={!isHost} value={room.settings.customTimer || 90000} onChange={(e) => handleSettingChange('customTimer', parseInt(e.target.value))} style={{...styles.dropdown, width: '100%', marginTop: '5px', padding: '10px', fontSize: '14px'}}>
+                         <option value={60000}>Fast (60s)</option><option value={90000}>Normal (90s)</option><option value={120000}>Slow (120s)</option>
+                       </select>
+                     </div>
+                   </div>
                  </div>
                )}
             </div>
@@ -1208,7 +1276,7 @@ function App() {
               }}></div>
 
               <div style={{...styles.devCardGreen, transform: 'rotate(-2deg)', marginTop: '40px'}}>
-                 <button onClick={() => setShowSupportModal(true)} className="btn-3d" style={{
+                 <button onClick={() => setShowUpiModal(true)} className="btn-3d" style={{
                      ...styles.donateBtn, 
                      background: '#6F4E37', 
                      color: '#ffffff', 
@@ -1254,7 +1322,7 @@ function App() {
 
       <div style={{
         marginBottom: '40px', 
-        backgroundColor: '#ff9900', 
+        backgroundColor: '#ff9900',
         padding: '12px 20px', 
         borderRadius: '50px 20px 60px 25px / 20px 60px 25px 50px', 
         border: '1px solid #1a1a1a', 
@@ -1394,18 +1462,6 @@ const styles = {
     fontFamily: "'Kalam', cursive", 
     fontSize: '9px' 
   },
-
-  modalOverlay: {
-    position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', 
-    backgroundColor: 'rgba(0, 0, 0, 0.7)', zIndex: 99999,
-    display: 'flex', justifyContent: 'center', alignItems: 'center'
-  },
-  modalContent: {
-    backgroundColor: '#ffffff', padding: '30px', borderRadius: '20px', 
-    border: '4px solid #1a1a1a', boxShadow: '8px 8px 0px #1a1a1a',
-    maxWidth: '400px', width: '90%', textAlign: 'center',
-    animation: 'slideDown 0.3s ease-out'
-  }
 };
 
 export default App;

@@ -9,14 +9,19 @@ const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require('@googl
 // Tracks the last time a user submitted a public scenario
 const submissionCooldowns = new Map();
 
+// Tracks active GOLD Fun Keys so they can't be shared simultaneously
+const activeGoldRooms = new Map(); // Maps roomId -> funKey
+
+// Temporary mock DB of valid Fun Keys (You can move this to your real DB later)
+const validFunKeys = ["SantaComesInTheAfternoonNap", "FlippedUpToiletSeat", "9InTheAfternoon", "NakedAtWork", "RandomStrangerPowerRanger", "NightChangesMorningSameSame", "GrannyRockstar", "CryingInTheCornerLaughingAtYourFace", "PressEnterNotHitEnter", "YourCrushHasTwoPartners"];
+
 // --- DATABASE CONNECTION ---
-// Pulls securely from Render Environment Variables! No hackers can see this.
 const uri = process.env.MONGODB_URI;
 
 mongoose.connect(uri)
   .then(() => {
     console.log("🚀 Humour Cup Database Connected!");
-    seedDatabase(); // Starts the Smart Seeder ONLY after DB connects
+    seedDatabase(); 
   })
   .catch(err => console.error("❌ Database connection error:", err));
 
@@ -26,50 +31,80 @@ const scenarioSchema = new mongoose.Schema({
   language: { type: String, required: true, index: true },
   category: { type: String, required: true, index: true },
   source: { type: String, default: 'AI' }, 
-  status: { type: String, default: 'Approved' }, // 'Approved' or 'Pending'
+  status: { type: String, default: 'Approved' }, 
   createdAt: { type: Date, default: Date.now }
 });
 
 const Scenario = mongoose.model('Scenario', scenarioSchema);
 
-// --- THE AUTO-MODERATOR BACKGROUND WORKER ---
+// --- THE AUTO-MODERATOR BATCH WORKER (Upgraded to 20 per batch) ---
 setInterval(async () => {
   try {
-    const pendingScenarios = await Scenario.find({ status: 'Pending' }).limit(3);
-    if (pendingScenarios.length === 0) return; 
+    // 1. Group pending scenarios by language and category to keep the AI focused
+    const pendingGroups = await Scenario.aggregate([
+      { $match: { status: 'Pending' } },
+      { $group: { _id: { language: "$language", category: "$category" }, scenarios: { $push: "$_id" } } }
+    ]);
 
-    console.log(`🔍 Auto-Moderator found ${pendingScenarios.length} pending scenarios...`);
+    if (pendingGroups.length === 0) return; 
+
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite", safetySettings });
 
-    for (let p of pendingScenarios) {
-      try {
-        const prompt = `You are the strict but fair moderator for a party game called Humour Cup.
-        A player submitted a custom scenario: "${p.text}"
-        Target Language: ${p.language} | Category: ${p.category}
-        Assess criteria: 1. Makes sense. 2. Correct spelling. 3. Humorous potential. 4. Fits category.
-        Return ONLY a JSON object: {"accepted": boolean, "correctedText": "fixed text", "reason": "1-sentence explanation"}`;
+    // 2. Process one group at a time
+    for (let group of pendingGroups) {
+      const lang = group._id.language;
+      const cat = group._id.category;
+      
+      // Grab up to 20 full scenarios from this specific group
+      const batchIds = group.scenarios.slice(0, 20);
+      const batch = await Scenario.find({ _id: { $in: batchIds } });
 
+      if (batch.length === 0) continue;
+
+      console.log(`🔍 Batch Moderating ${batch.length} pending scenarios for ${lang} (${cat})...`);
+
+      const scenarioList = batch.map(s => `ID: ${s._id} | Text: "${s.text}"`).join('\n');
+
+      // 3. The Strict Batch Prompt
+      const prompt = `You are moderating ${batch.length} user-submitted scenarios for a party game. 
+      All ${batch.length} are supposed to be in [${lang}] and [${cat}].
+      
+      Evaluate each one. 
+      - Reject if it contains explicit content (unless category is 18+).
+      - Reject if grammar is completely broken.
+      - Reject if it is NOT in ${lang}.
+      - Approve if it has good potential to start a humorous conversation.
+
+      Here are the scenarios:
+      ${scenarioList}
+
+      Return a strict JSON array in this exact format (no markdown): 
+      [{"id": "scenario_id_here", "status": "Approved", "correctedText": "fixed text if needed", "reason": "brief reason"}, ...]`;
+
+      try {
         const result = await model.generateContent(prompt);
-        const jsonMatch = result.response.text().trim().match(/\{[\s\S]*\}/);
+        const jsonMatch = result.response.text().trim().match(/\[[\s\S]*\]/);
         
         if (jsonMatch) {
-          const assessment = JSON.parse(jsonMatch[0]);
-          if (assessment.accepted) {
-            await Scenario.findByIdAndUpdate(p._id, { text: assessment.correctedText, status: 'Approved' });
-            console.log(`✅ Queue Approved: "${p.text}"`);
-          } else {
-            await Scenario.findByIdAndDelete(p._id);
-            console.log(`❌ Queue Rejected: "${p.text}" (${assessment.reason})`);
+          const assessments = JSON.parse(jsonMatch[0]);
+          for (let assessment of assessments) {
+            if (assessment.status === 'Approved') {
+              await Scenario.findByIdAndUpdate(assessment.id, { text: assessment.correctedText || assessment.text, status: 'Approved' });
+              console.log(`✅ Batch Approved: ${assessment.id}`);
+            } else {
+              await Scenario.findByIdAndDelete(assessment.id);
+              console.log(`❌ Batch Rejected: ${assessment.id} (${assessment.reason})`);
+            }
           }
         }
         await new Promise(resolve => setTimeout(resolve, 4000));
       } catch (err) {
-        console.log("⚠️ Moderation hit API limit, will try again next minute.");
+        console.log(`⚠️ Batch moderation hit API limit for ${lang}. Retrying later.`);
         break; 
       }
     }
   } catch (e) {
-    console.error("Queue processor error:", e.message);
+    console.error("Batch Queue processor error:", e.message);
   }
 }, 60000);
 
@@ -80,7 +115,7 @@ const server = http.createServer(app);
 
 const io = require('socket.io')(server, {
   cors: {
-    origin: ["https://humour-cup.vercel.app"], // ONLY allow your official website
+    origin: ["https://humour-cup.vercel.app", "http://localhost:3000"], 
     methods: ["GET", "POST"]
   }
 });
@@ -106,7 +141,7 @@ function getFallbackBatch() {
   return [...FALLBACK_VAULT].sort(() => 0.5 - Math.random()).slice(0, 5); 
 }
 
-// --- AI FETCH LOGIC (Upgraded to 20 Scenarios per call) ---
+// --- AI FETCH LOGIC ---
 async function fetchScenarioBatch(category, language = 'English', isSeeding = false) {
   try {
     const fetchPromise = (async () => {
@@ -127,7 +162,6 @@ async function fetchScenarioBatch(category, language = 'English', isSeeding = fa
       3. The scenarios/prompts should be totally different from each other.
       4. The scenarios should be able to have subjective views from people and should have the potential to start a humorous conversation.
       CRITICAL LANGUAGE RULE: You MUST write the scenarios entirely in ${language}. If ${language} is Hindi, use Hinglish (Hindi in English letters). Do NOT output English unless the requested language is English.
-      CRITICAL VOCABULARY RULE: Use simple, common, everyday words. DO NOT use complex, formal, or tough vocabulary. Keep it easy to read.
       ${categoryRule}
       Mix up the formats! Include a random variety of: 1. Absurd hypothetical questions. 2. Funny dialogues. 3. Daily life awkward situations. 4. Weird text messages. 5. out of the box. 6. weird situations. 7. different genres. 8. embarrassing moments. 9. immature stuff. 10. freaky things. 11. dumb things. 12. daily life. 13. failures. 14. meme stuff. 15. all the 5 Ws and 1H humorous questions. Like - What will you do if...; How would the world be...; When will people die of...; Which place would be next epstein island ....; etc. etc.
       (Anti-Cache Seed: ${Date.now()})
@@ -136,7 +170,6 @@ async function fetchScenarioBatch(category, language = 'English', isSeeding = fa
       const result = await model.generateContent(prompt);
       let text = result.response.text().trim();
       
-      // NEW BULLETPROOF JSON PARSER
       const startIndex = text.indexOf('[');
       const endIndex = text.lastIndexOf(']');
       if (startIndex === -1 || endIndex === -1) throw new Error("AI did not return a valid JSON array");
@@ -159,55 +192,24 @@ async function fetchScenarioBatch(category, language = 'English', isSeeding = fa
 
 // --- NEW INFINITE SMART SEEDER LOGIC ---
 async function seedDatabase() {
-  // 1. The starting targets
-  let dynamicTargets = {
-    'English': 1000, 
-    'Hindi': 500, 
-    'Spanish': 100, 
-    'French': 100,
-    'Mandarin': 100, 
-    'Japanese': 100, 
-    'Russian': 100, 
-    'Portuguese': 100,
-    'German': 100, 
-    'Korean': 100, 
-    'Arabic': 100, 
-    'Indonesian': 100
-  };
-
-  // 2. The exact custom amounts to add when a cycle finishes
-  const INCREMENTS = {
-    'English': 200, 
-    'Hindi': 250, 
-    'Spanish': 50, 
-    'French': 50,
-    'Mandarin': 50, 
-    'Japanese': 50, 
-    'Russian': 50, 
-    'Portuguese': 50,
-    'German': 50, 
-    'Korean': 50, 
-    'Arabic': 50, 
-    'Indonesian': 50
-  };
+  let dynamicTargets = { 'English': 1000, 'Hindi': 500, 'Spanish': 100, 'French': 100, 'Mandarin': 100, 'Japanese': 100, 'Russian': 100, 'Portuguese': 100, 'German': 100, 'Korean': 100, 'Arabic': 100, 'Indonesian': 100 };
+  const INCREMENTS = { 'English': 200, 'Hindi': 250, 'Spanish': 50, 'French': 50, 'Mandarin': 50, 'Japanese': 50, 'Russian': 50, 'Portuguese': 50, 'German': 50, 'Korean': 50, 'Arabic': 50, 'Indonesian': 50 };
 
   console.log("🌱 Starting INFINITE Smart Database Seeding...");
   
-  // The infinite loop
   while (true) {
     let allTargetsMet = true;
 
-    // It will ALWAYS run in this exact order: English -> Hindi -> Spanish...
     for (const lang of Object.keys(dynamicTargets)) {
       let targetCount = dynamicTargets[lang];
       let currentCount = await Scenario.countDocuments({ language: lang, source: 'AI' });
       
       if (currentCount >= targetCount) {
         console.log(`✅ [${lang}] Target of ${targetCount} is full (Current: ${currentCount}).`);
-        continue; // Moves to the next language in the list
+        continue; 
       }
 
-      allTargetsMet = false; // We found a language that needs work!
+      allTargetsMet = false; 
       let needed = targetCount - currentCount;
       console.log(`⏳ [${lang}] Needs ${needed} more scenarios to reach ${targetCount}. Starting generation...`);
 
@@ -216,9 +218,7 @@ async function seedDatabase() {
           const category = Math.random() > 0.5 ? 'All Ages' : '18+';
           const batch = await fetchScenarioBatch(category, lang, true); 
           
-          const scenarioObjects = batch.map(text => ({
-            text, language: lang, category: category, source: 'AI', status: 'Approved'
-          }));
+          const scenarioObjects = batch.map(text => ({ text, language: lang, category: category, source: 'AI', status: 'Approved' }));
 
           await Scenario.insertMany(scenarioObjects, { ordered: false }).catch(err => {
               if (err.code !== 11000 && (!err.writeErrors || err.writeErrors[0].code !== 11000)) throw err; 
@@ -228,20 +228,14 @@ async function seedDatabase() {
           needed = targetCount - currentCount;
           
           console.log(`📡 [${lang}] Progress: ${currentCount}/${targetCount}. Requesting next batch...`);
-
-          // Safe 4.5 second pause between normal requests
           await new Promise(resolve => setTimeout(resolve, 4500));
           
         } catch (err) {
           const errMsg = err.message.toLowerCase();
-          
-          // --- THE "DEEP SLEEP" SERVER PROTECTION ---
-          // If Google cuts us off, we go into hibernation to save Render resources.
           if (errMsg.includes('429') || errMsg.includes('quota') || errMsg.includes('exhausted') || errMsg.includes('limit')) {
-            console.error(`🛑 Google API Quota Reached! To save server RAM, entering DEEP SLEEP for 1 hour before checking for midnight reset...`);
-            await new Promise(resolve => setTimeout(resolve, 3600000)); // Sleeps for exactly 1 hour (3,600,000 ms)
+            console.error(`🛑 Google API Quota Reached! Entering DEEP SLEEP for 1 hour...`);
+            await new Promise(resolve => setTimeout(resolve, 3600000)); 
           } else {
-            // Normal glitches (like a network drop) only get a 1-minute pause
             console.error(`❌ Normal API Error for ${lang}: ${err.message}. Pausing for 1 minute...`);
             await new Promise(resolve => setTimeout(resolve, 60000));
           }
@@ -249,16 +243,9 @@ async function seedDatabase() {
       }
     }
 
-    // --- THE CUSTOM LEVEL UP ---
-    // This ONLY triggers when the loop finishes and every single language has hit its target.
     if (allTargetsMet) {
       console.log("🚀 ALL LANGUAGES MAXED OUT! Applying custom target upgrades...");
-      
-      for (const lang in dynamicTargets) {
-        dynamicTargets[lang] += INCREMENTS[lang]; // Adds +200 to EN, +250 to HI, +50 to rest
-      }
-      
-      // Wait 10 seconds before starting the brand new cycle back at English
+      for (const lang in dynamicTargets) { dynamicTargets[lang] += INCREMENTS[lang]; }
       await new Promise(resolve => setTimeout(resolve, 10000)); 
     }
   }
@@ -279,8 +266,10 @@ function startAnswerPhase(roomCode, scenario) {
   const room = rooms[roomCode];
   room.state = 'ANSWER_PHASE';
   
-  // 90 SECOND TIMER
-  room.roundData = { roundNumber: (room.roundData?.roundNumber || 0) + 1, scenario: scenario, answers: [], endTime: Date.now() + 90000 }; 
+  // Custom Timer Check (Gold Feature Mockup)
+  const timerLength = room.isGold ? (room.settings.customTimer || 90000) : 90000;
+  
+  room.roundData = { roundNumber: (room.roundData?.roundNumber || 0) + 1, scenario: scenario, answers: [], endTime: Date.now() + timerLength }; 
   
   emitSafeRoomData(roomCode);
 
@@ -311,13 +300,16 @@ function startChatPhase(roomCode) {
       clearInterval(roomTimers[roomCode]);
       room.history.push(JSON.parse(JSON.stringify(room.roundData))); 
 
-      // NEW: Check dynamic totalRounds instead of hardcoded 3!
-      const maxRounds = room.totalRounds || 3;
+      const maxRounds = room.isGold ? (room.settings.customRounds || 3) : 3;
       
       if (room.roundData.roundNumber < maxRounds) {
         startIntermission(roomCode);
       } else {
         room.state = 'RESULTS';
+        // Free up the gold key if the game is over
+        if (activeGoldRooms.has(roomCode)) {
+            activeGoldRooms.delete(roomCode);
+        }
         emitSafeRoomData(roomCode);
       }
     }
@@ -345,16 +337,11 @@ io.on('connection', (socket) => {
 
   socket.on('verifyAdmin', (passcode, callback) => {
     const correctPasscode = process.env.ADMIN_PASSCODE || '72954';
-    if (passcode === correctPasscode) {
-      callback({ success: true });
-    } else {
-      callback({ success: false });
-    }
+    if (passcode === correctPasscode) callback({ success: true });
+    else callback({ success: false });
   });
 
-  socket.on('requestSync', (roomId) => {
-    emitSafeRoomData(roomId.toUpperCase());
-  });
+  socket.on('requestSync', (roomId) => { emitSafeRoomData(roomId.toUpperCase()); });
 
   socket.on('getSeedingStats', async (passcode, callback) => {
     if (passcode !== (process.env.ADMIN_PASSCODE || '72954')) return callback({});
@@ -374,65 +361,50 @@ io.on('connection', (socket) => {
     } catch(e) { callback([]); }
   });
 
-  socket.on('getPublicVault', async (callback) => {
-    try {
-      const publicScenarios = await Scenario.find({ source: 'Public', status: 'Approved' }).lean();
-      callback(publicScenarios);
-    } catch(e) { callback([]); }
-  });
-
   socket.on('submitPublicScenario', async (data, callback) => {
     const now = Date.now();
     const lastSubmitTime = submissionCooldowns.get(socket.id) || 0;
-
-    if (now - lastSubmitTime < 10000) {
-      return callback({ success: false, message: "Please wait 10 seconds between submissions." });
-    }
-
+    if (now - lastSubmitTime < 10000) return callback({ success: false, message: "Please wait 10 seconds between submissions." });
+    
     submissionCooldowns.set(socket.id, now);
     
     try {
-      const exists = await Scenario.findOne({ text: data.text });
-      if (exists) return callback({ success: false, message: "Whoops! Someone already submitted this scenario." });
-
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite", safetySettings });
-      const prompt = `You are the strict but fair moderator for a party game called Humour Cup.
-      A player submitted a custom scenario: "${data.text}"
-      Target Language: ${data.language} | Category: ${data.category}
-      Assess criteria: 1. Makes sense. 2. Correct spelling. 3. Humorous potential. 4. Fits category.
-      Return ONLY a JSON object: {"accepted": boolean, "correctedText": "fixed text", "reason": "1-sentence explanation"}`;
-
-      const result = await model.generateContent(prompt);
-      const jsonMatch = result.response.text().trim().match(/\{[\s\S]*\}/);
-      if (!jsonMatch) throw new Error("AI JSON Error");
-      
-      const assessment = JSON.parse(jsonMatch[0]);
-      if (assessment.accepted) {
-        try {
-          await new Scenario({ text: assessment.correctedText, language: data.language, category: data.category, source: 'Public', status: 'Approved' }).save();
-        } catch(dbErr) {
-          if (dbErr.code === 11000) return callback({ success: false, message: "Whoops! This scenario already exists." });
-        }
-      }
-      callback({ success: true, data: assessment });
-    } catch (error) {
-      try {
-        await new Scenario({ text: data.text, language: data.language, category: data.category, source: 'Public', status: 'Pending' }).save();
-        callback({ success: true, data: { accepted: true, reason: "Saved to queue for moderation! Thanks!" } });
-      } catch (dbErr) {
-        callback({ success: false, message: "Server busy or duplicate scenario." });
-      }
+      await new Scenario({ text: data.text, language: data.language, category: data.category, source: 'Public', status: 'Pending' }).save();
+      callback({ success: true, data: { accepted: true, reason: "Saved to queue for moderation! Thanks!" } });
+    } catch (dbErr) {
+      if (dbErr.code === 11000) return callback({ success: false, message: "Whoops! This scenario already exists." });
+      callback({ success: false, message: "Server busy, try again." });
     }
   });
 
   socket.on('createRoom', (data, callback) => {
-    const { playerName, language } = data;
+    const { playerName, language, funKey } = data;
+    
+    let isGold = false;
+    
+    // Check GOLD Fun Key
+    if (funKey) {
+        if (!validFunKeys.includes(funKey)) {
+            return callback({ success: false, message: "Invalid Fun Key!" });
+        }
+        if (Array.from(activeGoldRooms.values()).includes(funKey)) {
+            return callback({ success: false, message: "your Fun Key is already in use." });
+        }
+        isGold = true;
+    }
+
     const roomId = Math.random().toString(36).substring(2, 6).toUpperCase(); 
+    
+    if (isGold) {
+        activeGoldRooms.set(roomId, funKey);
+    }
+
     rooms[roomId] = {
       id: roomId, state: 'LOBBY', players: [{ id: socket.id, name: playerName, score: 0 }],
       roundData: null, history: [], scenarioBatch: [], 
-      settings: { category: 'All Ages', source: 'AI', language: language || 'English', namesRevealed: false }, // Added namesRevealed
-      secretCustomScenarios: [], customCount: 0
+      settings: { category: 'All Ages', source: 'AI', language: language || 'English', namesRevealed: false }, 
+      secretCustomScenarios: [], customCount: 0,
+      isGold: isGold, hostId: socket.id 
     };
     socket.join(roomId);
     callback({ success: true, roomId: roomId });
@@ -444,11 +416,17 @@ io.on('connection', (socket) => {
     const room = rooms[roomCode];
     
     if (room) {
+      // Free users cap at 6, Gold can have unlimited (or set high limit)
+      if (!room.isGold && room.players.length >= 6) {
+          return callback({ success: false, message: "Free rooms are limited to 6 players. Host needs Humour Cup GOLD to unlock more!"});
+      }
+
       const existingPlayer = room.players.find(p => p.name.toLowerCase() === playerName.toLowerCase());
       
       if (existingPlayer) {
         const oldId = existingPlayer.id;
         existingPlayer.id = socket.id;
+        if (room.hostId === oldId) room.hostId = socket.id; // Update host ID if host reconnected
         
         if (room.roundData && room.roundData.answers) {
            room.roundData.answers.forEach(ans => {
@@ -502,65 +480,50 @@ io.on('connection', (socket) => {
       room.state = 'LAUNCHING';
       emitSafeRoomData(roomCode);
 
-      // --- DYNAMIC ROUND LOGIC ---
+      const maxRounds = room.isGold ? (room.settings.customRounds || 3) : 3;
+
       if (room.settings.source === 'Custom') {
         const pool = [...room.secretCustomScenarios].sort(() => 0.5 - Math.random());
-        
         if (pool.length > 0) {
           room.scenarioBatch = pool;
-          room.totalRounds = pool.length; // Set rounds to exact number of entered scenarios!
+          room.totalRounds = pool.length; 
         } else {
-          room.scenarioBatch = getFallbackBatch().slice(0, 3); // Fallback if they hit start with 0
-          room.totalRounds = 3;
+          room.scenarioBatch = getFallbackBatch().slice(0, maxRounds); 
+          room.totalRounds = maxRounds;
         }
       } else {
-        room.totalRounds = 3; // AI and Public default to 3 rounds
+        room.totalRounds = maxRounds; 
         try {
           const randomScenarios = await Scenario.aggregate([
             { $match: { language: room.settings.language, category: room.settings.category, status: 'Approved' } },
-            { $sample: { size: 3 } } 
+            { $sample: { size: maxRounds } } 
           ]);
           
-          if (randomScenarios.length >= 3) {
+          if (randomScenarios.length >= maxRounds) {
              room.scenarioBatch = randomScenarios.map(s => s.text);
           } else {
              room.scenarioBatch = await fetchScenarioBatch(room.settings.category, room.settings.language, false);
           }
         } catch(e) {
            console.error("DB Fetch Error", e);
-           room.scenarioBatch = getFallbackBatch().slice(0, 3);
+           room.scenarioBatch = getFallbackBatch().slice(0, maxRounds);
         }
       }
-      // ---------------------------
 
       startAnswerPhase(roomCode, room.scenarioBatch.shift());
     }
   });
 
-  // --- KICK PLAYER LOGIC ---
   socket.on('kickPlayer', ({ roomId, playerIdToKick }) => {
     const roomCode = roomId.toUpperCase();
     const room = rooms[roomCode];
-    
-    // Make sure the room exists and is in the Lobby phase
     if (room && room.state === 'LOBBY') {
-      // Find the player in the array
       const playerIndex = room.players.findIndex(p => p.id === playerIdToKick);
-      
       if (playerIndex !== -1) {
-        // 1. Remove the player from the room's array
         room.players.splice(playerIndex, 1);
-        
-        // --- NEW: KICK THEM OUT OF THE ACTUAL SOCKET CONNECTION CHANNEL ---
         const kickedSocket = io.sockets.sockets.get(playerIdToKick);
-        if (kickedSocket) {
-            kickedSocket.leave(roomCode);
-        }
-        
-        // 2. Send a private message to that specific ghost/player to boot them to the main menu
+        if (kickedSocket) kickedSocket.leave(roomCode);
         io.to(playerIdToKick).emit('kickedFromRoom');
-        
-        // 3. Update the lobby screen for everyone else so the name disappears
         emitSafeRoomData(roomCode);
       }
     }
@@ -635,6 +598,16 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     submissionCooldowns.delete(socket.id); 
+    
+    // Free up Gold Key if the Host disconnected and room dies
+    for (const [roomId, room] of Object.entries(rooms)) {
+        if (room.hostId === socket.id) {
+            if (activeGoldRooms.has(roomId)) {
+                activeGoldRooms.delete(roomId);
+            }
+        }
+    }
+    
     console.log(`🔴 Player Disconnected: ${socket.id}`); 
   });
 });
