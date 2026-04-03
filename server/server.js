@@ -37,6 +37,64 @@ const scenarioSchema = new mongoose.Schema({
 
 const Scenario = mongoose.model('Scenario', scenarioSchema);
 
+// --- THE FUN KEY SCHEMA ---
+const funKeySchema = new mongoose.Schema({
+  key: { type: String, required: true, unique: true },
+  createdAt: { type: Date, default: Date.now }
+});
+
+const FunKey = mongoose.model('FunKey', funKeySchema);
+
+// --- THE DAILY FUN KEY GENERATOR ---
+async function generateDailyFunKeys() {
+  try {
+    // Check how many keys we currently have
+    const currentCount = await FunKey.countDocuments();
+    
+    if (currentCount >= 100) {
+      console.log(`✅ Fun Key Vault is full (${currentCount}/100). No generation needed today.`);
+      return;
+    }
+
+    console.log(`🔑 Generating 10 new Fun Keys... (Current: ${currentCount}/100)`);
+
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite", generationConfig: { temperature: 1.8 } });
+    
+    const prompt = `Generate exactly 10 hilarious, awkward, and highly relatable phrases formatted in CamelCase to be used as VIP passcodes for a party game.
+    Examples of the vibe: SantaComesInTheAfternoonNap, FlippedUpToiletSeat, NakedAtWork, PushedThePullDoor, MomFoundTheSearchHistory, WavingAtSomeoneWavingAtSomeoneElse.
+    CRITICAL RULES:
+    1. They must be completely different from the examples.
+    2. They must be 3 to 7 words long, mashed together in CamelCase.
+    3. Make them funny, absurd, or related to daily life embarrassments.
+    Return ONLY a strict JSON array of 10 strings. No markdown.`;
+
+    const result = await model.generateContent(prompt);
+    const jsonMatch = result.response.text().trim().match(/\[[\s\S]*\]/);
+    
+    if (jsonMatch) {
+      const newKeys = JSON.parse(jsonMatch[0]);
+      
+      // Save them to the database
+      for (const key of newKeys) {
+        try {
+          await new FunKey({ key: key }).save();
+        } catch (dbErr) {
+          // Ignore duplicates if AI accidentally repeats one
+        }
+      }
+      console.log("🎉 Successfully added 10 new Fun Keys to the database!");
+    }
+  } catch (error) {
+    console.error("❌ Failed to generate daily Fun Keys:", error.message);
+  }
+}
+
+// Run this check immediately when the server starts
+generateDailyFunKeys();
+
+// And then run it once every 24 hours (86,400,000 milliseconds)
+setInterval(generateDailyFunKeys, 86400000);
+
 // --- THE AUTO-MODERATOR BATCH WORKER (Upgraded to 20 per batch) ---
 setInterval(async () => {
   try {

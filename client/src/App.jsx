@@ -315,6 +315,12 @@ const BGM_TRACKS = [
 
 const doodleBgSvg = "data:image/svg+xml;charset=utf-8,%3Csvg width='400' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%231a1a1a' stroke-width='4' fill='none' stroke-linecap='round' stroke-linejoin='round' opacity='0.08'%3E%3Cpath d='M40,40 Q60,20 80,50 T120,40'/%3E%3Ccircle cx='200' cy='60' r='8'/%3E%3Cpath d='M250,220 L265,190 L280,220 Z'/%3E%3Cpath d='M50,250 C70,220 100,280 120,240'/%3E%3Cpath d='M150,150 L165,165 L150,180'/%3E%3Cpath d='M270,100 L290,90 L280,110'/%3E%3Ccircle cx='80' cy='150' r='4' fill='%231a1a1a'/%3E%3Cpath d='M20,180 Q30,190 20,200'/%3E%3Cpath d='M320,320 L340,340 M340,320 L320,340'/%3E%3Cpath d='M350,150 Q370,130 380,160 T350,190'/%3E%3Ccircle cx='300' cy='280' r='12' stroke-dasharray='4 4'/%3E%3Cpath d='M100,350 L110,320 L130,340'/%3E%3Cpath d='M180,300 Q200,320 220,300'/%3E%3Ccircle cx='50' cy='320' r='3' fill='%231a1a1a'/%3E%3C/g%3E%3C/svg%3E";
 
+const formatNum = (num) => {
+  if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'm';
+  if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+  return num;
+};
+
 function App() {
   const [appLang, setAppLang] = useState('English'); 
   const [playerName, setPlayerName] = useState('');
@@ -333,6 +339,9 @@ function App() {
   const [seedingStats, setSeedingStats] = useState({});
   const [adminPublicScenarios, setAdminPublicScenarios] = useState([]);
   const [adminKey, setAdminKey] = useState('');
+  
+  const [showAdminLogin, setShowAdminLogin] = useState(false);
+  const [adminPwdInput, setAdminPwdInput] = useState('');
 
   const [myAnswer, setMyAnswer] = useState('');
   const [replyText, setReplyText] = useState('');
@@ -358,8 +367,6 @@ function App() {
   const prevPlayersCount = useRef(0);
   const prevGameState = useRef('');
   const prevRoundNumber = useRef(1);
-
-  const targets = { 'English': 10000, 'Hindi': 1000, 'Spanish': 1000, 'French': 1000, 'Mandarin': 1000, 'Japanese': 1000, 'Russian': 1000, 'Portuguese': 1000, 'German': 1000, 'Korean': 1000, 'Arabic': 1000, 'Indonesian': 1000 };
 
   const t = (key) => uiTranslations[appLang]?.[key] || uiTranslations['English'][key] || key;
 
@@ -507,21 +514,25 @@ function App() {
     
     if (newCount >= 5) {
       setLogoClicks(0);
-      const pwd = prompt("Admin Passcode:");
-      if (!pwd) return;
-
-      socket.emit('verifyAdmin', pwd, (res) => {
-        if (res.success) {
-          playSound('win');
-          setAdminKey(pwd);
-          setIsAdminMode(true);
-          refreshStats(pwd);
-        } else {
-          playSound('alert');
-          alert("Access Denied: Incorrect Passcode");
-        }
-      });
+      setShowAdminLogin(true);
     }
+  };
+
+  const submitAdminLogin = () => {
+    socket.emit('verifyAdmin', adminPwdInput, (res) => {
+      if (res.success) {
+        playSound('win');
+        setAdminKey(adminPwdInput);
+        setIsAdminMode(true);
+        setShowAdminLogin(false);
+        setAdminPwdInput('');
+        refreshStats(adminPwdInput);
+      } else {
+        playSound('alert');
+        alert("Access Denied: Incorrect Passcode");
+        setAdminPwdInput('');
+      }
+    });
   };
 
   const handlePublicSubmit = () => {
@@ -682,6 +693,29 @@ function App() {
         }
 
       `}</style>
+
+      {/* --- THE ADMIN LOGIN MODAL --- */}
+      {showAdminLogin && (
+        <div id="admin-backdrop" onClick={(e) => { if(e.target.id === 'admin-backdrop') setShowAdminLogin(false); }} style={{
+          position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
+          backgroundColor: 'rgba(0,0,0,0.85)', zIndex: 100000,
+          display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px'
+        }}>
+          <div style={{
+            backgroundColor: '#FFC200', padding: '30px', borderRadius: '24px', border: '5px solid #1a1a1a', 
+            boxShadow: '10px 10px 0px #1a1a1a', maxWidth: '400px', width: '100%', textAlign: 'center', animation: 'popIn 0.3s ease-out'
+          }}>
+            <h2 style={{...styles.phaseTitle, fontSize: '28px', marginBottom: '20px', color: '#1a1a1a', textShadow: 'none', transform: 'rotate(0deg)'}}>🔐 Admin Vault</h2>
+            
+            <input type="password" id="adminPwd" placeholder="Enter Passcode..." value={adminPwdInput} onChange={(e) => setAdminPwdInput(e.target.value)} style={{...styles.input, marginBottom: '20px', textAlign: 'center', letterSpacing: '5px'}} />
+            
+            <div style={{display: 'flex', gap: '10px'}}>
+               <button onClick={submitAdminLogin} className="btn-3d" style={{...styles.primaryBtn, backgroundColor: '#10b981', color: '#fff', flex: 1, padding: '15px', fontSize: '16px'}}>ENTER</button>
+               <button onClick={() => setShowAdminLogin(false)} className="btn-3d" style={{...styles.secondaryBtn, flex: 1, padding: '15px', fontSize: '16px'}}>CANCEL</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* --- THE UPI POPUP MODAL --- */}
       {showUpiModal && (
@@ -862,24 +896,17 @@ function App() {
             </div>
             
             <div style={{marginBottom: '40px'}}>
-              {Object.entries(targets).map(([lang, target]) => {
-                const current = seedingStats[lang] || 0;
-                const percent = Math.min(100, (current / target) * 100);
-                return (
-                  <div key={lang} style={{marginBottom: '20px', textAlign: 'left'}}>
-                    <div style={{display: 'flex', justifyContent: 'space-between', fontWeight: '900', fontSize: '14px', marginBottom: '5px'}}>
-                      <span>{lang}</span><span>{current.toLocaleString()} / {target.toLocaleString()}</span>
-                    </div>
-                    <div style={{width: '100%', height: '12px', background: '#eee', borderRadius: '10px', overflow: 'hidden', border: '2px solid #1a1a1a'}}>
-                      <div style={{width: `${percent}%`, height: '100%', background: percent === 100 ? '#10b981' : '#fbbf24', transition: 'width 0.5s ease'}}></div>
-                    </div>
+              <div style={{display: 'flex', flexWrap: 'wrap', gap: '10px'}}>
+                {Object.entries(seedingStats).map(([lang, count]) => (
+                  <div key={lang} style={{backgroundColor: '#fef3c7', border: '2px solid #1a1a1a', borderRadius: '8px', padding: '10px 15px', fontWeight: '900', color: '#1a1a1a', flex: '1 1 calc(33% - 10px)', textAlign: 'center'}}>
+                    {lang}: <span style={{color: '#10b981'}}>{formatNum(count)}</span>
                   </div>
-                );
-              })}
+                ))}
+              </div>
             </div>
 
             <div style={{ borderTop: '4px solid #1a1a1a', paddingTop: '30px' }}>
-              <h2 style={{...styles.phaseTitle, fontSize: '24px'}}>🌍 USER SUBMISSIONS ({adminPublicScenarios.length})</h2>
+              <h2 style={{...styles.phaseTitle, fontSize: '24px'}}>🌍 USER SUBMISSIONS ({formatNum(adminPublicScenarios.length)})</h2>
               <div style={{maxHeight: '400px', overflowY: 'auto', background: '#fef3c7', padding: '15px', borderRadius: '12px', border: '3px solid #1a1a1a'}}>
                 {adminPublicScenarios.length === 0 ? <p style={{fontWeight: 'bold'}}>No public scenarios submitted yet.</p> :
                   adminPublicScenarios.map((s, i) => (
@@ -1078,6 +1105,7 @@ function App() {
                  </div>
                )}
                
+               {/* MOCKUP OF GOLD LOBBY FEATURES IF HOST HAS GOLD */}
                {room.isGold && (
                  <div style={{marginTop: '20px', padding: '15px', backgroundColor: '#fff', borderRadius: '12px', border: '3px solid #ff9900', textAlign: 'center'}}>
                    <p style={{fontWeight: '900', color: '#ff9900', margin: '0 0 10px 0'}}>⭐ GOLD SETTINGS ⭐</p>
