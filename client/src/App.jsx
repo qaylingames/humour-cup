@@ -859,29 +859,6 @@ function App() {
               
               <p style={{fontSize: '11px', color: '#ef4444', fontWeight: 'bold', marginBottom: '10px', textAlign: 'center'}}>{t('goldSub')}</p>
 
-              {/* NEW: Indie Dev Support Box */}
-              <div style={{
-                padding: '12px', backgroundColor: '#FFF9D2', borderRadius: '12px', 
-                border: '2px dashed #1a1a1a', textAlign: 'center'
-              }}>
-                <h3 style={{fontWeight: '900', color: '#1a1a1a', fontSize: '14px', margin: '0 0 4px 0'}}>👨‍💻 Support an Indie Dev!</h3>
-                <p style={{fontSize: '11px', color: '#333', margin: '0 0 10px 0', fontWeight: '600'}}>
-                  Humour Cup is built by a solo developer. If you love the game, your feedback and support keep the servers running!
-                </p>
-                <div style={{display: 'flex', gap: '8px'}}>
-                  <a href="YOUR_FEEDBACK_LINK" target="_blank" rel="noreferrer" style={{
-                    flex: 1, backgroundColor: '#fff', color: '#1a1a1a', fontWeight: 'bold', padding: '8px 4px', 
-                    borderRadius: '8px', border: '2px solid #1a1a1a', textDecoration: 'none', fontSize: '11px',
-                    boxShadow: '2px 2px 0px #1a1a1a'
-                  }}>📝 Give Feedback</a>
-                  <a href="YOUR_DONATE_LINK" target="_blank" rel="noreferrer" style={{
-                    flex: 1, backgroundColor: '#FFDD00', color: '#1a1a1a', fontWeight: 'bold', padding: '8px 4px', 
-                    borderRadius: '8px', border: '2px solid #1a1a1a', textDecoration: 'none', fontSize: '11px',
-                    boxShadow: '2px 2px 0px #1a1a1a'
-                  }}>☕ Buy a Coffee</a>
-                </div>
-              </div>
-
             </div>
           </div>
         </div>
