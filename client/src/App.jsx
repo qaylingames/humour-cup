@@ -784,10 +784,22 @@ function App() {
           display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '15px'
         }}>
           <div style={{
-            backgroundColor: '#fff', padding: '25px', borderRadius: '24px', border: '5px solid #1a1a1a', 
-            boxShadow: '10px 10px 0px #1a1a1a', maxWidth: '500px', width: '100%', maxHeight: '90vh', display: 'flex', flexDirection: 'column',
+            position: 'relative', /* Added so the close button can be placed inside */
+            backgroundColor: '#fff', padding: '35px 25px 25px 25px', /* Increased top padding to fit the 'X' */
+            borderRadius: '24px', border: '5px solid #1a1a1a', 
+            boxShadow: '10px 10px 0px #1a1a1a', maxWidth: '500px', width: '100%', maxHeight: '90vh', 
+            display: 'flex', flexDirection: 'column',
             animation: 'popIn 0.3s ease-out', overflow: 'hidden'
           }}>
+            
+            {/* NEW: Close Button (X) for mobile users to easily tap out */}
+            <button onClick={() => setShowGoldModal(false)} style={{
+              position: 'absolute', top: '10px', right: '15px',
+              background: 'none', border: 'none', fontSize: '32px', fontWeight: 'bold', 
+              color: '#9ca3af', cursor: 'pointer', lineHeight: '1'
+            }}>
+              &times;
+            </button>
             
             <h2 style={{fontFamily: '"Fredoka One", cursive', fontSize: '32px', color: '#ff9900', margin: '0 0 15px 0', textShadow: '2px 2px 0px #1a1a1a, -1px -1px 0px #1a1a1a, 1px -1px 0px #1a1a1a, -1px 1px 0px #1a1a1a'}}>
               {t('goldTitle')}
@@ -795,7 +807,7 @@ function App() {
             
             <div className="custom-scroll" style={{
                 textAlign: 'left', marginBottom: '20px', padding: '15px', backgroundColor: '#fef3c7', 
-                borderRadius: '12px', border: '3px solid #1a1a1a', overflowY: 'auto', minHeight: '150px', flex: '1 1 auto'
+                borderRadius: '12px', border: '3px solid #1a1a1a', overflowY: 'auto', minHeight: '120px', flex: '1 1 auto'
             }}>
                <p style={{fontWeight: '900', color: '#1a1a1a', fontSize: '18px', margin: '0 0 10px 0', textAlign: 'center'}}>Unlock these Perks:</p>
                <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
@@ -819,28 +831,57 @@ function App() {
                     {/* The Purchase Section */}
                     <div style={{backgroundColor: '#f3f4f6', border: '3px dashed #1a1a1a', borderRadius: '12px', padding: '15px', marginBottom: '15px'}}>
                         <p style={{fontWeight: '800', color: '#1a1a1a', fontSize: '14px', marginBottom: '10px', marginTop: 0}}>{t('gInstruction')}</p>
-                        <input type="email" id="goldEmailInput" placeholder={t('emailPlace')} value={goldEmail} onChange={(e) => setGoldEmail(e.target.value)} style={{...styles.input, marginBottom: '10px', fontSize: '16px', padding: '12px'}} />
-                        <div style={{display: 'flex', gap: '10px'}}>
-                           <button onClick={() => handleBuyGold('razorpay')} className="btn-3d" style={{...styles.primaryBtn, backgroundColor: '#3b82f6', color: '#fff', fontSize: '14px', padding: '10px', flex: 1}}>
-                             <span style={{fontSize: '20px', display: 'block', fontWeight: '900'}}>{t('goldPrice') || '$5.99'}</span>
-                             {t('payRazor')}
+                        
+                        {/* Added boxSizing so input doesn't break out of container on mobile */}
+                        <input type="email" id="goldEmailInput" placeholder={t('emailPlace')} value={goldEmail} onChange={(e) => setGoldEmail(e.target.value)} style={{...styles.input, marginBottom: '10px', fontSize: '16px', padding: '12px', width: '100%', boxSizing: 'border-box'}} />
+                        
+                        {/* UPDATED: Payment Buttons with exact prices and forced side-by-side flexbox layout */}
+                        <div style={{display: 'flex', gap: '10px', width: '100%'}}>
+                           <button onClick={() => handleBuyGold('razorpay')} className="btn-3d" style={{...styles.primaryBtn, backgroundColor: '#3b82f6', color: '#fff', fontSize: '11px', padding: '10px', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+                             <span style={{fontSize: '18px', display: 'block', fontWeight: '900', marginBottom: '2px'}}>₹500</span>
+                             <span style={{textAlign: 'center', lineHeight: '1.2'}}>Pay via<br/>Razorpay</span>
                            </button>
-                           <button onClick={() => handleBuyGold('paddle')} className="btn-3d" style={{...styles.primaryBtn, backgroundColor: '#10b981', color: '#fff', fontSize: '14px', padding: '10px', flex: 1}}>
-                             <span style={{fontSize: '20px', display: 'block', fontWeight: '900'}}>{t('goldPrice') || '$5.99'}</span>
-                             {t('payPaddle')}
+                           
+                           <button onClick={() => handleBuyGold('paddle')} className="btn-3d" style={{...styles.primaryBtn, backgroundColor: '#10b981', color: '#fff', fontSize: '11px', padding: '10px', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+                             <span style={{fontSize: '18px', display: 'block', fontWeight: '900', marginBottom: '2px'}}>$6.00</span>
+                             <span style={{textAlign: 'center', lineHeight: '1.2'}}>Pay via Paddle<br/>(Global)</span>
                            </button>
                         </div>
                     </div>
 
                     {/* The Activation Section */}
                     <div style={{display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '15px'}}>
-                        <input id="goldKeyInputBox" name="goldKey" placeholder={t('gInput')} value={goldKeyInput} onChange={(e) => setGoldKeyInput(e.target.value)} style={{...styles.input, marginBottom: '0', fontSize: '16px', padding: '15px', width: '100%', textAlign: 'center'}} />
+                        <input id="goldKeyInputBox" name="goldKey" placeholder={t('gInput')} value={goldKeyInput} onChange={(e) => setGoldKeyInput(e.target.value)} style={{...styles.input, marginBottom: '0', fontSize: '16px', padding: '15px', width: '100%', textAlign: 'center', boxSizing: 'border-box'}} />
                         <button onClick={handleActivateGold} className="btn-3d" style={{...styles.primaryBtn, backgroundColor: '#1a1a1a', color: '#ff9900', borderColor: '#1a1a1a', width: '100%', fontSize: '16px', padding: '15px'}}>ACTIVATE FUN KEY</button>
                     </div>
                  </>
               )}
               
-              <p style={{fontSize: '11px', color: '#ef4444', fontWeight: 'bold', marginBottom: '5px', textAlign: 'center'}}>{t('goldSub')}</p>
+              <p style={{fontSize: '11px', color: '#ef4444', fontWeight: 'bold', marginBottom: '10px', textAlign: 'center'}}>{t('goldSub')}</p>
+
+              {/* NEW: Indie Dev Support Box */}
+              <div style={{
+                padding: '12px', backgroundColor: '#FFF9D2', borderRadius: '12px', 
+                border: '2px dashed #1a1a1a', textAlign: 'center'
+              }}>
+                <h3 style={{fontWeight: '900', color: '#1a1a1a', fontSize: '14px', margin: '0 0 4px 0'}}>👨‍💻 Support an Indie Dev!</h3>
+                <p style={{fontSize: '11px', color: '#333', margin: '0 0 10px 0', fontWeight: '600'}}>
+                  Humour Cup is built by a solo developer. If you love the game, your feedback and support keep the servers running!
+                </p>
+                <div style={{display: 'flex', gap: '8px'}}>
+                  <a href="YOUR_FEEDBACK_LINK" target="_blank" rel="noreferrer" style={{
+                    flex: 1, backgroundColor: '#fff', color: '#1a1a1a', fontWeight: 'bold', padding: '8px 4px', 
+                    borderRadius: '8px', border: '2px solid #1a1a1a', textDecoration: 'none', fontSize: '11px',
+                    boxShadow: '2px 2px 0px #1a1a1a'
+                  }}>📝 Give Feedback</a>
+                  <a href="YOUR_DONATE_LINK" target="_blank" rel="noreferrer" style={{
+                    flex: 1, backgroundColor: '#FFDD00', color: '#1a1a1a', fontWeight: 'bold', padding: '8px 4px', 
+                    borderRadius: '8px', border: '2px solid #1a1a1a', textDecoration: 'none', fontSize: '11px',
+                    boxShadow: '2px 2px 0px #1a1a1a'
+                  }}>☕ Buy a Coffee</a>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
