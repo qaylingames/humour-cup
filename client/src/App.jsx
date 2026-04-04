@@ -80,7 +80,7 @@ const uiTranslations = {
   'French': { 
     name: "Votre nom drôle", create: "Créer un Salon", createGold: "Créer un Salon GOLD!", orJoin: "OU REJOINDRE", code: "CODE", join: "Rejoindre", rulebook: "👑 Comment Jouer 👑", rule1: "Écrivez votre réponse humoristique.", rule2: "Répondez avec vos blagues dans le chat.", rule3: "Votez pour ceux que vous trouvez drôles.", rule4: "Le joueur avec le plus d'XP gagne.", submitPub: "🌍 Soumettez vos Scénarios pour Humour Cup 🌍", pubDesc: "Ceux-ci apparaissent aléatoirement aux joueurs optant pour les scénarios Publics dans le Lobby.", pubPlace: "Tapez votre scénario ici...", submit: "Soumettre", lobby: "Lobby", roomCode: "CODE DU SALON:", cat: "Catégorie:", scen: "Scénarios:", lang: "Langue:", secret: "🤫 Ajouter secrètement !", secPlace: "Écrivez un scénario surprise...", addPool: "Ajouter", totPool: "Total personnalisés:", addCustomAlso: "Ajoutez également vos scénarios dans la boîte de scénario Public ci-dessous, si approprié.", waitSquad: "En attente de l'équipe...", host: "(Hôte)", launch: "Lancer le jeu 🚀", waitMore: "En attente d'un joueur...", waitHost: "En attente de l'hôte...", fetch: "Récupération...", scenTitle: "Scénario", secLeft: "Secondes", typeHumour: "Tapez votre humour...", subHumour: "Soumettre l'humour", waitSlow: "En attente des humains lents...", chatVote: "Round de Chat & Vote", humourBtn: "Drôle !", replyBtn: "Répondre", repPlace: "Répondre...", send: "Envoyer", cancel: "Annuler", done: "J'ai fini !", waiting: "En attente...", upcoming: "À venir", enterRound: "Entrée au Round-", in: "dans", seconds: "secondes", load: "Chargement...", results: "Résultats Finaux", winners: "Gagnants", winner: "Gagnant", scoreboard: "Tableau de bord", receipt: "🧾 MATCH RECEIPT", thanks: "Merci d'avoir joué ! 🏆", saveRec: "📸 Sauvegarder ce reçu", playAgain: "Rejouer", waitRes: "En attente de l'hôte...", adminVault: "Vue Admin", backHome: "⬅ Retour", noScen: "Pas de scénarios !", madeBy: "⚡créé par ", toSpark: " pour éveiller votre humour⚡", privacy: "Politique de confidentialité", terms: "Conditions d'utilisation", contact: "Nous contacter",
     donateBtn: "🥺 Soutenez-moi pour faire grandir Humour Cup 🥺", donateText: "Ce développeur indé doit gérer les serveurs, la modération et la maintenance. Un peu d'aide boostera mes idées 💙.", feedbackText: "Comment diable puis-je rendre ce jeu plus amusant ? Dites-moi tout à", chatInst: "Appuyez sur 'Drôle !' sur les réponses amusantes des autres.", whatIsHC: "🤔 Qu'est-ce que Humour Cup ?",
-    donateClarify: "Si vous voulez des avantages, achetez Humour Cup GOLD. Mais si vous voulez juste soutenir mon travail, faites un don ici. 💙", customAmt: "Montant", emailPlace: "Votre adresse e-mail...", payRazor: "Payer via Razorpay", payPaddle: "Payer via Paddle (Global)", payUpi: "Payer via UPI (Inde)",
+    donateClarify: "Si vous voulez des avantages, achetez Humour Cup GOLD. Mais si vous voulez juste soutenir mon travail, faites un don ici. 💙", customAmt: "Montant", emailPlace: "Votre adresse e-mail...", payRazor: "Pagar via Razorpay", payPaddle: "Payer via Paddle (Global)", payUpi: "Payer via UPI (Inde)",
     goldTitle: "🏆 Humour Cup GOLD", goldSub: "Plus d'un salon ne peut pas être créé avec cette Fun Key en même temps.",
     gPerk1: "Joueurs illimités (Au-delà de 7!)", gPerk2: "Nombre de rounds et minuteries personnalisés", gPerk3: "Scénarios A.I. plus humoristiques", gPerk4: "Meilleurs scénarios A.I. et Publics classés par ordre de priorité", gPerk5: "Changer de scénario en jouant", gPerk6: "100% sans publicité", gPerk7: "Supporter officiel de Humour Cup 💙",
     gInput: "Vous avez déjà une clé ? Entrez-la ici...", gInstruction: "Achetez GOLD pour recevoir votre Fun Key par e-mail !", gActive: "Fun Key activée. Créez un salon GOLD maintenant.",
@@ -198,7 +198,7 @@ const uiTranslations = {
     ab16: "Teste deinen Humor noch heute. Erstelle einen Raum und lass die Humor-Schlacht beginnen!"
   },
   'Japanese': { 
-    name: "あなたの面白い名前", create: "ルームを作成", createGold: "GOLDルームを作成！", orJoin: "または参加", code: "コード", join: "参加", rulebook: "👑 遊び方 👑", rule1: "各お題に面白い回答を書きます。", rule2: "チャットでジョークを返信します。", rule3: "面白いものに投票します。", rule4: "XPが最も多いプレイヤーの勝ちです。", submitPub: "🌍 Humour Cupプレイヤーのためにお題を送信 🌍", pubDesc: "これらはロビーで公開お題を選択したHumour Cupプレイヤーにランダムに出題されます。", pubPlace: "ここにお題を入力...", submit: "送信", lobby: "ロビー", roomCode: "ルームコード:", cat: "カテゴリー:", scen: "お題:", lang: "言語:", secret: "🤫 こっそり追加！", secPlace: "サプライズお題を書く...", addPool: "追加", totPool: "カスタムお題の合計:", addCustomAlso: "適切であれば、下の公開お題ボックスにもカスタムのお題を追加してください。", waitSquad: "チームを待っています...", host: "(ホスト)", launch: "ゲーム開始 🚀", waitMore: "あと1人待っています...", waitHost: "ホストを待っています...", fetch: "お題を取得中...", scenTitle: "お題", secLeft: "残り秒数", typeHumour: "ユーモアを入力...", subHumour: "送信", waitSlow: "他のプレイヤーを待っています...", chatVote: "チャット＆投票", humourBtn: "面白い！", replyBtn: "返信", repPlace: "返信...", send: "送信", cancel: "キャンセル", done: "読み終わりました！", waiting: "待機中...", upcoming: "次", enterRound: "ラウンド-", in: "開始まで", seconds: "秒", load: "ロード中...", results: "最終結果", winners: "勝者", winner: "勝者", scoreboard: "最終スコアボード", receipt: "🧾 MATCH RECEIPT", thanks: "遊んでくれてありがとう！🏆", saveRec: "📸 このレシートを保存", playAgain: "もう一度プレイ", waitRes: "ホストを待っています...", adminVault: "管理者", backHome: "⬅ 戻る", noScen: "まだお題がありません！", madeBy: "⚡作成者 ", toSpark: " あなたのユーモアを刺激するために⚡", privacy: "プライバシーポリシー", terms: "利用規約", contact: "お問い合わせ",
+    name: "あなたの面白い名前", create: "ルームを作成", createGold: "GOLDルームを作成！", orJoin: "または参加", code: "コード", join: "参加", rulebook: "👑 遊び方 👑", rule1: "各お題に面白い回答を書きます。", rule2: "チャットでジョークを返信します。", rule3: "面白いものに投票します。", rule4: "XPが最も多いプレイヤーの勝ちです。", submitPub: "🌍 Humour Cupプレイヤーのためにお題を送信 🌍", pubDesc: "これらはロビーで公開お題を選択したHumour Cupプレイヤーにランダムに出题されます。", pubPlace: "ここにお題を入力...", submit: "送信", lobby: "ロビー", roomCode: "ルームコード:", cat: "カテゴリー:", scen: "お題:", lang: "言語:", secret: "🤫 こっそり追加！", secPlace: "サプライズお題を書く...", addPool: "追加", totPool: "カスタムお題の合計:", addCustomAlso: "適切であれば、下の公開お題ボックスにもカスタムのお題を追加してください。", waitSquad: "チームを待っています...", host: "(ホスト)", launch: "ゲーム開始 🚀", waitMore: "あと1人待っています...", waitHost: "ホストを待っています...", fetch: "お題を取得中...", scenTitle: "お題", secLeft: "残り秒数", typeHumour: "ユーモアを入力...", subHumour: "送信", waitSlow: "他のプレイヤーを待っています...", chatVote: "チャット＆投票", humourBtn: "面白い！", replyBtn: "返信", repPlace: "返信...", send: "送信", cancel: "キャンセル", done: "読み終わりました！", waiting: "待機中...", upcoming: "次", enterRound: "ラウンド-", in: "開始まで", seconds: "秒", load: "ロード中...", results: "最終結果", winners: "勝者", winner: "勝者", scoreboard: "最終スコアボード", receipt: "🧾 MATCH RECEIPT", thanks: "遊んでくれてありがとう！🏆", saveRec: "📸 このレシートを保存", playAgain: "もう一度プレイ", waitRes: "ホストを待っています...", adminVault: "管理者", backHome: "⬅ 戻る", noScen: "まだお題がありません！", madeBy: "⚡作成者 ", toSpark: " あなたのユーモアを刺激するために⚡", privacy: "プライバシーポリシー", terms: "利用規約", contact: "お問い合わせ",
     donateBtn: "🥺 Humour Cupを成長させるためにサポートして 🥺", donateText: "この個人開発者はサーバー、モデレーション、保守を管理する必要があります。少しの支援が私のアイデアを後押しします💙。", feedbackText: "どうすればこのゲームをもっと面白くできる？ここで全部教えて", chatInst: "他の人の面白い回答に「面白い！」をタップしてください。", whatIsHC: "🤔 Humour Cupとは？",
     donateClarify: "特典をご希望の場合は、Humour Cup GOLDをご購入ください。活動をサポートしていただける場合は、こちらからご寄付をお願いします。💙", customAmt: "金額", emailPlace: "メールアドレス...", payRazor: "Razorpayで支払う", payPaddle: "Paddleで支払う (グローバル)", payUpi: "UPIで支払う (インド)",
     goldTitle: "🏆 Humour Cup GOLD", goldSub: "このFun Keyで同時に複数のルームを作成することはできません。",
@@ -641,6 +641,63 @@ function App() {
     </div>
   );
 
+  // --- NEW: Reusable Component for the Support & Feedback blocks to eliminate duplicates ---
+  const renderSupportCards = () => (
+    <>
+      <div style={styles.sectionDivider}></div>
+
+      {/* The Updated Indie Dev Support Box */}
+      <div style={{
+        ...styles.devCardGreen, 
+        backgroundColor: '#20c997', /* Vibrant green from your image */
+        border: '5px solid #1a1a1a',
+        boxShadow: '10px 10px 0px #1a1a1a',
+        transform: 'rotate(0deg)', 
+        marginTop: '30px'
+      }}>
+        <button onClick={() => setShowDonateModal(true)} className="btn-3d" style={{
+          ...styles.donateBtn, 
+          background: '#6b4c3a', /* Brown coffee color */
+          color: '#ffffff', 
+          marginTop: '0', 
+          padding: '15px 24px', 
+          fontSize: '20px',
+          display: 'flex',          
+          justifyContent: 'center',
+          alignItems: 'center',      
+          gap: '10px',
+          width: '90%',
+          borderRadius: '50px',
+          border: '4px solid #1a1a1a',
+          boxShadow: '0px 6px 0px #1a1a1a'
+        }}>
+          <span style={{ whiteSpace: 'nowrap', fontFamily: "'Fredoka One', cursive", letterSpacing: '1px' }}>
+            ☕ {t('donateBtn')}
+          </span>
+        </button>
+        <p style={{
+          ...styles.indieDevText, 
+          color: '#ffffff', 
+          backgroundColor: 'transparent',
+          border: 'none', 
+          padding: '5px',
+          fontSize: '18px',
+          textAlign: 'center',
+          textShadow: '1px 1px 0px rgba(0,0,0,0.3)',
+          margin: '0'
+        }}>
+          {t('donateText')}
+        </p>
+      </div>
+
+      {/* The Feedback Oval Box */}
+      <div style={{...styles.devCardOval, marginTop: '35px'}}>
+         <p style={styles.feedbackText}>{t('feedbackText')}</p>
+         <a href="mailto:qaylingames@gmail.com" className="btn-3d" style={styles.emailLink}>qaylingames@gmail.com 💌</a>
+      </div>
+    </>
+  );
+
   const isHost = room?.players[0]?.id === socket.id;
   const rainEmojis = ['😂', '🤣', '💀', '🏆', '🔥', '🌶️', '👽', '🦄', '🍻', '😆', '😁', '🫠', '😭', '🤟'];
 
@@ -784,15 +841,14 @@ function App() {
           display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '15px'
         }}>
           <div style={{
-            position: 'relative', /* Added so the close button can be placed inside */
-            backgroundColor: '#fff', padding: '35px 25px 25px 25px', /* Increased top padding to fit the 'X' */
+            position: 'relative', 
+            backgroundColor: '#fff', padding: '35px 25px 25px 25px', 
             borderRadius: '24px', border: '5px solid #1a1a1a', 
             boxShadow: '10px 10px 0px #1a1a1a', maxWidth: '500px', width: '100%', maxHeight: '90vh', 
             display: 'flex', flexDirection: 'column',
             animation: 'popIn 0.3s ease-out', overflow: 'hidden'
           }}>
             
-            {/* NEW: Close Button (X) for mobile users to easily tap out */}
             <button onClick={() => setShowGoldModal(false)} style={{
               position: 'absolute', top: '10px', right: '15px',
               background: 'none', border: 'none', fontSize: '32px', fontWeight: 'bold', 
@@ -832,10 +888,8 @@ function App() {
                     <div style={{backgroundColor: '#f3f4f6', border: '3px dashed #1a1a1a', borderRadius: '12px', padding: '15px', marginBottom: '15px'}}>
                         <p style={{fontWeight: '800', color: '#1a1a1a', fontSize: '14px', marginBottom: '10px', marginTop: 0}}>{t('gInstruction')}</p>
                         
-                        {/* Added boxSizing so input doesn't break out of container on mobile */}
                         <input type="email" id="goldEmailInput" placeholder={t('emailPlace')} value={goldEmail} onChange={(e) => setGoldEmail(e.target.value)} style={{...styles.input, marginBottom: '10px', fontSize: '16px', padding: '12px', width: '100%', boxSizing: 'border-box'}} />
                         
-                        {/* UPDATED: Payment Buttons with exact prices and forced side-by-side flexbox layout */}
                         <div style={{display: 'flex', gap: '10px', width: '100%'}}>
                            <button onClick={() => handleBuyGold('razorpay')} className="btn-3d" style={{...styles.primaryBtn, backgroundColor: '#3b82f6', color: '#fff', fontSize: '11px', padding: '10px', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
                              <span style={{fontSize: '18px', display: 'block', fontWeight: '900', marginBottom: '2px'}}>₹500</span>
@@ -972,47 +1026,7 @@ function App() {
 
             {renderSubmitScenarioBox()}
 
-            <div style={{ 
-                width: '50%', 
-                maxWidth: '250px', 
-                height: '4px', 
-                backgroundColor: '#1a1a1a', 
-                marginTop: '60px', 
-                marginBottom: '10px',
-                marginInline: 'auto',
-                borderRadius: '10px', 
-                opacity: '0.6' 
-            }}></div>
-
-            <div style={{...styles.devCardGreen, backgroundColor: 'transparent', border: 'none', boxShadow: 'none', transform: 'rotate(0deg)', marginTop: '30px'}}>
-               <button onClick={() => setShowDonateModal(true)} className="btn-3d" style={{
-                   ...styles.donateBtn, 
-                   background: '#1a1a1a', 
-                   color: '#ffffff', 
-                   marginTop: '0', 
-                   padding: '18px 24px', 
-                   fontSize: '16px',
-                   display: 'flex',           
-                   flexDirection: 'column',   
-                   alignItems: 'center',      
-                   gap: '4px',
-                   width: '100%',
-                   maxWidth: '450px',
-                   borderRadius: '16px'
-               }}>
-                 <span style={{ whiteSpace: 'nowrap', fontFamily: "'Fredoka One', cursive", letterSpacing: '1px' }}>{t('donateBtn')}</span>
-               </button>
-               <p style={{...styles.indieDevText, color: '#1a1a1a', textShadow: 'none', backgroundColor: '#fff', padding: '15px', borderRadius: '12px', border: '3px solid #1a1a1a'}}>
-                 {t('donateText')}
-               </p>
-            </div>
-
-            <div style={{...styles.devCardOval, marginTop: '35px'}}>
-               <p style={styles.feedbackText}>
-                 {t('feedbackText')}
-               </p>
-               <a href="mailto:qaylingames@gmail.com" className="btn-3d" style={styles.emailLink}>qaylingames@gmail.com 💌</a>
-            </div>
+            {renderSupportCards()}
 
             <div style={{ width: '100%', marginTop: '40px' }}>
               <button 
@@ -1393,63 +1407,14 @@ function App() {
                 {renderSubmitScenarioBox()}
               </div>
 
-              <div style={{ 
-                  width: '50%', 
-                  height: '4px', 
-                  backgroundColor: '#1a1a1a', 
-                  marginTop: '60px', 
-                  marginBottom: '10px',
-                  marginInline: 'auto',
-                  borderRadius: '10px', 
-                  opacity: '0.6' 
-              }}></div>
-
-              <div style={{...styles.devCardGreen, backgroundColor: 'transparent', border: 'none', boxShadow: 'none', transform: 'rotate(0deg)', marginTop: '30px'}}>
-                 <button onClick={() => setShowDonateModal(true)} className="btn-3d" style={{
-                     ...styles.donateBtn, 
-                     background: '#1a1a1a', 
-                     color: '#ffffff', 
-                     marginTop: '0', 
-                     padding: '18px 24px', 
-                     fontSize: '16px',
-                     display: 'flex',           
-                     flexDirection: 'column',   
-                     alignItems: 'center',      
-                     gap: '4px',
-                     width: '100%',
-                     maxWidth: '450px',
-                     borderRadius: '16px'
-                 }}>
-                   <span style={{ whiteSpace: 'nowrap', fontFamily: "'Fredoka One', cursive", letterSpacing: '1px' }}>{t('donateBtn')}</span>
-                 </button>
-                 <p style={{...styles.indieDevText, color: '#1a1a1a', textShadow: 'none', backgroundColor: '#fff', padding: '15px', borderRadius: '12px', border: '3px solid #1a1a1a'}}>
-                   {t('donateText')}
-                 </p>
-              </div>
-
-              <div style={{...styles.devCardOval, marginTop: '35px'}}>
-                 <p style={styles.feedbackText}>
-                   {t('feedbackText')}
-                 </p>
-                 <a href="mailto:qaylingames@gmail.com" className="btn-3d" style={styles.emailLink}>qaylingames@gmail.com 💌</a>
-              </div>
+              {renderSupportCards()}
 
             </>
           );
         })()}
       </div>
 
-      <div style={{ 
-          width: '50%', 
-          maxWidth: '250px', 
-          height: '4px', 
-          backgroundColor: '#1a1a1a', 
-          marginTop: 'auto', 
-          marginBottom: '25px', 
-          marginInline: 'auto',
-          borderRadius: '10px', 
-          opacity: '0.6' 
-      }}></div>
+      <div style={styles.sectionDivider}></div>
 
       <div style={{
         marginBottom: '40px', 
@@ -1586,6 +1551,18 @@ const styles = {
   feedbackText: { fontFamily: "'Kalam', cursive", fontSize: '14px', color: '#1a1a1a', fontWeight: 'bold', margin: '0', lineHeight: '1.4' },
   emailLink: { color: '#ffffff', fontFamily: "'Kalam', cursive", background: '#ef4444', padding: '8px 16px', borderRadius: '12px', border: '3px solid #1a1a1a', textDecoration: 'none', fontWeight: '900', fontSize: '15px', margin: '0', boxShadow: '4px 4px 0px #1a1a1a', display: 'inline-block' },
 
+  sectionDivider: { 
+    width: '50%', 
+    maxWidth: '250px', 
+    height: '4px', 
+    backgroundColor: '#1a1a1a', 
+    marginTop: '60px', 
+    marginBottom: '10px',
+    marginInline: 'auto',
+    borderRadius: '10px', 
+    opacity: '0.6' 
+  },
+  
   footerLegalLink: { 
     color: '#ffffff',
     textDecoration: 'underline', 

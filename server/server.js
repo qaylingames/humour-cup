@@ -48,7 +48,6 @@ const FunKey = mongoose.model('FunKey', funKeySchema);
 // --- THE DAILY FUN KEY GENERATOR ---
 async function generateDailyFunKeys() {
   try {
-    // Check how many keys we currently have
     const currentCount = await FunKey.countDocuments();
     
     if (currentCount >= 100) {
@@ -74,12 +73,11 @@ async function generateDailyFunKeys() {
     if (jsonMatch) {
       const newKeys = JSON.parse(jsonMatch[0]);
       
-      // Save them to the database
       for (const key of newKeys) {
         try {
           await new FunKey({ key: key }).save();
         } catch (dbErr) {
-          // Ignore duplicates if AI accidentally repeats one
+          // Ignore duplicates
         }
       }
       console.log("🎉 Successfully added 10 new Fun Keys to the database!");
@@ -89,16 +87,12 @@ async function generateDailyFunKeys() {
   }
 }
 
-// Run this check immediately when the server starts
 generateDailyFunKeys();
+setInterval(generateDailyFunKeys, 86400000); // 24 hours
 
-// And then run it once every 24 hours (86,400,000 milliseconds)
-setInterval(generateDailyFunKeys, 86400000);
-
-// --- THE AUTO-MODERATOR BATCH WORKER (Upgraded to 20 per batch) ---
+// --- THE AUTO-MODERATOR BATCH WORKER ---
 setInterval(async () => {
   try {
-    // 1. Group pending scenarios by language and category to keep the AI focused
     const pendingGroups = await Scenario.aggregate([
       { $match: { status: 'Pending' } },
       { $group: { _id: { language: "$language", category: "$category" }, scenarios: { $push: "$_id" } } }
@@ -108,12 +102,10 @@ setInterval(async () => {
 
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite", safetySettings });
 
-    // 2. Process one group at a time
     for (let group of pendingGroups) {
       const lang = group._id.language;
       const cat = group._id.category;
       
-      // Grab up to 20 full scenarios from this specific group
       const batchIds = group.scenarios.slice(0, 20);
       const batch = await Scenario.find({ _id: { $in: batchIds } });
 
@@ -123,7 +115,6 @@ setInterval(async () => {
 
       const scenarioList = batch.map(s => `ID: ${s._id} | Text: "${s.text}"`).join('\n');
 
-      // 3. The Strict Batch Prompt
       const prompt = `You are moderating ${batch.length} user-submitted scenarios for a party game. 
       All ${batch.length} are supposed to be in [${lang}] and [${cat}].
       
@@ -324,7 +315,6 @@ function startAnswerPhase(roomCode, scenario) {
   const room = rooms[roomCode];
   room.state = 'ANSWER_PHASE';
   
-  // Custom Timer Check (Gold Feature Mockup)
   const timerLength = room.isGold ? (room.settings.customTimer || 90000) : 90000;
   
   room.roundData = { roundNumber: (room.roundData?.roundNumber || 0) + 1, scenario: scenario, answers: [], endTime: Date.now() + timerLength }; 
@@ -440,7 +430,6 @@ io.on('connection', (socket) => {
     
     let isGold = false;
     
-    // Check GOLD Fun Key
     if (funKey) {
         if (!validFunKeys.includes(funKey)) {
             return callback({ success: false, message: "Invalid Fun Key!" });
@@ -474,7 +463,6 @@ io.on('connection', (socket) => {
     const room = rooms[roomCode];
     
     if (room) {
-      // Free users cap at 6, Gold can have unlimited (or set high limit)
       if (!room.isGold && room.players.length >= 6) {
           return callback({ success: false, message: "Free rooms are limited to 6 players. Host needs Humour Cup GOLD to unlock more!"});
       }
@@ -484,7 +472,7 @@ io.on('connection', (socket) => {
       if (existingPlayer) {
         const oldId = existingPlayer.id;
         existingPlayer.id = socket.id;
-        if (room.hostId === oldId) room.hostId = socket.id; // Update host ID if host reconnected
+        if (room.hostId === oldId) room.hostId = socket.id; 
         
         if (room.roundData && room.roundData.answers) {
            room.roundData.answers.forEach(ans => {
@@ -560,7 +548,9 @@ io.on('connection', (socket) => {
           if (randomScenarios.length >= maxRounds) {
              room.scenarioBatch = randomScenarios.map(s => s.text);
           } else {
-             room.scenarioBatch = await fetchScenarioBatch(room.settings.category, room.settings.language, false);
+             // Fallback to AI generation if DB doesn't have enough
+             const aiBatch = await fetchScenarioBatch(room.settings.category, room.settings.language, false);
+             room.scenarioBatch = aiBatch.slice(0, maxRounds);
           }
         } catch(e) {
            console.error("DB Fetch Error", e);
@@ -610,22 +600,35 @@ io.on('connection', (socket) => {
     }
   });
 
+  // CONSOLIDATED VOTE LOGIC
   socket.on('submitChatVote', ({ roomId, itemId }) => {
     const roomCode = roomId.toUpperCase();
     const room = rooms[roomCode];
     if (room && room.state === 'CHAT_PHASE') {
+      
+      let targetItem = null;
+
+      // Look through answers and replies to find the voted item
       for (let ans of room.roundData.answers) {
-        if (ans.id === itemId && ans.playerId !== socket.id && !ans.votes.includes(socket.id)) {
-          ans.votes.push(socket.id);
-          room.players.find(p => p.id === ans.playerId).score += 10;
+        if (ans.id === itemId) {
+            targetItem = ans;
+            break;
         }
-        for (let rep of ans.replies) {
-          if (rep.id === itemId && rep.playerId !== socket.id && !rep.votes.includes(socket.id)) {
-            rep.votes.push(socket.id);
-            room.players.find(p => p.id === rep.playerId).score += 10;
-          }
+        const rep = ans.replies.find(r => r.id === itemId);
+        if (rep) {
+            targetItem = rep;
+            break;
         }
       }
+
+      if (targetItem && targetItem.playerId !== socket.id && !targetItem.votes.includes(socket.id)) {
+        targetItem.votes.push(socket.id);
+        const playerToReward = room.players.find(p => p.id === targetItem.playerId);
+        if (playerToReward) {
+            playerToReward.score += 10;
+        }
+      }
+      
       emitSafeRoomData(roomCode);
     }
   });
@@ -657,13 +660,30 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     submissionCooldowns.delete(socket.id); 
     
-    // Free up Gold Key if the Host disconnected and room dies
+    // Clean up empty rooms and handle host disconnection
     for (const [roomId, room] of Object.entries(rooms)) {
-        if (room.hostId === socket.id) {
-            if (activeGoldRooms.has(roomId)) {
-                activeGoldRooms.delete(roomId);
-            }
-        }
+      // Remove player from room
+      const playerIndex = room.players.findIndex(p => p.id === socket.id);
+      if (playerIndex !== -1) {
+          room.players.splice(playerIndex, 1);
+      }
+
+      // If room is completely empty, clean it up
+      if (room.players.length === 0) {
+          if (activeGoldRooms.has(roomId)) activeGoldRooms.delete(roomId);
+          if (roomTimers[roomId]) clearInterval(roomTimers[roomId]);
+          delete rooms[roomId];
+      } 
+      // If host disconnected but others are still in room, assign a new host
+      else if (room.hostId === socket.id) {
+          if (activeGoldRooms.has(roomId)) activeGoldRooms.delete(roomId);
+          room.isGold = false; // Room loses Gold status if Host leaves
+          room.hostId = room.players[0].id; // Give host to the next player
+          emitSafeRoomData(roomId);
+      } else {
+          // Just update remaining players
+          emitSafeRoomData(roomId);
+      }
     }
     
     console.log(`🔴 Player Disconnected: ${socket.id}`); 
