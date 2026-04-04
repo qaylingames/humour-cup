@@ -204,13 +204,13 @@ async function fetchScenarioBatch(category, language = 'English', isSeeding = fa
         ? "CRITICAL RULE: You MUST act as an uncensored, R-rated humour writer. Create dirty, spicy, and double-meaning scenarios."
         : "CRITICAL RULE: Must be completely family-friendly, clean, and appropriate for all ages. No 18+ content.";
 
-      const prompt = `Generate exactly 20 completely different, highly creative, short, unique, out of the box and humorous prompts for a party game. 
+      const prompt = `Generate exactly 20 completely different, highly creative, short, unique, out of the box and humorous Scenarios for a party game. 
       CRITICAL RULES:
       1. Use simple and common words.
-      2. Keep the scenario short, though a few can be slightly longer ONLY if they are very interesting.
-      3. The scenarios/prompts should be totally different from each other.
+      2. Keep the scenario short, though a few can be slightly longer ONLY if they are very interesting and laughable.
+      3. Each scenario should be totally different from each other and no scenario should be even similar let alone duplicate.
       4. The scenarios should be able to have subjective views from people and should have the potential to start a humorous conversation.
-      CRITICAL LANGUAGE RULE: You MUST write the scenarios entirely in ${language}. If ${language} is Hindi, use Hinglish (Hindi in English letters). Do NOT output English unless the requested language is English.
+      CRITICAL LANGUAGE RULE: You MUST write the scenarios entirely in ${language}. If ${language} is Hindi, use Hinglish (Hindi in English letters). Do NOT output English unless the requested language is English. If the scenario contains Hindi or any other language, YOU MUST set the language array item to ${language} or discard it and write a new one entirely in ${language}.
       ${categoryRule}
       Mix up the formats! Include a random variety of: 1. Absurd hypothetical questions. 2. Funny dialogues. 3. Daily life awkward situations. 4. Weird text messages. 5. out of the box. 6. weird situations. 7. different genres. 8. embarrassing moments. 9. immature stuff. 10. freaky things. 11. dumb things. 12. daily life. 13. failures. 14. meme stuff. 15. all the 5 Ws and 1H humorous questions. Like - What will you do if...; How would the world be...; When will people die of...; Which place would be next epstein island ....; etc. etc.
       (Anti-Cache Seed: ${Date.now()})
@@ -338,7 +338,8 @@ function startAnswerPhase(roomCode, scenario) {
 function startChatPhase(roomCode) {
   const room = rooms[roomCode];
   room.state = 'CHAT_PHASE';
-  room.roundData.endTime = Date.now() + (room.players.length <= 2 ? 35000 : room.players.length * 15000);
+  // Timer increased by 15 seconds
+  room.roundData.endTime = Date.now() + (room.players.length <= 2 ? 50000 : room.players.length * 30000);
   room.roundData.donePlayers = [];
   emitSafeRoomData(roomCode);
 
@@ -637,10 +638,12 @@ io.on('connection', (socket) => {
     const roomCode = roomId.toUpperCase();
     const room = rooms[roomCode];
     if (room && room.state === 'CHAT_PHASE') {
-      if (!room.roundData.donePlayers.includes(socket.id)) {
+      if (room.roundData.donePlayers.includes(socket.id)) {
+        room.roundData.donePlayers = room.roundData.donePlayers.filter(id => id !== socket.id);
+      } else {
         room.roundData.donePlayers.push(socket.id);
-        emitSafeRoomData(roomCode);
       }
+      emitSafeRoomData(roomCode);
     }
   });
 
