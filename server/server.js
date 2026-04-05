@@ -464,9 +464,6 @@ io.on('connection', (socket) => {
     const room = rooms[roomCode];
     
     if (room) {
-      if (!room.isGold && room.players.length >= 6) {
-          return callback({ success: false, message: "Free rooms are limited to 6 players. Host needs Humour Cup GOLD to unlock more!"});
-      }
 
       const existingPlayer = room.players.find(p => p.name.toLowerCase() === playerName.toLowerCase());
       
