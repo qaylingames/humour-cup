@@ -1508,6 +1508,54 @@ function App() {
         })()}
       </div>
 
+      <div style={{
+        marginBottom: '40px', 
+        backgroundColor: '#ff9900',
+        padding: '12px 20px', 
+        borderRadius: '50px 20px 60px 25px / 20px 60px 25px 50px', /* This creates the blob shape! */
+        border: '3px solid #1a1a1a', /* Thickened slightly to match the comic theme */
+        boxShadow: '4px 4px 0px #1a1a1a', 
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: 'fit-content', 
+        maxWidth: '95%', 
+        textAlign: 'center',
+        zIndex: 1,
+        marginTop: 'auto' /* This ensures it always gets pushed to the bottom of the screen */
+      }}>
+        <div style={{ 
+          fontSize: '0.8rem', 
+          color: '#ffffff', 
+          fontWeight: 'bold',
+          fontFamily: '"Kalam", cursive',
+          whiteSpace: 'nowrap', 
+        }}>
+          {t('madeBy')}<a 
+            href="https://arpitsrivstva.itch.io/" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            style={{ 
+              color: '#ffffff', 
+              fontFamily: '"Kalam", cursive',
+              fontWeight: 'bold', 
+              textDecoration: 'underline', 
+              textDecorationStyle: 'wavy', 
+              textDecorationColor: '#ffffff', 
+              textUnderlineOffset: '2.5px', 
+            }}
+          >
+            Arpit Srivastava
+          </a>{t('toSpark')}
+        </div>
+
+        <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'center', gap: '15px', flexWrap: 'wrap' }}>
+          <a href="/privacy.html" style={styles.footerLegalLink}>{t('privacy')}</a>
+          <a href="/terms.html" style={styles.footerLegalLink}>{t('terms')}</a>
+          <a href="mailto:qaylingames@gmail.com" style={styles.footerLegalLink}>{t('contact')}</a>
+        </div>
+      </div>
+
     </div>
 
   );
