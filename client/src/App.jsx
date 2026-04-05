@@ -1508,56 +1508,54 @@ function App() {
         })()}
       </div>{/* <-- This safely closes styles.container */}
 
-      {/* --- RESTORED EXACT BLOB FOOTER --- */}
       <div style={{
+        marginBottom: '40px', 
         backgroundColor: '#ff9900',
-        padding: '20px 30px', 
-        borderRadius: '50px 20px 60px 25px / 20px 60px 25px 50px',
-        border: '4px solid #1a1a1a', 
-        boxShadow: '8px 8px 0px #1a1a1a', 
+        padding: '12px 20px', 
+        borderRadius: '50px 20px 60px 25px / 20px 60px 25px 50px', 
+        border: '1px solid #1a1a1a', 
+        boxShadow: '3px 3px 0px #1a1a1a', 
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         width: 'fit-content', 
         maxWidth: '95%', 
-        textAlign: 'center',
-        margin: '0 auto', 
-        zIndex: 1
+        textAlign: 'center'
       }}>
         <div style={{ 
-          fontSize: '16px', 
+          fontSize: '0.7rem', 
           color: '#ffffff', 
-          fontWeight: 'bold',
+          fontWeight: '400',
           fontFamily: '"Kalam", cursive',
           whiteSpace: 'nowrap', 
         }}>
-          ⚡ made by <a 
+          {t('madeBy')}<a 
             href="https://arpitsrivstva.itch.io/" 
             target="_blank" 
             rel="noopener noreferrer" 
             style={{ 
               color: '#ffffff', 
+              fontFamily: '"Kalam", cursive',
+              fontWeight: '400', 
               textDecoration: 'underline', 
               textDecorationStyle: 'wavy', 
               textDecorationColor: '#ffffff', 
-              textUnderlineOffset: '3px', 
+              textUnderlineOffset: '2.5px', 
             }}
           >
             Arpit Srivastava
-          </a> to spark your humour ⚡
+          </a>{t('toSpark')}
         </div>
 
-        <div style={{ marginTop: '15px', display: 'flex', justifyContent: 'center', gap: '20px', flexWrap: 'wrap' }}>
+        <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'center', gap: '15px', flexWrap: 'wrap' }}>
           <a href="/privacy.html" style={styles.footerLegalLink}>{t('privacy')}</a>
           <a href="/terms.html" style={styles.footerLegalLink}>{t('terms')}</a>
           <a href="mailto:qaylingames@gmail.com" style={styles.footerLegalLink}>{t('contact')}</a>
         </div>
       </div>
 
-      {/* NEW: Balanced bar below the blob */}
-      <div style={{...styles.sectionDivider, marginTop: '40px', marginBottom: '40px'}}></div>
+    </div>
 
-    </div> /* <-- This safely closes styles.appWrapper */
   );
 }
 
